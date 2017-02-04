@@ -1,0 +1,33 @@
+{
+  "name": "barbiche",
+  "version": "0.0.1",
+  "description": "Logic-full template engine for DOM & JavaScript",
+  "author": "Manuel Baclet <manuel@eda.sarl>",
+  "homepage": "https://github.com/manubb/barbiche",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/manubb/barbiche.git"
+  },
+  "keywords": [
+    "DOM",
+    "template",
+    "templates",
+    "templating"
+  ],
+  "main": "barbiche.js",
+  "scripts": {
+    "build:parser": "./node_modules/jison/lib/cli.js ./src/parser.jison",
+    "build:js": "./node_modules/browserify/bin/cmd.js ./src/barbiche.js --standalone Barbiche > barbiche.js",
+    "build:uglify": "./node_modules/uglify-js/bin/uglifyjs barbiche.js > barbiche.min.js",
+    "build": "npm run build:parser && npm run build:js && npm run build:uglify"
+  },
+  "devDependencies": {
+    "browserify": "^14.0.0",
+    "jison": "^0.4.17",
+    "uglify-js": "^2.7.5"
+  },
+   "bugs": {
+    "url": "https://github.com/manubb/barbiche/issues"
+  },
+  "license": "MIT"
+}
