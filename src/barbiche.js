@@ -45,10 +45,8 @@ function Template(node) {
 	}
 	if (node) {
 		if (node.id) templates[node.id] = this;
-		var template = document.createElement('template');
-		template.innerHTML = node.textContent || node.innerText;
 		this.closures = {};
-		this.node = template;
+		this.node = node.cloneNode(true);
 		this.ready = false;
 	}
 	return this;
