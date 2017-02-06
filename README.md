@@ -116,7 +116,8 @@ Recursion is also supported:
 		<template bb-repeat="children:'child'">
 			<li>
 				<div bb-text="child.name"></div>
-					<template bb-if="child.children" bb-alias="child.children:'children'" bb-import="'recursive-sub'"></template>
+					<template bb-if="child.children" bb-alias="child.children:'children'" 
+					bb-import="'recursive-sub'"></template>
 			</li>
 		</template>
 	</ul>
