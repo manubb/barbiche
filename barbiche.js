@@ -1352,7 +1352,7 @@ Template.prototype.merge = function(data, filters) {
 	merge(clone.node.content, clone);
 	context.pop();
 	if (filters) context.pop();
-	return clone.node.content;
+	return clone.node;
 }
 
 var works = {};
