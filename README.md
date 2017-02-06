@@ -47,8 +47,7 @@ We get:
 ```
 ## Browser support
 
-Barbiche requires support of `<template>` tag, Array.from static method and some DOM convenience methods (childNode.before,
-childNode.replaceWith and childNode.remove currently). Early but not so simple tests show that properly polyfilled, Barbiche can be used with:
+Barbiche requires support of `<template>` tag, `Array.from` static method and some DOM convenience methods (`childNode.before`, `childNode.replaceWith` and `childNode.remove` currently). Early but not so simple tests show that properly polyfilled, Barbiche can be used with:
 
 * Chrome >= 15 (no test with previous releases)
 * Firefox >= 20
@@ -68,6 +67,24 @@ Barbiche templates are decorated with special attributes which are resolved in t
 6. `bb-import` for importing a subtemplate
 7. `bb-attr` for setting attributes on current node
 8. `bb-class` for setting classes on current node
+
+### `bb-if`
+`bb-if` attribute resolves to a boolean value. If false, the decorated node (and its subtree) is removed. Supported operators are: `||`, `&&`, `!`, `==`, `!=`, `<`, `>`, `<=`, `>=`. This can be extended with custom filters.
+
+Some examples of `bb-if` attributes:
+```html
+<div bb-if="children.length >= 4 && species != 'cat'">...</div>
+<div bb-if="my_filter(obj.items[2], obj.other.another) && species == 'hen'">...</div>
+```
+### `bb-alias`
+`bb-alias` attribute resolves to an array of objects that have properties `name` and `val`. For each item of the array, `val` is bound to `name` during the processing of the current subtree. 
+
+Some examples of `bb-alias` attributes:
+```html
+<div bb-alias="JSON.stringify(obj):'str1'; obj.prop:'str2'">...</div>
+<div bb-alias="logo.resources.link[0]:'link'">...</div>
+```
+In the first line, the value of `JSON.stringify(obj)` is bound to `'str1'` identifier and the value of `obj.prop` to `str2`.
 
 ## Subtemplates
 
