@@ -47,7 +47,7 @@ We get:
 Browser support
 ---------------
 
-Barbiche requires support of <template> tag, Array.from static method and some DOM convenience methods (childNode.before,
+Barbiche requires support of `<template>` tag, Array.from static method and some DOM convenience methods (childNode.before,
 childNode.replaceWith and childNode.remove currently). Early but not so simple tests show that properly polyfilled, Barbiche can be used with:
 
 * Chrome >= 15 (no test with previous releases)
@@ -111,7 +111,7 @@ Recursion is also supported:
 <template id="recursive">
 	<template bb-if="children.length" bb-import="'recursive-sub'"></template>
 </template>
-<template id="recursive-sub" type="text/bb-template">
+<template id="recursive-sub">
 	<ul>
 		<template bb-repeat="children:'child'">
 			<li>
