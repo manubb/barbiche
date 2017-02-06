@@ -138,7 +138,7 @@ e
     | NUMBER
         {$$ = Number.bind(null, yytext);}
     | STRING
-        {$$ = String.bind(null, yytext);}
+        {$$ = function() {return quoteUnescape(String(yytext));}}
     | TRUE
         {$$ = function() {return true;}}
     | FALSE
@@ -245,3 +245,8 @@ IdentifierName
     : VAR
         {$$ = yy.context.resolve.bind(yy.context, yytext);}
     ;
+
+%%
+function quoteUnescape(str) {
+    return str.replace(/(\\('|"))/g, function() {return arguments[2];});
+}
