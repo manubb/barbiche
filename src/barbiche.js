@@ -165,11 +165,11 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 			node.replaceWith(template.content);
 		} else node.remove();
 	} else if (node.nodeName == "TEMPLATE") {
-		if (node.hasAttribute('bb-import')) {
-			var parsed = (template.closures[node.getAttribute('bb-import')])().pop();
-			var clone = Template(parsed.val).clone();
-			node.before(merge(clone.node.content, clone));
-		} else if (node.hasAttribute('bb-repeat')) {
+		if (node.hasAttribute('bb-repeat')) {
+			var closure = null;
+			if (node.hasAttribute('bb-import')) {
+				closure = template.closures[node.getAttribute('bb-import')];
+			}
 			var parsed = (template.closures[node.getAttribute('bb-repeat')])();
 			//iterate on cartesian product of arrays:
 			(parsed.reduceRight(function(accu, task) {
@@ -183,9 +183,14 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 					})
 				};
 			}, function() {
-				var copy = node.cloneNode(true);
+				var target = closure && Template(closure().pop().val).node;
+				var copy = (target || node).cloneNode(true);
 				node.before(merge(copy.content, template));
 			}))();
+		} else if (node.hasAttribute('bb-import')) {
+			var importId = (template.closures[node.getAttribute('bb-import')])().pop();
+			var clone = Template(importId.val).clone();
+			node.before(merge(clone.node.content, clone));
 		} else {
 			node.before(merge(node.content, template));
 		}
