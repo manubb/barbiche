@@ -15,8 +15,8 @@
 						<template bb-text="item.name"></template>
 					</li>
 				</template>
-				<span><template bb-text="item.join(', ').toUpperCase()"></template></span>
 			</ul>
+			<span><template bb-text="item.join(', ').toUpperCase()"></template></span>
 		</div>
 	</template>
 	<template id="simple-sub-template">
@@ -29,9 +29,7 @@
 	</template>
 	<template id="dynamic-sub-template">
 		<div>
-			<template bb-repeat="items:'item'">
-				<template bb-import="item"></template>
-			</template>
+			<template bb-repeat="items:'item'" bb-import="item"></template>
 		</div>
 	</template>
 	<template id="sub1">
@@ -43,7 +41,7 @@
 	<template id="recursive">
 		<template bb-if="children.length" bb-import="'recursive-sub'"></template>
 	</template>
-	<template id="recursive-sub" type="text/bb-template">
+	<template id="recursive-sub">
 		<ul>
 			<template bb-repeat="children:'child'">
 				<li>
