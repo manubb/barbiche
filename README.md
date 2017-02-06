@@ -58,6 +58,20 @@ childNode.replaceWith and childNode.remove currently). Early but not so simple t
 * Opera >=11.6
 * Safari >=5.1
 
+Attributes
+----------
+
+Barbiche templates are decorated with special attributes which are resolved in this order:
+
+1. `bb-if` for evaluating a boolean value
+2. `bb-alias` for binding a value to an identifier
+3. `bb-text` for inserting a text node
+4. `bb-html` for inserting an html fragment
+5. `bb-repeat` for looping
+6. `bb-import` for importing a subtemplate
+7. `bb-attr` for setting attributes on current node
+8. `bb-class` for setting classes on current node
+
 Subtemplates
 -------------
 Barbiche support subtemplating:
