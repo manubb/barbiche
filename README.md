@@ -6,8 +6,7 @@ Source code is clean, readable and short (around 500 lines parser included).
 
 See Barbiche live examples [here](http://htmlpreview.github.io/?https://github.com/manubb/barbiche/blob/master/examples/starter.html).
 
-Quick start
------------
+## Quick start
 
 We start with a simple template and a call to Barbiche:
 ```html
@@ -46,8 +45,7 @@ We get:
 	<span>HEN, CAT, DOG, SPIDER</span>
 </div>
 ```
-Browser support
----------------
+## Browser support
 
 Barbiche requires support of `<template>` tag, Array.from static method and some DOM convenience methods (childNode.before,
 childNode.replaceWith and childNode.remove currently). Early but not so simple tests show that properly polyfilled, Barbiche can be used with:
@@ -58,8 +56,7 @@ childNode.replaceWith and childNode.remove currently). Early but not so simple t
 * Opera >=11.6
 * Safari >=5.1
 
-Attributes
-----------
+## Attributes
 
 Barbiche templates are decorated with special attributes which are resolved in this order:
 
@@ -72,8 +69,8 @@ Barbiche templates are decorated with special attributes which are resolved in t
 7. `bb-attr` for setting attributes on current node
 8. `bb-class` for setting classes on current node
 
-Subtemplates
--------------
+## Subtemplates
+
 Barbiche support subtemplating:
 ```html
 <template id="simple-sub">
