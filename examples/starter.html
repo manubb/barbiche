@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Simple Barbiche examples</title>
+	<meta charset="utf-8">
+	<script type="text/javascript" src="https://cdn.rawgit.com/manubb/barbiche/521812f6/examples/js/polyfill.min.js"></script>
+	<script type="text/javascript" src="https://cdn.rawgit.com/manubb/barbiche/521812f6/barbiche.js"></script>
+</head>
+<body>
+	<template id="test">
+		<div bb-class="true: class">
+			<ul>
+				<template bb-repeat="items:'item'">
+					<li bb-if="item.show" bb-class="true: item.species || 'unknown'">
+						<template bb-text="item.name"></template>
+					</li>
+				</template>
+				<span><template bb-text="item.join(', ').toUpperCase()"></template></span>
+			</ul>
+		</div>
+	</template>
+	<template id="simple-sub-template">
+		<div>
+			<template bb-import="'sub-template1'"></template>
+		</div>
+	</template>
+	<template id="sub-template1">
+		<span>I am a sub-template!</span>
+	</template>
+	<template id="dynamic-sub-template">
+		<div>
+			<template bb-repeat="items:'item'">
+				<template bb-import="item"></template>
+			</template>
+		</div>
+	</template>
+	<template id="sub1">
+		<span>I am sub-template1!</span>
+	</template>
+	<template id="sub2">
+		<span>I am sub-template2!</span>
+	</template>
+	<template id="recursive">
+		<template bb-if="children.length" bb-import="'recursive-sub'"></template>
+	</template>
+	<template id="recursive-sub" type="text/bb-template">
+		<ul>
+			<template bb-repeat="children:'child'">
+				<li>
+					<div bb-text="child.name"></div>
+					<template bb-if="child.children" bb-alias="child.children:'children'" bb-import="'recursive-sub'"></template>
+				</li>
+			</template>
+		</ul>
+	</template>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			document.body.appendChild(Barbiche.Template('test').merge({
+				"class": "list",
+				"items": [
+					{species: "hen", name: "Elsa", show: true},
+					{species: "cat", name: "Jacynthe", show: false},
+					{species: null, name: "Zaza", show: true}
+				],
+				item: ["hen", "cat", "dog", "spider"]
+			}));
+			document.body.appendChild(Barbiche.Template('simple-sub-template').merge());
+			document.body.appendChild(Barbiche.Template('dynamic-sub-template').merge({
+				items: ['sub2', 'sub1']
+			}));
+			document.body.appendChild(Barbiche.Template('recursive').merge({
+				children: [
+					{
+						name: "Solomon",
+						children: [
+							{
+								name : "Lexie",
+								children: [
+									{
+										name: "Shavon",
+										children: [
+											{
+												name : "Shirleen"
+											}, {
+												name : "Kathleen"
+											}
+										]
+									},
+									{
+										name: "Travis"
+									},
+									{
+										name: "Adele"
+									},
+									{
+										name: "Barney"
+									}
+								]
+							}, {
+								name : "Allie"
+							}
+						]
+					}, {
+						name: "Juliann",
+						children: [
+							{
+								name : "Guy"
+							}, {
+								name : "Yaeko"
+							}
+						]
+					}
+				]
+			}));
+		});
+	</script>
+</body>
+</html>
