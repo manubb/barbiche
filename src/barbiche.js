@@ -192,8 +192,7 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 	var nodeContext = {_node_: node};
 	context.push(nodeContext);
 	if (node.hasAttribute('bb-if')) {
-		var parsed = (template.closures[node.getAttribute('bb-if')])().pop();
-		var val = parsed && parsed.val;
+		var val = (template.closures[node.getAttribute('bb-if')])().pop();
 		if (!val) {
 			context.pop();
 			return node.remove();
@@ -207,14 +206,12 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 		node.removeAttribute('bb-alias');
 	}
 	if (node.hasAttribute('bb-text')) {
-		var parsed = (template.closures[node.getAttribute('bb-text')])().pop();
-		var val = parsed && parsed.val;
+		var val = (template.closures[node.getAttribute('bb-text')])().pop();
 		if (val !== undefined) {
 			node.replaceWith(val);
 		} else node.remove();
 	} else if (node.hasAttribute('bb-html')) {
-		var parsed = (template.closures[node.getAttribute('bb-html')])().pop();
-		var val = parsed && parsed.val;
+		var val = (template.closures[node.getAttribute('bb-html')])().pop();
 		if (val !== undefined) {
 			var template = document.createElement('template');
 			template.innerHTML = val;
@@ -239,13 +236,13 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 					})
 				};
 			}, function() {
-				var target = closure && Template(closure().pop().val).node;
+				var target = closure && Template(closure().pop()).node;
 				var copy = (target || node).cloneNode(true);
 				node.before(merge(copy.content, template));
 			}))();
 		} else if (node.hasAttribute('bb-import')) {
 			var importId = (template.closures[node.getAttribute('bb-import')])().pop();
-			var clone = Template(importId.val).clone();
+			var clone = Template(importId).clone();
 			node.before(merge(clone.node.content, clone));
 		} else {
 			node.before(merge(node.content, template));

@@ -88,7 +88,7 @@ Statement
          }).bind(null, $1, $3);}
     | e
         {$$ = (function(a) {
-            return {val: a()};
+            return a();
         }).bind(null, $1);}
     ;
 
