@@ -111,7 +111,6 @@ function compile(node, template) {
 	(compile_works[node.nodeType])(node, template);
 }
 
-
 Template.prototype.clone = function() {
 	if (!this.ready) this.compile();
 	var t = new Template();
