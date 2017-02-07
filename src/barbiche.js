@@ -1,5 +1,5 @@
 // Barbiche
-// version: 0.0.1
+// version: 0.0.5
 // author: Manuel Baclet <manuel@eda.sarl>
 // license: MIT
 var Barbiche = {};
