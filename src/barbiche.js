@@ -68,7 +68,7 @@ compile_works[Node.ELEMENT_NODE] = function(node, template) {
 		wrapper.content.appendChild(node);
 		node = wrapper;
 	}
-	['bb-if', 'bb-alias', 'bb-text', 'bb-html', 'bb-attr', 'bb-class', 'bb-repeat', 'bb-import'].forEach(function(attr) {
+	['bb-if', 'bb-alias', 'bb-text', 'bb-html', 'bb-repeat', 'bb-import', 'bb-attr', 'bb-class'].forEach(function(attr) {
 		if (node.hasAttribute(attr)) {
 			var parsed = Barbiche.Parser.parse(node.getAttribute(attr));
 			node.setAttribute(attr, template.addClosure(parsed));
