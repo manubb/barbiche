@@ -248,5 +248,5 @@ IdentifierName
 
 %%
 function quoteUnescape(str) {
-    return str.replace(/(\\('|"))/g, function() {return arguments[2];});
+    return str.replace(/(\\('|"|\n|\t|\r))/g, function() {return arguments[2];});
 }

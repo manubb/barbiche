@@ -57,16 +57,21 @@ Barbiche.Template = Template;
 var compile_works = {};
 compile_works[Node.ELEMENT_NODE] = function(node, template) {
 	if (node.hasAttribute('bb-repeat') && node.nodeName != 'TEMPLATE') {
-		var wrapper = document.createElement('template');
-		wrapper.setAttribute('bb-repeat', node.getAttribute('bb-repeat'));
-		node.removeAttribute('bb-repeat');
-		if (node.hasAttribute('bb-alias')) {
-			wrapper.setAttribute('bb-alias', node.getAttribute('bb-alias'));
-			node.removeAttribute('bb-alias');
+		if (node.hasAttribute('bb-text') || node.hasAttribute('bb-html')) node.removeAttribute('bb-repeat');
+		else {
+			var wrapper = document.createElement('template');
+			wrapper.setAttribute('bb-repeat', node.getAttribute('bb-repeat'));
+			node.removeAttribute('bb-repeat');
+			['bb-if', 'bb-alias'].forEach(function(attr) {
+				if (node.hasAttribute(attr)) {
+					wrapper.setAttribute(attr, node.getAttribute(attr));
+					node.removeAttribute(attr);
+				}
+			});
+			node.before(wrapper);
+			wrapper.content.appendChild(node);
+			node = wrapper;
 		}
-		node.before(wrapper);
-		wrapper.content.appendChild(node);
-		node = wrapper;
 	}
 	['bb-if', 'bb-alias', 'bb-text', 'bb-html', 'bb-repeat', 'bb-import', 'bb-attr', 'bb-class'].forEach(function(attr) {
 		if (node.hasAttribute(attr)) {
@@ -77,18 +82,70 @@ compile_works[Node.ELEMENT_NODE] = function(node, template) {
 	if (node.nodeName == 'TEMPLATE') {
 		compile(node.content, template);
 	} else {
-		Array.from(node.children).forEach(function(child) {
+		Array.from(node.childNodes).forEach(function(child) {
 			compile(child, template);
 		});
 	}
 }
 
-compile_works[Node.TEXT_NODE] = function(node, template) {};
+compile_works[Node.TEXT_NODE] = function(node, template) {
+	var re = /{{([^{}]*)}}|{{{([^{}]*)}}}|([^{}]+)/g;
+	var value = node.nodeValue;
+	var tokenFound = false;
+	var res;
+	var stack = [];
+	while(res = re.exec(value)) {
+		if (res[3]) {
+			stack.push({
+				content: res[3],
+				type: 'plain'
+			});
+		} else if (res[1]) {
+			stack.push({
+				content: res[1],
+				type: 'text'
+			});
+			tokenFound = true;
+		} else {
+			stack.push({
+				content: res[2],
+				type: 'html'
+			});
+			tokenFound = true;
+		}
+	}
+	if (tokenFound) {
+		function resolve(accu) {
+			var exp = accu.join('+');
+			if (exp) {
+				var t = document.createElement('template');
+				t.setAttribute('bb-text', exp);
+				node.before(t); compile(t, template);
+			}
+		}
+		resolve(stack.reduce(function(accu, item) {
+			if (item.type == 'plain') {
+				accu.push('"' + item.content.replace(/('|"|\n|\t|\r)/g, function() {return '\\' + arguments[1];}) + '"');
+				return accu;
+			} else if (item.type == 'text') {
+				accu.push(item.content);
+				return accu;
+			} else {
+				resolve(accu);
+				var t = document.createElement('template');
+				t.setAttribute('bb-html', item.content);
+				node.before(t); compile(t, template);
+				return [];
+			}
+		}, []));
+		node.remove();
+	}
+};
 
 compile_works[Node.COMMENT_NODE] = function(node, template) {};
 
 compile_works[Node.DOCUMENT_FRAGMENT_NODE] = function(node, template) {
-	Array.from(node.children || node.childNodes).forEach(function(child) {compile(child, template);});
+	Array.from(node.childNodes).forEach(function(child) {compile(child, template);});
 };
 
 Template.prototype.addClosure = (function() {

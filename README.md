@@ -11,16 +11,14 @@ See Barbiche live examples [here](http://htmlpreview.github.io/?https://github.c
 We start with a simple template and a call to Barbiche:
 ```html
 <template id="test">
-  <div bb-class="true: class">
-    <ul>
-      <template bb-repeat="items:'item'">
-        <li bb-if="item.show" bb-class="true: item.species || 'unknown'">
-          <template bb-text="item.name"></template>
-        </li>
-      </template>
-    </ul>
-    <span><template bb-text="item.join(', ').toUpperCase()"></template></span>
-  </div>
+	<div bb-class="true: class">
+		<ul>
+			<template bb-repeat="items:'item'">
+				<li bb-if="item.show" bb-class="true: item.species || 'unknown'">{{item.name}}</li>
+			</template>
+		</ul>
+		<span>{{item.join(', ').toUpperCase()}}</span>
+	</div>
 </template>
 ```
 ```js
@@ -47,7 +45,7 @@ We get:
 ```
 ## Browser support
 
-Barbiche requires support of `<template>` tag, `Array.from` static method and some DOM convenience methods (`childNode.before`, `childNode.replaceWith` and `childNode.remove` currently). Early but not so simple tests show that properly polyfilled, Barbiche can be used with:
+Barbiche requires support of `<template>` tag, `Array.from` static method and some DOM convenience methods (currently `childNode.before`, `childNode.replaceWith`, `childNode.remove` and `element.classList` api). Early but not so simple tests show that properly polyfilled, Barbiche can be used with:
 
 * Chrome >= 15 (no test with previous releases)
 * Firefox >= 20
@@ -77,7 +75,7 @@ Some examples of `bb-if` attributes:
 <div bb-if="my_filter(obj.items[2], obj.other.another) && species == 'hen'">...</div>
 ```
 ### `bb-alias`
-`bb-alias` attribute resolves to an array of objects that have properties `name` and `val`. For each item of the array, `val` is bound to `name` during the processing of the current subtree. 
+`bb-alias` attribute resolves to an array of objects that have properties `name` and `val`. For each item of the array, `val` is bound to `name` during the processing of the current subtree.
 
 Some examples of `bb-alias` attributes:
 ```html
@@ -112,9 +110,7 @@ Subtemplate import is dynamic:
 ```html
 <template id="dynamic-sub-template">
 	<div>
-		<template bb-repeat="items:'item'">
-			<template bb-import="item"></template>
-		</template>
+		<template bb-repeat="items:'item'" bb-import="item"></template>
 	</div>
 </template>
 <template id="sub1">
@@ -144,10 +140,8 @@ Recursion is also supported:
 <template id="recursive-sub">
 	<ul>
 		<template bb-repeat="children:'child'">
-			<li>
-				<template bb-text="child.name"></template>
-				<template bb-if="child.children" bb-alias="child.children:'children'" 
-				bb-import="'recursive-sub'"></template>
+			<li>{{child.name}}
+				<template bb-if="child.children" bb-alias="child.children:'children'" bb-import="'recursive-sub'"></template>
 			</li>
 		</template>
 	</ul>
