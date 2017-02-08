@@ -1223,70 +1223,101 @@ if (typeof module !== 'undefined' && require.main === module) {
 }).call(this,require('_process'))
 },{"_process":3,"fs":1,"path":2}],5:[function(require,module,exports){
 // Barbiche
-// version: 0.0.6
+// version: 0.0.7
 // author: Manuel Baclet <manuel@eda.sarl>
 // license: MIT
-var Barbiche = {};
 
-var templates = {};
+var prefix = 'bb-';
+var destructive = false;
+var re;
+var store = {};
 
-function Context() {}
+var context = {
+	stack: []
+};
 
-Context.prototype.resolve = function(identifier) {
+context.resolve = function(identifier) {
 	var m = this.stack.length - 1;
 	var val;
 	while (val == undefined && m >= 0) {
 		val = this.stack[m][identifier];
 		m--;
 	}
-	return val;
+	return (val == undefined) ? window[identifier] : val;
 };
 
-Context.prototype.init = function() {
-	this.stack = [window];
+context.init = function(arr) {
+	this.stack = arr || [];
 };
 
-Context.prototype.push = function(obj) {
+context.push = function(obj) {
 	this.stack.push(obj);
 };
 
-Context.prototype.pop = function() {
+context.pop = function() {
 	return this.stack.pop();
 };
 
-var context = new Context();
+var Parser = require('../parser.js');
+Parser.parser.yy.context = context;
 
-Barbiche.Parser = require('../parser.js');
-Barbiche.Parser.parser.yy.context = context;
-
-function Template(node) {
+function Barbiche(node) {
 	if (typeof(node) == 'string') {
-		if (templates[node]) return templates[node];
+		if (store[node]) return store[node];
 		else node = document.querySelector('#' + node);
 	}
-	if (!(this instanceof Template)) {
-		return new Template(node);
+	if (!(this instanceof Barbiche)) {
+		return new Barbiche(node);
 	}
 	if (node) {
-		if (node.id) templates[node.id] = this;
+		if (node.id) store[node.id] = this;
 		this.closures = {};
-		this.node = node.cloneNode(true);
+		this.node = (destructive) ? node : node.cloneNode(true);
 		this.ready = false;
 	}
 	return this;
 }
 
-Barbiche.Template = Template;
+Barbiche.setPrefix = function(str) {
+	prefix = str;
+};
+
+Barbiche.setDestructive = function(bool) {
+	destructive = bool;
+};
+
+Barbiche.setDelimiters = function(arr) {
+	var str = '{{([^{}]*)}}|{{{([^{}]*)}}}|([^{}]+)';
+	var escaped = arr.map(function(char) {
+		return char.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+	});
+	re = new RegExp(str.replace(/{|}/g, function(match) {if (match == '{') return escaped[0]; else return escaped[1];}), 'g');
+};
+
+Barbiche.setDelimiters(['{', '}']);
+
+Barbiche.clean = function(name) {
+	if (name) delete store[name];
+	else {
+		for (var key in store) {
+			delete store[key];
+		}
+	}
+};
+
+function addPrefix(str) {
+	return prefix + str;
+}
 
 var compile_works = {};
 compile_works[Node.ELEMENT_NODE] = function(node, template) {
-	if (node.hasAttribute('bb-repeat') && node.nodeName != 'TEMPLATE') {
-		if (node.hasAttribute('bb-text') || node.hasAttribute('bb-html')) node.removeAttribute('bb-repeat');
+	if (node.hasAttribute(prefix + 'repeat') && node.nodeName != 'TEMPLATE') {
+		if (node.hasAttribute(prefix + 'text') || node.hasAttribute(prefix + 'html')) node.removeAttribute(prefix + 'repeat');
 		else {
 			var wrapper = document.createElement('template');
-			wrapper.setAttribute('bb-repeat', node.getAttribute('bb-repeat'));
-			node.removeAttribute('bb-repeat');
-			['bb-if', 'bb-alias'].forEach(function(attr) {
+			wrapper.setAttribute(prefix + 'repeat', node.getAttribute(prefix + 'repeat'));
+			node.removeAttribute(prefix + 'repeat');
+			['if', 'alias'].map(addPrefix).forEach(function(attr) {
 				if (node.hasAttribute(attr)) {
 					wrapper.setAttribute(attr, node.getAttribute(attr));
 					node.removeAttribute(attr);
@@ -1297,10 +1328,10 @@ compile_works[Node.ELEMENT_NODE] = function(node, template) {
 			node = wrapper;
 		}
 	}
-	['bb-if', 'bb-alias', 'bb-text', 'bb-html', 'bb-repeat', 'bb-import', 'bb-attr', 'bb-class'].forEach(function(attr) {
+	['if', 'alias', 'text', 'html', 'repeat', 'import', 'attr', 'class'].map(addPrefix).forEach(function(attr) {
 		if (node.hasAttribute(attr)) {
-			var parsed = Barbiche.Parser.parse(node.getAttribute(attr));
-			node.setAttribute(attr, template.addClosure(parsed));
+			var parsed = Parser.parse(node.getAttribute(attr));
+			node.setAttribute(attr, template._addClosure(parsed));
 		}
 	});
 	if (node.nodeName == 'TEMPLATE') {
@@ -1313,7 +1344,6 @@ compile_works[Node.ELEMENT_NODE] = function(node, template) {
 }
 
 compile_works[Node.TEXT_NODE] = function(node, template) {
-	var re = /{{([^{}]*)}}|{{{([^{}]*)}}}|([^{}]+)/g;
 	var value = node.nodeValue;
 	var tokenFound = false;
 	var res;
@@ -1343,7 +1373,7 @@ compile_works[Node.TEXT_NODE] = function(node, template) {
 			var exp = accu.join('+');
 			if (exp) {
 				var t = document.createElement('template');
-				t.setAttribute('bb-text', exp);
+				t.setAttribute(prefix + 'text', exp);
 				node.before(t); compile(t, template);
 			}
 		}
@@ -1357,7 +1387,7 @@ compile_works[Node.TEXT_NODE] = function(node, template) {
 			} else {
 				resolve(accu);
 				var t = document.createElement('template');
-				t.setAttribute('bb-html', item.content);
+				t.setAttribute(prefix + 'html', item.content);
 				node.before(t); compile(t, template);
 				return [];
 			}
@@ -1372,7 +1402,7 @@ compile_works[Node.DOCUMENT_FRAGMENT_NODE] = function(node, template) {
 	Array.from(node.childNodes).forEach(function(child) {compile(child, template);});
 };
 
-Template.prototype.addClosure = (function() {
+Barbiche.prototype._addClosure = (function() {
 	var counter = 0;
 	return function(fun) {
 		counter++;
@@ -1382,7 +1412,7 @@ Template.prototype.addClosure = (function() {
 	};
 })();
 
-Template.prototype.compile = function() {
+Barbiche.prototype._compile = function() {
 	compile(this.node.content, this);
 	this.ready = true;
 	return this;
@@ -1392,62 +1422,63 @@ function compile(node, template) {
 	(compile_works[node.nodeType])(node, template);
 }
 
-Template.prototype.clone = function() {
-	if (!this.ready) this.compile();
-	var t = new Template();
+Barbiche.prototype._clone = function() {
+	if (!this.ready) this._compile();
+	var t = new Barbiche();
 	t.node = this.node.cloneNode(true);
 	t.closures = this.closures;
 	return t;
 }
 
-Template.prototype.merge = function(data, filters) {
-	var clone = this.clone();
-	context.init();
-	if (filters) context.push(filters);
-	context.push(data);
+Barbiche.prototype.merge = function() {
+	var clone = this._clone();
+	context.init(Array.from(arguments));
 	merge(clone.node.content, clone);
-	context.pop();
-	if (filters) context.pop();
+	context.init();
 	return clone.node.content;
 }
 
 var works = {};
 works[Node.ELEMENT_NODE] = function(node, template) {
-	var nodeContext = {_node_: node};
-	context.push(nodeContext);
-	if (node.hasAttribute('bb-if')) {
-		var val = (template.closures[node.getAttribute('bb-if')])().pop();
-		if (!val) {
-			context.pop();
-			return node.remove();
-		} else node.removeAttribute('bb-if');
+	var nodeContext = {};
+	var nodeContextPushed = false;
+	if (node.hasAttribute(prefix + 'if')) {
+		var val = (template.closures[node.getAttribute(prefix + 'if')])().pop();
+		if (!val) return node.remove();
+		else node.removeAttribute(prefix + 'if');
 	}
-	if (node.hasAttribute('bb-alias')) {
-		var parsed = (template.closures[node.getAttribute('bb-alias')])();
+	if (node.hasAttribute(prefix + 'alias')) {
+		var parsed = (template.closures[node.getAttribute(prefix + 'alias')])();
 		parsed.forEach(function(item) {
 			nodeContext[item.name] = item.val;
 		});
-		node.removeAttribute('bb-alias');
+		context.push(nodeContext);
+		nodeContextPushed = true;
+		node.removeAttribute(prefix + 'alias');
 	}
-	if (node.hasAttribute('bb-text')) {
-		var val = (template.closures[node.getAttribute('bb-text')])().pop();
+	if (node.hasAttribute(prefix + 'text')) {
+		var val = (template.closures[node.getAttribute(prefix + 'text')])().pop();
 		if (val !== undefined) {
 			node.replaceWith(val);
 		} else node.remove();
-	} else if (node.hasAttribute('bb-html')) {
-		var val = (template.closures[node.getAttribute('bb-html')])().pop();
+	} else if (node.hasAttribute(prefix + 'html')) {
+		var val = (template.closures[node.getAttribute(prefix + 'html')])().pop();
 		if (val !== undefined) {
 			var template = document.createElement('template');
 			template.innerHTML = val;
 			node.replaceWith(template.content);
 		} else node.remove();
 	} else if (node.nodeName == "TEMPLATE") {
-		if (node.hasAttribute('bb-repeat')) {
+		if (node.hasAttribute(prefix + 'repeat')) {
 			var closure = null;
-			if (node.hasAttribute('bb-import')) {
-				closure = template.closures[node.getAttribute('bb-import')];
+			if (node.hasAttribute(prefix + 'import')) {
+				closure = template.closures[node.getAttribute(prefix + 'import')];
 			}
-			var parsed = (template.closures[node.getAttribute('bb-repeat')])();
+			if (!nodeContextPushed) {
+				context.push(nodeContext);
+				nodeContextPushed = true;
+			}
+			var parsed = (template.closures[node.getAttribute(prefix + 'repeat')])();
 			//iterate on cartesian product of arrays:
 			(parsed.reduceRight(function(accu, task) {
 				var alias = task.name;
@@ -1460,21 +1491,21 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 					})
 				};
 			}, function() {
-				var target = closure && Template(closure().pop()).node;
+				var target = closure && Barbiche(closure().pop()).node;
 				var copy = (target || node).cloneNode(true);
 				node.before(merge(copy.content, template));
 			}))();
-		} else if (node.hasAttribute('bb-import')) {
-			var importId = (template.closures[node.getAttribute('bb-import')])().pop();
-			var clone = Template(importId).clone();
+		} else if (node.hasAttribute(prefix + 'import')) {
+			var importId = (template.closures[node.getAttribute(prefix + 'import')])().pop();
+			var clone = Barbiche(importId)._clone();
 			node.before(merge(clone.node.content, clone));
 		} else {
 			node.before(merge(node.content, template));
 		}
 		node.remove();
 	} else {
-		if (node.hasAttribute('bb-attr')) {
-			var parsed = (template.closures[node.getAttribute('bb-attr')])();
+		if (node.hasAttribute(prefix + 'attr')) {
+			var parsed = (template.closures[node.getAttribute(prefix + 'attr')])();
 			parsed.forEach(function(item) {
 				var val = item.val;
 				var name = item.name;
@@ -1483,10 +1514,10 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 					else node.removeAttribute(name);
 				}
 			});
-			node.removeAttribute('bb-attr');
+			node.removeAttribute(prefix + 'attr');
 		}
-		if (node.hasAttribute('bb-class')) {
-			var parsed = (template.closures[node.getAttribute('bb-class')])();
+		if (node.hasAttribute(prefix + 'class')) {
+			var parsed = (template.closures[node.getAttribute(prefix + 'class')])();
 			parsed.forEach(function(item) {
 				var val = item.val;
 				var name = item.name;
@@ -1495,11 +1526,11 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 					else node.classList.remove(name);
 				}
 			});
-			node.removeAttribute('bb-class');
+			node.removeAttribute(prefix + 'class');
 		}
 		Array.from(node.children).forEach(function(child) {merge(child, template);});
 	}
-	context.pop();
+	if (nodeContextPushed) context.pop();
 };
 
 works[Node.TEXT_NODE] = function(node, template) {};

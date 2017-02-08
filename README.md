@@ -22,7 +22,7 @@ We start with a simple template and a call to Barbiche:
 </template>
 ```
 ```js
-  Barbiche.Template('test').merge({
+  Barbiche('test').merge({
     "class": "list",
     "items": [
       {species: "hen", name: "Elsa", show: true},
@@ -98,7 +98,7 @@ Barbiche support subtemplating:
 </template>
 ```
 ```js
-Barbiche.Template('simple-sub').merge();
+Barbiche('simple-sub').merge();
 ```
 will produce:
 ```html
@@ -121,7 +121,7 @@ Subtemplate import is dynamic:
 </template>
 ```
 ```js
-Barbiche.Template('dynamic-sub-template').merge({
+Barbiche('dynamic-sub-template').merge({
 	items: ['sub2', 'sub1']
 })
 ```
@@ -139,16 +139,14 @@ Recursion is also supported:
 </template>
 <template id="recursive-sub">
 	<ul>
-		<template bb-repeat="children:'child'">
-			<li>{{child.name}}
-				<template bb-if="child.children" bb-alias="child.children:'children'" bb-import="'recursive-sub'"></template>
-			</li>
-		</template>
+		<li bb-repeat="children:'child'">{{child.name}}
+			<template bb-if="child.children" bb-alias="child.children:'children'" bb-import="'recursive-sub'"></template>
+		</li>
 	</ul>
 </template>
 ```
 ```js
-Barbiche.Template('recursive').merge({
+Barbiche('recursive').merge({
 	children: [
 		{
 			name: "Solomon",
