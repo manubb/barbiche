@@ -1,5 +1,5 @@
 // Barbiche
-// version: 0.0.7
+// version: 0.1.0
 // author: Manuel Baclet <manuel@eda.sarl>
 // license: MIT
 
@@ -14,12 +14,12 @@ var context = {
 
 context.resolve = function(identifier) {
 	var m = this.stack.length - 1;
-	var val;
-	while (val == undefined && m >= 0) {
-		val = this.stack[m][identifier];
+	var value;
+	while (value == undefined && m >= 0) {
+		value = this.stack[m][identifier];
 		m--;
 	}
-	return (val == undefined) ? window[identifier] : val;
+	return (value == undefined) ? window[identifier] : value;
 };
 
 context.init = function(arr) {
@@ -219,29 +219,29 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 	var nodeContext = {};
 	var nodeContextPushed = false;
 	if (node.hasAttribute(prefix + 'if')) {
-		var val = (template.closures[node.getAttribute(prefix + 'if')])().pop();
-		if (!val) return node.remove();
-		else node.removeAttribute(prefix + 'if');
+		var value = (template.closures[node.getAttribute(prefix + 'if')])();
+		if (value) node.removeAttribute(prefix + 'if');
+		else return node.remove();
 	}
 	if (node.hasAttribute(prefix + 'alias')) {
 		var parsed = (template.closures[node.getAttribute(prefix + 'alias')])();
 		parsed.forEach(function(item) {
-			nodeContext[item.name] = item.val;
+			nodeContext[item.name] = item.value;
 		});
 		context.push(nodeContext);
 		nodeContextPushed = true;
 		node.removeAttribute(prefix + 'alias');
 	}
 	if (node.hasAttribute(prefix + 'text')) {
-		var val = (template.closures[node.getAttribute(prefix + 'text')])().pop();
-		if (val !== undefined) {
-			node.replaceWith(val);
+		var value = (template.closures[node.getAttribute(prefix + 'text')])();
+		if (value !== undefined) {
+			node.replaceWith(value);
 		} else node.remove();
 	} else if (node.hasAttribute(prefix + 'html')) {
-		var val = (template.closures[node.getAttribute(prefix + 'html')])().pop();
-		if (val !== undefined) {
+		var value = (template.closures[node.getAttribute(prefix + 'html')])();
+		if (value !== undefined) {
 			var template = document.createElement('template');
-			template.innerHTML = val;
+			template.innerHTML = value;
 			node.replaceWith(template.content);
 		} else node.remove();
 	} else if (node.nodeName == "TEMPLATE") {
@@ -255,24 +255,25 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 				nodeContextPushed = true;
 			}
 			var parsed = (template.closures[node.getAttribute(prefix + 'repeat')])();
+			var order = parsed.order || 'before';
 			//iterate on cartesian product of arrays:
 			(parsed.reduceRight(function(accu, task) {
 				var alias = task.name;
-				var val = task.val;
+				var value = task.value;
 				return function() {
-					val.forEach(function(item, index) {
-						nodeContext[alias] = val[index];
+					value.forEach(function(item, index) {
+						nodeContext[alias] = value[index];
 						nodeContext['_' + alias + '_'] = index;
 						accu();
 					})
 				};
 			}, function() {
-				var target = closure && Barbiche(closure().pop()).node;
+				var target = closure && Barbiche(closure()).node;
 				var copy = (target || node).cloneNode(true);
-				node.before(merge(copy.content, template));
+				node[order](merge(copy.content, template));
 			}))();
 		} else if (node.hasAttribute(prefix + 'import')) {
-			var importId = (template.closures[node.getAttribute(prefix + 'import')])().pop();
+			var importId = (template.closures[node.getAttribute(prefix + 'import')])();
 			var clone = Barbiche(importId)._clone();
 			node.before(merge(clone.node.content, clone));
 		} else {
@@ -283,10 +284,10 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 		if (node.hasAttribute(prefix + 'attr')) {
 			var parsed = (template.closures[node.getAttribute(prefix + 'attr')])();
 			parsed.forEach(function(item) {
-				var val = item.val;
+				var value = item.value;
 				var name = item.name;
 				if (name) {
-					if (val != undefined) node.setAttribute(name, val);
+					if (value != undefined) node.setAttribute(name, value);
 					else node.removeAttribute(name);
 				}
 			});
@@ -295,10 +296,10 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 		if (node.hasAttribute(prefix + 'class')) {
 			var parsed = (template.closures[node.getAttribute(prefix + 'class')])();
 			parsed.forEach(function(item) {
-				var val = item.val;
+				var value = item.value;
 				var name = item.name;
 				if (name) {
-					if (val) node.classList.add(name);
+					if (value) node.classList.add(name);
 					else node.classList.remove(name);
 				}
 			});
