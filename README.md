@@ -110,7 +110,7 @@ Some examples of `bb-if` attributes:
 
 Some examples of `bb-alias` attributes:
 ```html
-<div bb-alias="[JSON.stringify(obj):'str1'; obj.prop:'str2']">...</div>
+<div bb-alias="[JSON.stringify(obj):'str1', obj.prop:'str2']">...</div>
 <div bb-alias="[logo.resources.link[0]:'link']">...</div>
 ```
 In the first line, the value of `JSON.stringify(obj)` is bound to `str1` identifier and the value of `obj.prop` to `str2`.
