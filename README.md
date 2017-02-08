@@ -43,9 +43,21 @@ We get:
 	<span>HEN, CAT, DOG, SPIDER</span>
 </div>
 ```
+
+## Browser support
+
+Barbiche requires support of `<template>` tag, `Array.from` static method and some DOM convenience methods (currently `childNode.before`, `childNode.after`, `childNode.replaceWith`, `childNode.remove` and `element.classList` api). Early but not so simple tests show that properly polyfilled, Barbiche can be used with:
+
+* Chrome >= 15 (no test with previous releases)
+* Firefox >= 20
+* Internet Explorer >=9
+* Opera >=11.6
+* Safari >=5.1
+
+
 ## API
 ### Common usage
-Barbiche constructor expects the node id of a `<template>` element or a `<template>` element:
+Barbiche constructor expects the id string of a `<template>` element or a `<template>` element:
 ```js
 Barbiche('my-template');
 // or
@@ -74,17 +86,27 @@ For example, in `Barbiche('my-template').merge(obj1, obj2, obj3)`, you can consi
 
 This is currently secret.
 
-## Browser support
+## Template description
 
-Barbiche requires support of `<template>` tag, `Array.from` static method and some DOM convenience methods (currently `childNode.before`, `childNode.after`, `childNode.replaceWith`, `childNode.remove` and `element.classList` api). Early but not so simple tests show that properly polyfilled, Barbiche can be used with:
+### `<template>` element
+Barbiche heavily relies on the great properties of the `<template>` element. An essential point of Barbiche is that you can wrap any html fragment of the template in a `<template>` tag without changing the merge result. For example, the template:
+```html
+<template id="test">
+	<div bb-class="[true: customClass]">
+		<template>
+			<ul>
+				<template bb-repeat="[items: 'item']">
+					<li bb-if="item.show" bb-class="[true: item.species || 'unknown']">{{item.name}}</li>
+				</template>
+			</ul>
+			<span>{{item.join(', ').toUpperCase()}}</span>
+		</template>
+	</div>
+</template>
+```
+and the template of the Quick start section would always produce the same merge result. One day or the other, you will want to set a Barbiche attribute in-between an element and its parent: just wrap the element in a `<template>` tag and set the attribute on this tag.
 
-* Chrome >= 15 (no test with previous releases)
-* Firefox >= 20
-* Internet Explorer >=9
-* Opera >=11.6
-* Safari >=5.1
-
-## Attributes
+### Attributes
 
 Barbiche templates are decorated with special attributes which are resolved in this order:
 
@@ -96,6 +118,8 @@ Barbiche templates are decorated with special attributes which are resolved in t
 6. `bb-import` for importing a subtemplate
 7. `bb-attr` for setting attributes on current node
 8. `bb-class` for setting classes on current node
+
+Attributes `bb-if` resolve to boolean values, `bb-text`, `bb-html`, `bb-import` to string values and `bb-alias`, `bb-repeat`, `bb-attr` and `bb-class` to arrays that contain object with properties `name` and `value`.
 
 ### `bb-if`
 `bb-if` attribute resolves to a boolean value. If false, the decorated node (and its subtree) is removed. Supported operators are: `||`, `&&`, `!`, `==`, `!=`, `<`, `>`, `<=`, `>=`. This can be extended with custom filters.
@@ -115,7 +139,7 @@ Some examples of `bb-alias` attributes:
 ```
 In the first line, the value of `JSON.stringify(obj)` is bound to `str1` identifier and the value of `obj.prop` to `str2`.
 
-## Subtemplates
+### Subtemplates
 
 Barbiche supports subtemplating:
 ```html
