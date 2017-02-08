@@ -1,6 +1,6 @@
 # Barbiche - Template engine for DOM &amp; JS
 
-Barbiche is a logic-full template engine for browser environment. It is currently alpha and should be used only for testing as syntactic changes are very likely to happen.
+Barbiche is a logic-full template engine for browser environment. It is currently ~~alpha and should be used only for testing as syntactic changes are very likely to happen~~ beta and syntactic changes are less likely to happen.
 
 Source code is clean, readable and short (around 600 lines parser included).
 
@@ -11,10 +11,10 @@ See Barbiche live examples [here](http://htmlpreview.github.io/?https://github.c
 We start with a simple template and a call to Barbiche:
 ```html
 <template id="test">
-	<div bb-class="true: customClass">
+	<div bb-class="[true: customClass]">
 		<ul>
-			<template bb-repeat="items:'item'">
-				<li bb-if="item.show" bb-class="true: item.species || 'unknown'">{{item.name}}</li>
+			<template bb-repeat="[items:'item']">
+				<li bb-if="item.show" bb-class="[true: item.species || 'unknown']">{{item.name}}</li>
 			</template>
 		</ul>
 		<span>{{item.join(', ').toUpperCase()}}</span>
@@ -63,7 +63,7 @@ Merging data into a Barbiche instance is done in this way:
 ```js
 Barbiche('my-template').merge(obj1, obj2, obj3,...);
 ```
-This returns a DocumentFragment that can be inserted in the main document. The arguments of `merge` method are used to init the merge context: when Barbiche is looking for the value of an identifier, it searches first in `obj1`, then in `obj2`,..., then in `window`. 
+This returns a DocumentFragment that can be inserted in the main document. The arguments of `merge` method are used to init the merge context: when Barbiche is looking for the value of an identifier, it searches first in `obj1`, then in `obj2`,..., then in `window`.
 
 For example, in `Barbiche('my-template').merge(obj1, obj2, obj3)`, you can consider that:
 * `obj1` is a plain JSON object that comes from your database
@@ -73,10 +73,10 @@ For example, in `Barbiche('my-template').merge(obj1, obj2, obj3)`, you can consi
 ### Settings
 
 This is currently secret.
-	
+
 ## Browser support
 
-Barbiche requires support of `<template>` tag, `Array.from` static method and some DOM convenience methods (currently `childNode.before`, `childNode.replaceWith`, `childNode.remove` and `element.classList` api). Early but not so simple tests show that properly polyfilled, Barbiche can be used with:
+Barbiche requires support of `<template>` tag, `Array.from` static method and some DOM convenience methods (currently `childNode.before`, `childNode.after`, `childNode.replaceWith`, `childNode.remove` and `element.classList` api). Early but not so simple tests show that properly polyfilled, Barbiche can be used with:
 
 * Chrome >= 15 (no test with previous releases)
 * Firefox >= 20
@@ -106,12 +106,12 @@ Some examples of `bb-if` attributes:
 <div bb-if="my_filter(obj.items[2], obj.other.another) && species == 'hen'">...</div>
 ```
 ### `bb-alias`
-`bb-alias` attribute resolves to an array of objects that have properties `name` and `val`. For each item of the array, `val` is bound to `name` during the processing of the current subtree.
+`bb-alias` attribute resolves to an array of objects that have properties `name` and `value`. For each item of the array, `value` is bound to `name` during the processing of the current subtree.
 
 Some examples of `bb-alias` attributes:
 ```html
-<div bb-alias="JSON.stringify(obj):'str1'; obj.prop:'str2'">...</div>
-<div bb-alias="logo.resources.link[0]:'link'">...</div>
+<div bb-alias="[JSON.stringify(obj):'str1'; obj.prop:'str2']">...</div>
+<div bb-alias="[logo.resources.link[0]:'link']">...</div>
 ```
 In the first line, the value of `JSON.stringify(obj)` is bound to `str1` identifier and the value of `obj.prop` to `str2`.
 
@@ -129,7 +129,7 @@ Barbiche supports subtemplating:
 </template>
 ```
 ```js
-Barbiche('simple-sub').merge()
+Barbiche('simple-sub').merge();
 ```
 will produce:
 ```html
@@ -141,7 +141,7 @@ Subtemplate import is dynamic:
 ```html
 <template id="dynamic-subtemplate">
 	<div>
-		<template bb-repeat="items:'item'" bb-import="item"></template>
+		<template bb-repeat="[items:'item']" bb-import="item"></template>
 	</div>
 </template>
 <template id="sub1">
@@ -170,8 +170,8 @@ Recursion is also supported:
 </template>
 <template id="recursive-sub">
 	<ul>
-		<li bb-repeat="children:'child'">{{child.name}}
-			<template bb-if="child.children" bb-alias="child.children:'children'"
+		<li bb-repeat="[children:'child']">{{child.name}}
+			<template bb-if="child.children" bb-alias="[child.children:'children']"
 				bb-import="'recursive-sub'"></template>
 		</li>
 	</ul>
