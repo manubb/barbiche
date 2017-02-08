@@ -10,39 +10,39 @@
 	<template id="test">
 		<div bb-class="[true: class]">
 			<ul>
-				<template bb-repeat="[items:'item']">
+				<template bb-repeat="[items: 'item']">
 					<li bb-if="item.show" bb-class="[true: item.species || 'unknown']">{{item.name}}</li>
 				</template>
 			</ul>
 			<span>{{item.join(', ').toUpperCase()}}</span>
 		</div>
 	</template>
-	<template id="simple-sub-template">
+	<template id="simple-subtemplate">
 		<div>
-			<template bb-import="'sub-template1'"></template>
+			<template bb-import="'sub'"></template>
 		</div>
 	</template>
-	<template id="sub-template1">
-		<span>I am a sub-template!</span>
+	<template id="sub">
+		<span>I am a subtemplate!</span>
 	</template>
-	<template id="dynamic-sub-template">
+	<template id="dynamic-subtemplate">
 		<div>
-			<template bb-repeat="[items:'item']" bb-import="item"></template>
+			<template bb-repeat="[items: 'item']" bb-import="item"></template>
 		</div>
 	</template>
 	<template id="sub1">
-		<span>I am sub-template1!</span>
+		<span>I am subtemplate1!</span>
 	</template>
 	<template id="sub2">
-		<span>I am sub-template2!</span>
+		<span>I am subtemplate2!</span>
 	</template>
 	<template id="recursive">
 		<template bb-if="children.length" bb-import="'recursive-sub'"></template>
 	</template>
 	<template id="recursive-sub">
 		<ul>
-			<li bb-repeat="[children:'child']">{{child.name}}
-				<template bb-if="child.children" bb-alias="[child.children:'children']" bb-import="'recursive-sub'"></template>
+			<li bb-repeat="[children: 'child']">{{child.name}}
+				<template bb-if="child.children" bb-alias="[child.children: 'children']" bb-import="'recursive-sub'"></template>
 			</li>
 		</ul>
 	</template>
@@ -57,8 +57,8 @@
 				],
 				item: ["hen", "cat", "dog", "spider"]
 			}));
-			document.body.appendChild(Barbiche('simple-sub-template').merge());
-			document.body.appendChild(Barbiche('dynamic-sub-template').merge({
+			document.body.appendChild(Barbiche('simple-subtemplate').merge());
+			document.body.appendChild(Barbiche('dynamic-subtemplate').merge({
 				items: ['sub2', 'sub1']
 			}));
 			document.body.appendChild(Barbiche('recursive').merge({

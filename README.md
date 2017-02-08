@@ -13,7 +13,7 @@ We start with a simple template and a call to Barbiche:
 <template id="test">
 	<div bb-class="[true: customClass]">
 		<ul>
-			<template bb-repeat="[items:'item']">
+			<template bb-repeat="[items: 'item']">
 				<li bb-if="item.show" bb-class="[true: item.species || 'unknown']">{{item.name}}</li>
 			</template>
 		</ul>
@@ -110,8 +110,8 @@ Some examples of `bb-if` attributes:
 
 Some examples of `bb-alias` attributes:
 ```html
-<div bb-alias="[JSON.stringify(obj):'str1', obj.prop:'str2']">...</div>
-<div bb-alias="[logo.resources.link[0]:'link']">...</div>
+<div bb-alias="[JSON.stringify(obj): 'str1', obj.prop: 'str2']">...</div>
+<div bb-alias="[logo.resources.link[0]: 'link']">...</div>
 ```
 In the first line, the value of `JSON.stringify(obj)` is bound to `str1` identifier and the value of `obj.prop` to `str2`.
 
@@ -119,7 +119,7 @@ In the first line, the value of `JSON.stringify(obj)` is bound to `str1` identif
 
 Barbiche supports subtemplating:
 ```html
-<template id="simple-sub">
+<template id="simple-subtemplate">
 	<div>
 		<template bb-import="'sub'"></template>
 	</div>
@@ -129,7 +129,7 @@ Barbiche supports subtemplating:
 </template>
 ```
 ```js
-Barbiche('simple-sub').merge();
+Barbiche('simple-subtemplate').merge();
 ```
 will produce:
 ```html
@@ -141,7 +141,7 @@ Subtemplate import is dynamic:
 ```html
 <template id="dynamic-subtemplate">
 	<div>
-		<template bb-repeat="[items:'item']" bb-import="item"></template>
+		<template bb-repeat="[items: 'item']" bb-import="item"></template>
 	</div>
 </template>
 <template id="sub1">
@@ -170,8 +170,8 @@ Recursion is also supported:
 </template>
 <template id="recursive-sub">
 	<ul>
-		<li bb-repeat="[children:'child']">{{child.name}}
-			<template bb-if="child.children" bb-alias="[child.children:'children']"
+		<li bb-repeat="[children: 'child']">{{child.name}}
+			<template bb-if="child.children" bb-alias="[child.children: 'children']"
 				bb-import="'recursive-sub'"></template>
 		</li>
 	</ul>
