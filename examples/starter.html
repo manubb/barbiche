@@ -3,8 +3,8 @@
 <head>
 	<title>Simple Barbiche examples</title>
 	<meta charset="utf-8">
-	<script type="text/javascript" src="https://cdn.rawgit.com/manubb/barbiche/00850998/examples/js/polyfill.min.js"></script>
-	<script type="text/javascript" src="https://cdn.rawgit.com/manubb/barbiche/00850998/barbiche.js"></script>
+	<script type="text/javascript" src="https://cdn.rawgit.com/manubb/barbiche/c334924b/examples/js/polyfill.min.js"></script>
+	<script type="text/javascript" src="https://cdn.rawgit.com/manubb/barbiche/c334924b/barbiche.js"></script>
 </head>
 <body>
 	<template id="test">
@@ -41,16 +41,14 @@
 	</template>
 	<template id="recursive-sub">
 		<ul>
-			<template bb-repeat="children:'child'">
-				<li>{{child.name}}
-					<template bb-if="child.children" bb-alias="child.children:'children'" bb-import="'recursive-sub'"></template>
-				</li>
-			</template>
+			<li bb-repeat="children:'child'">{{child.name}}
+				<template bb-if="child.children" bb-alias="child.children:'children'" bb-import="'recursive-sub'"></template>
+			</li>
 		</ul>
 	</template>
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {
-			document.body.appendChild(Barbiche.Template('test').merge({
+			document.body.appendChild(Barbiche('test').merge({
 				"class": "list",
 				"items": [
 					{species: "hen", name: "Elsa", show: true},
@@ -59,11 +57,11 @@
 				],
 				item: ["hen", "cat", "dog", "spider"]
 			}));
-			document.body.appendChild(Barbiche.Template('simple-sub-template').merge());
-			document.body.appendChild(Barbiche.Template('dynamic-sub-template').merge({
+			document.body.appendChild(Barbiche('simple-sub-template').merge());
+			document.body.appendChild(Barbiche('dynamic-sub-template').merge({
 				items: ['sub2', 'sub1']
 			}));
-			document.body.appendChild(Barbiche.Template('recursive').merge({
+			document.body.appendChild(Barbiche('recursive').merge({
 				children: [
 					{
 						name: "Solomon",
