@@ -140,7 +140,8 @@ Recursion is also supported:
 <template id="recursive-sub">
 	<ul>
 		<li bb-repeat="children:'child'">{{child.name}}
-			<template bb-if="child.children" bb-alias="child.children:'children'" bb-import="'recursive-sub'"></template>
+			<template bb-if="child.children" bb-alias="child.children:'children'"
+				bb-import="'recursive-sub'"></template>
 		</li>
 	</ul>
 </template>
