@@ -8,10 +8,10 @@
 </head>
 <body>
 	<template id="test">
-		<div bb-class="true: class">
+		<div bb-class="[true: class]">
 			<ul>
-				<template bb-repeat="items:'item'">
-					<li bb-if="item.show" bb-class="true: item.species || 'unknown'">{{item.name}}</li>
+				<template bb-repeat="[items:'item']">
+					<li bb-if="item.show" bb-class="[true: item.species || 'unknown']">{{item.name}}</li>
 				</template>
 			</ul>
 			<span>{{item.join(', ').toUpperCase()}}</span>
@@ -27,7 +27,7 @@
 	</template>
 	<template id="dynamic-sub-template">
 		<div>
-			<template bb-repeat="items:'item'" bb-import="item"></template>
+			<template bb-repeat="[items:'item']" bb-import="item"></template>
 		</div>
 	</template>
 	<template id="sub1">
@@ -41,8 +41,8 @@
 	</template>
 	<template id="recursive-sub">
 		<ul>
-			<li bb-repeat="children:'child'">{{child.name}}
-				<template bb-if="child.children" bb-alias="child.children:'children'" bb-import="'recursive-sub'"></template>
+			<li bb-repeat="[children:'child']">{{child.name}}
+				<template bb-if="child.children" bb-alias="[child.children:'children']" bb-import="'recursive-sub'"></template>
 			</li>
 		</ul>
 	</template>
