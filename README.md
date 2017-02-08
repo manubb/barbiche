@@ -18,6 +18,7 @@ We start with a simple template and a call to Barbiche:
 			</template>
 		</ul>
 		<span>{{item.join(', ').toUpperCase()}}</span>
+		{{{some_html}}}
 	</div>
 </template>
 ```
@@ -29,7 +30,8 @@ We start with a simple template and a call to Barbiche:
       {species: "cat", name: "Jacynthe", show: false},
       {species: null, name: "Zaza", show: true}
     ],
-    item: ["hen", "cat", "dog", "spider"]
+    item: ["hen", "cat", "dog", "spider"],
+    some_html: "<div><p>This is</p><p>some HTML.</p></div>"
   });
 ```
 
@@ -41,6 +43,7 @@ We get:
 		<li class="unknown">Zaza</li>
 	</ul>
 	<span>HEN, CAT, DOG, SPIDER</span>
+	<div><p>This is</p><p>some HTML.</p></div>
 </div>
 ```
 
@@ -88,8 +91,8 @@ This is currently secret.
 
 ## Template description
 
-### `<template>` element
-Barbiche heavily relies on the great properties of the `<template>` element. An essential point of Barbiche is that you can wrap any html fragment of the template in a `<template>` tag without changing the merge result. One day or the other, you will want to set a Barbiche attribute in-between an element and its parent: just wrap the element in a `<template>` tag and set the attribute on this tag.
+### `<template>`
+Barbiche heavily relies on the great properties of the `<template>` element. An essential point of Barbiche is that you can wrap any html fragment of the template in a `<template>` element without changing the merge result. One day or the other, you will want to set a Barbiche attribute between an element and its parent: just wrap the element in a `<template>` tag and set the attribute on this tag.
 
 ### Attributes
 
@@ -104,8 +107,6 @@ Barbiche templates are decorated with special attributes which are evaluated in 
 7. `bb-attr`
 8. `bb-class`
 
-Attributes `bb-if` resolve to boolean values, `bb-text`, `bb-html`, `bb-import` to string values and `bb-alias`, `bb-repeat`, `bb-attr` and `bb-class` to arrays that contain object with properties `name` and `value`.
-
 #### `bb-if`
 A `bb-if` attribute resolves to a boolean value. If false, the decorated node (and its subtree) is removed. Supported operators are: `||`, `&&`, `!`, `==`, `!=`, `<`, `>`, `<=`, `>=`.
 
@@ -114,7 +115,7 @@ Some examples of `bb-if` attributes:
 <div bb-if="children.length >= 4 || species != 'cat'">...</div>
 <span bb-if="my_crazy_filter(obj.items[2], obj.other.another)">...</span>
 ```
-### `bb-alias`
+#### `bb-alias`
 A `bb-alias` attribute resolves to an array of objects that have properties `name` and `value`. For each item of the array, `value` is bound to `name` during the processing of the current subtree.
 
 Some examples of `bb-alias` attributes:
@@ -124,11 +125,14 @@ Some examples of `bb-alias` attributes:
 ```
 In the first line, the value of `JSON.stringify(obj)` is bound to `str1` identifier and the value of `obj.prop` to `str2`.
 
-### `bb-text`
+#### `bb-text`
 This attribute is reserved to `<template>` element. A `bb-text` attribute resolves to a string `str`. The node that has the attribute (and its subtree) is replaced by a text node which has content `str`. For your convenience, you can use à la mustache expressions `{{string_exp}}`.
 
-### `bb-html`
-This attribute is reserved to `<template>` element. A `bb-html` attribute resolves to a string `str`. The node that has the attribute (and its subtree) is replaced by the fragment has `str` as html. For your convenience, you can use à la mustache expressions `{{{string_exp}}}`.
+#### `bb-html`
+This attribute is reserved to `<template>` element. A `bb-html` attribute resolves to a string `str`. The node that has the attribute (and its subtree) is replaced by the fragment that has `str` as html. For your convenience, you can use à la mustache expressions `{{{string_exp}}}`.
+
+#### `bb-repeat`
+A `bb-repeat="[arr1: var1, arr2: var2,...]"` attribute, where `arr1`, `arr2`,... are arrays, `var1`, `var2`,... are strings, defines nested loops.
 
 ### Subtemplates
 
