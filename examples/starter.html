@@ -8,13 +8,14 @@
 </head>
 <body>
 	<template id="test">
-		<div bb-class="[true: class]">
-			<ul>
+		<div bb-class="[true: customClass]">
+			<ul bb-attr="[my_replace(attrValue): 'myAttr']">
 				<template bb-repeat="[items: 'item']">
-					<li bb-if="item.show" bb-class="[true: item.species || 'unknown']">{{item.name}}</li>
+					<li bb-if="item.show" bb-class="[true: item.species || 'unknown', _item_ <= 1: 'first']">{{item.name}}</li>
 				</template>
 			</ul>
 			<span>{{item.join(', ').toUpperCase()}}</span>
+			{{{some_html}}}
 		</div>
 	</template>
 	<template id="simple-subtemplate">
@@ -49,13 +50,16 @@
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {
 			document.body.appendChild(Barbiche('test').merge({
-				"class": "list",
+				"customClass": "list",
 				"items": [
 					{species: "hen", name: "Elsa", show: true},
 					{species: "cat", name: "Jacynthe", show: false},
 					{species: null, name: "Zaza", show: true}
 				],
-				item: ["hen", "cat", "dog", "spider"]
+				item: ["hen", "cat", "dog", "spider"],
+		    some_html: "<div><p>This is...</p><p>...some HTML.</p></div>",
+		   	my_replace: function(str) {return str.replace(/o/g, "O");},
+				attrValue: "poipoi"
 			}));
 			document.body.appendChild(Barbiche('simple-subtemplate').merge());
 			document.body.appendChild(Barbiche('dynamic-subtemplate').merge({
