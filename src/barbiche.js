@@ -15,11 +15,11 @@ var context = {
 context.resolve = function(identifier) {
 	var m = this.stack.length - 1;
 	var value;
-	while (value == undefined && m >= 0) {
+	while (value === undefined && m >= 0) {
 		value = this.stack[m][identifier];
 		m--;
 	}
-	return (value == undefined) ? window[identifier] : value;
+	return (value === undefined) ? window[identifier] : value;
 };
 
 context.init = function(arr) {
