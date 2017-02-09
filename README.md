@@ -14,10 +14,7 @@ We start with a simple template and a call to Barbiche:
 	<div bb-class="[true: customClass]">
 		<ul bb-attr="[my_replace(attrValue): 'myAttr']">
 			<template bb-repeat="[items: 'item']">
-				<li bb-if="item.show" 
-				  bb-class="[true: item.species || 'unknown', _item_ <= 1: 'first']">
-				  {{item.name}}
-				</li>
+				<li bb-if="item.show" bb-class="[true: item.species || 'unknown', _item_ <= 1: 'first']">{{item.name}} (index: {{_item_}})</li>
 			</template>
 		</ul>
 		<span>{{item.join(', ').toUpperCase()}}</span>
@@ -44,8 +41,8 @@ We get:
 ```html
 <div class="list">
 	<ul myattr="pOipOi">
-		<li class="hen first">Elsa</li>
-		<li class="unknown">Zaza</li>
+		<li class="hen first">Elsa (index: 0)</li>
+		<li class="unknown">Zaza (index: 2)</li>
 	</ul>
 	<span>HEN, CAT, DOG, SPIDER</span>
 	<div><p>This is...</p><p>...some HTML.</p></div>
