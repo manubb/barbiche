@@ -287,7 +287,7 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 				var value = item.value;
 				var name = item.name;
 				if (name) {
-					if (value != undefined) node.setAttribute(name, value);
+					if (typeof value == "string") node.setAttribute(name, value);
 					else node.removeAttribute(name);
 				}
 			});
