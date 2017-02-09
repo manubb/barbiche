@@ -12,9 +12,12 @@ We start with a simple template and a call to Barbiche:
 ```html
 <template id="test">
 	<div bb-class="[true: customClass]">
-		<ul>
+		<ul bb-attr="[my_replace(attrValue): 'myAttr']">
 			<template bb-repeat="[items: 'item']">
-				<li bb-if="item.show" bb-class="[true: item.species || 'unknown']">{{item.name}}</li>
+				<li bb-if="item.show" 
+				  bb-class="[true: item.species || 'unknown', _item_ <= 1: 'first']">
+				  {{item.name}}
+				</li>
 			</template>
 		</ul>
 		<span>{{item.join(', ').toUpperCase()}}</span>
@@ -31,19 +34,21 @@ We start with a simple template and a call to Barbiche:
       {species: null, name: "Zaza", show: true}
     ],
     item: ["hen", "cat", "dog", "spider"],
-    some_html: "<div><p>This is</p><p>some HTML.</p></div>"
+    some_html: "<div><p>This is...</p><p>...some HTML.</p></div>",
+    my_replace: function(str) {return str.replace(/o/g, "O");},
+    attrValue: "poipoi"
   });
 ```
 
 We get:
 ```html
 <div class="list">
-	<ul>
-		<li class="hen">Elsa</li>
+	<ul myattr="pOipOi">
+		<li class="hen first">Elsa</li>
 		<li class="unknown">Zaza</li>
 	</ul>
 	<span>HEN, CAT, DOG, SPIDER</span>
-	<div><p>This is</p><p>some HTML.</p></div>
+	<div><p>This is...</p><p>...some HTML.</p></div>
 </div>
 ```
 
