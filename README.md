@@ -34,7 +34,7 @@ We start with a simple template and a call to Barbiche:
       {species: null, name: "Zaza", show: true}
     ],
     item: ["hen", "cat", "dog", "spider"],
-    some_html: "<div><p>This is</p><p>some HTML.</p></div>",
+    some_html: "<div><p>This is...</p><p>...some HTML.</p></div>",
     my_replace: function(str) {return str.replace(/o/g, "O");},
     attrValue: "poipoi"
   });
@@ -48,7 +48,7 @@ We get:
 		<li class="unknown">Zaza</li>
 	</ul>
 	<span>HEN, CAT, DOG, SPIDER</span>
-	<div><p>This is</p><p>some HTML.</p></div>
+	<div><p>This is...</p><p>...some HTML.</p></div>
 </div>
 ```
 
