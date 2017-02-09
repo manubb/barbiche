@@ -104,12 +104,17 @@ compile_works[Node.ELEMENT_NODE] = function(node, template) {
 			node = wrapper;
 		}
 	}
-	['if', 'alias', 'text', 'html', 'repeat', 'import', 'attr', 'class'].map(addPrefix).forEach(function(attr) {
-		if (node.hasAttribute(attr)) {
-			var parsed = Parser.parse(node.getAttribute(attr));
-			node.setAttribute(attr, template._addClosure(parsed));
+	var bbAttrs = {};
+	var attrFound = false;
+	['if', 'alias', 'text', 'html', 'repeat', 'import', 'attr', 'class'].forEach(function(attr) {
+		if (node.hasAttribute(prefix + attr)) {
+			attrFound = true;
+			var parsed = Parser.parse(node.getAttribute(prefix + attr));
+			bbAttrs[attr] = template._addClosure(parsed);
+			node.removeAttribute(prefix + attr);
 		}
 	});
+	if (attrFound) node.setAttribute(prefix + 'global', JSON.stringify(bbAttrs));
 	if (node.nodeName == 'TEMPLATE') {
 		compile(node.content, template);
 	} else {
@@ -218,43 +223,47 @@ var works = {};
 works[Node.ELEMENT_NODE] = function(node, template) {
 	var nodeContext = {};
 	var nodeContextPushed = false;
-	if (node.hasAttribute(prefix + 'if')) {
-		var value = (template.closures[node.getAttribute(prefix + 'if')])();
-		if (value) node.removeAttribute(prefix + 'if');
-		else return node.remove();
+	var bbAttrs;
+	if (node.hasAttribute(prefix + 'global')) {
+		bbAttrs = JSON.parse(node.getAttribute(prefix + 'global'));
+		node.removeAttribute(prefix + 'global');
 	}
-	if (node.hasAttribute(prefix + 'alias')) {
-		var parsed = (template.closures[node.getAttribute(prefix + 'alias')])();
+	bbAttrs = bbAttrs || {};
+	if (bbAttrs.if) {
+		var value = (template.closures[bbAttrs.if])();
+		if (!value) return node.remove();
+	}
+	if (bbAttrs.alias) {
+		var parsed = (template.closures[bbAttrs.alias])();
 		parsed.forEach(function(item) {
 			nodeContext[item.name] = item.value;
 		});
 		context.push(nodeContext);
 		nodeContextPushed = true;
-		node.removeAttribute(prefix + 'alias');
 	}
-	if (node.hasAttribute(prefix + 'text')) {
-		var value = (template.closures[node.getAttribute(prefix + 'text')])();
+	if (bbAttrs.text) {
+		var value = (template.closures[bbAttrs.text])();
 		if (value !== undefined) {
 			node.replaceWith(value);
 		} else node.remove();
-	} else if (node.hasAttribute(prefix + 'html')) {
-		var value = (template.closures[node.getAttribute(prefix + 'html')])();
+	} else if (bbAttrs.html) {
+		var value = (template.closures[bbAttrs.html])();
 		if (value !== undefined) {
 			var template = document.createElement('template');
 			template.innerHTML = value;
 			node.replaceWith(template.content);
 		} else node.remove();
 	} else if (node.nodeName == "TEMPLATE") {
-		if (node.hasAttribute(prefix + 'repeat')) {
-			var closure = null;
-			if (node.hasAttribute(prefix + 'import')) {
-				closure = template.closures[node.getAttribute(prefix + 'import')];
+		if (bbAttrs.repeat) {
+			var closure;
+			if (bbAttrs.import) {
+				closure = template.closures[bbAttrs.import];
 			}
 			if (!nodeContextPushed) {
 				context.push(nodeContext);
 				nodeContextPushed = true;
 			}
-			var parsed = (template.closures[node.getAttribute(prefix + 'repeat')])();
+			var parsed = (template.closures[bbAttrs.repeat])();
 			var order = parsed.order || 'before';
 			//iterate on cartesian product of arrays:
 			(parsed.reduceRight(function(accu, task) {
@@ -272,8 +281,8 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 				var copy = (target || node).cloneNode(true);
 				node[order](merge(copy.content, template));
 			}))();
-		} else if (node.hasAttribute(prefix + 'import')) {
-			var importId = (template.closures[node.getAttribute(prefix + 'import')])();
+		} else if (bbAttrs.import) {
+			var importId = (template.closures[bbAttrs.import])();
 			var clone = Barbiche(importId)._clone();
 			node.before(merge(clone.node.content, clone));
 		} else {
@@ -281,8 +290,8 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 		}
 		node.remove();
 	} else {
-		if (node.hasAttribute(prefix + 'attr')) {
-			var parsed = (template.closures[node.getAttribute(prefix + 'attr')])();
+		if (bbAttrs.attr) {
+			var parsed = (template.closures[bbAttrs.attr])();
 			parsed.forEach(function(item) {
 				var value = item.value;
 				var name = item.name;
@@ -291,10 +300,9 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 					else node.removeAttribute(name);
 				}
 			});
-			node.removeAttribute(prefix + 'attr');
 		}
-		if (node.hasAttribute(prefix + 'class')) {
-			var parsed = (template.closures[node.getAttribute(prefix + 'class')])();
+		if (bbAttrs.class) {
+			var parsed = (template.closures[bbAttrs.class])();
 			parsed.forEach(function(item) {
 				var value = item.value;
 				var name = item.name;
@@ -303,7 +311,6 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 					else node.classList.remove(name);
 				}
 			});
-			node.removeAttribute(prefix + 'class');
 		}
 		Array.from(node.children).forEach(function(child) {merge(child, template);});
 	}
