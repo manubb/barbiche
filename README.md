@@ -42,7 +42,7 @@ We start with a simple template and a call to Barbiche:
 
 We get:
 ```html
-<div>
+<div class="list">
 	<ul myattr="pOipOi">
 		<li class="hen first">Elsa</li>
 		<li class="unknown">Zaza</li>
