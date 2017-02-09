@@ -14,7 +14,9 @@ We start with a simple template and a call to Barbiche:
 	<div bb-class="[true: customClass]">
 		<ul bb-attr="[my_replace(attrValue): 'myAttr']">
 			<template bb-repeat="[items: 'item']">
-				<li bb-if="item.show" bb-class="[true: item.species || 'unknown', _item_ <= 1: 'first']">{{item.name}} (index: {{_item_}})</li>
+				<li bb-if="item.show" bb-class="[true: item.species || 'unknown', _item_ <= 1: 'first']">
+					{{item.name}} (index: {{_item_}})
+				</li>
 			</template>
 		</ul>
 		<span>{{item.join(', ').toUpperCase()}}</span>
