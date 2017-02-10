@@ -243,12 +243,12 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 	}
 	if (bbAttrs.text) {
 		var value = (template.closures[bbAttrs.text])();
-		if (value !== undefined) {
+		if (value) {
 			node.replaceWith(value);
 		} else node.remove();
 	} else if (bbAttrs.html) {
 		var value = (template.closures[bbAttrs.html])();
-		if (value !== undefined) {
+		if (value) {
 			var template = document.createElement('template');
 			template.innerHTML = value;
 			node.replaceWith(template.content);
