@@ -53,7 +53,8 @@ StringLiteral (\"{DoubleStringCharacter}*\")|(\'{SingleStringCharacter}*\')
 /* operator associations and precedence */
 
 %left ','
-%left '||' '&&'
+%left '||'
+%left '&&'
 %left '==' '!=' '<=' '>=' '<' '>'
 %left '+'
 %left '*' '/'
