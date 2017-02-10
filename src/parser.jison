@@ -58,7 +58,6 @@ StringLiteral (\"{DoubleStringCharacter}*\")|(\'{SingleStringCharacter}*\')
 %left '==' '!=' '<=' '>=' '<' '>'
 %left '+'
 %left '*' '/'
-%left '^'
 %left UMINUS
 
 %start Main
