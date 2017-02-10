@@ -163,7 +163,7 @@ compile_works[Node.TEXT_NODE] = function(node, template) {
 				accu.push('"' + item.content.replace(/('|"|\n|\t|\r)/g, function() {return '\\' + arguments[1];}) + '"');
 				return accu;
 			} else if (item.type == 'text') {
-				accu.push(item.content);
+				accu.push("(" + item.content + ")");
 				return accu;
 			} else {
 				resolve(accu);
