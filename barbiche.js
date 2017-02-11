@@ -486,12 +486,12 @@ process.umask = function() { return 0; };
   }
 */
 var parser = (function(){
-var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,4],$V1=[1,5],$V2=[1,6],$V3=[1,7],$V4=[1,8],$V5=[1,9],$V6=[1,14],$V7=[1,16],$V8=[1,17],$V9=[1,18],$Va=[1,19],$Vb=[1,20],$Vc=[1,21],$Vd=[1,22],$Ve=[1,23],$Vf=[1,24],$Vg=[5,9,14,15,16,17,18,19,20,21,22,23,24,27],$Vh=[1,31],$Vi=[5,9,13,14,15,16,17,18,19,20,21,22,23,24,26,27,36],$Vj=[1,50],$Vk=[9,14],$Vl=[5,9,14,15,16,17,18,19,20,21,22,23,27],$Vm=[9,27];
+var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,4],$V1=[1,5],$V2=[1,6],$V3=[1,7],$V4=[1,8],$V5=[1,9],$V6=[1,14],$V7=[1,16],$V8=[1,17],$V9=[1,18],$Va=[1,19],$Vb=[1,20],$Vc=[1,21],$Vd=[1,22],$Ve=[1,23],$Vf=[1,24],$Vg=[1,25],$Vh=[5,8,13,14,15,16,17,18,19,20,21,22,23,26],$Vi=[1,32],$Vj=[5,8,12,13,14,15,16,17,18,19,20,21,22,23,25,26,35],$Vk=[1,51],$Vl=[8,13],$Vm=[5,8,13,14,15,16,17,18,19,20,21,22,26],$Vn=[8,26];
 var parser = {trace: function trace() { },
 yy: {},
-symbols_: {"error":2,"Main":3,"SimpleExpression":4,"EOF":5,"Array":6,"ArrayItemList":7,"ArrayItem":8,",":9,"Order":10,"--":11,"++":12,"[":13,"]":14,":":15,"||":16,"&&":17,"==":18,"!=":19,"<=":20,">=":21,"<":22,">":23,"+":24,"!":25,"(":26,")":27,"NUMBER":28,"STRING":29,"TRUE":30,"FALSE":31,"CallExpression":32,"MemberExpression":33,"Arguments":34,"ArgumentList":35,".":36,"PropertyName":37,"IdentifierName":38,"VAR":39,"$accept":0,"$end":1},
-terminals_: {2:"error",5:"EOF",9:",",11:"--",12:"++",13:"[",14:"]",15:":",16:"||",17:"&&",18:"==",19:"!=",20:"<=",21:">=",22:"<",23:">",24:"+",25:"!",26:"(",27:")",28:"NUMBER",29:"STRING",30:"TRUE",31:"FALSE",36:".",39:"VAR"},
-productions_: [0,[3,2],[3,2],[7,1],[7,3],[10,1],[10,1],[6,3],[6,4],[8,3],[8,1],[4,3],[4,3],[4,3],[4,3],[4,3],[4,3],[4,3],[4,3],[4,3],[4,2],[4,3],[4,1],[4,1],[4,1],[4,1],[4,1],[4,1],[34,2],[34,3],[35,1],[35,3],[32,2],[32,2],[32,4],[32,3],[33,1],[33,4],[33,3],[37,1],[38,1]],
+symbols_: {"error":2,"Main":3,"SimpleExpression":4,"EOF":5,"Array":6,"ArrayItemList":7,",":8,"Order":9,"--":10,"++":11,"[":12,"]":13,":":14,"||":15,"&&":16,"==":17,"!=":18,"<=":19,">=":20,"<":21,">":22,"+":23,"!":24,"(":25,")":26,"NUMBER":27,"STRING":28,"TRUE":29,"FALSE":30,"CallExpression":31,"MemberExpression":32,"Arguments":33,"ArgumentList":34,".":35,"PropertyName":36,"IdentifierName":37,"VAR":38,"$accept":0,"$end":1},
+terminals_: {2:"error",5:"EOF",8:",",10:"--",11:"++",12:"[",13:"]",14:":",15:"||",16:"&&",17:"==",18:"!=",19:"<=",20:">=",21:"<",22:">",23:"+",24:"!",25:"(",26:")",27:"NUMBER",28:"STRING",29:"TRUE",30:"FALSE",35:".",38:"VAR"},
+productions_: [0,[3,2],[3,2],[7,1],[7,3],[9,1],[9,1],[6,3],[6,4],[4,3],[4,3],[4,3],[4,3],[4,3],[4,3],[4,3],[4,3],[4,3],[4,3],[4,2],[4,3],[4,1],[4,1],[4,1],[4,1],[4,1],[4,1],[33,2],[33,3],[34,1],[34,3],[31,2],[31,2],[31,4],[31,3],[32,1],[32,4],[32,3],[36,1],[37,1]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
@@ -500,10 +500,10 @@ switch (yystate) {
 case 1: case 2:
 return $$[$0-1];
 break;
-case 3: case 30:
+case 3: case 29:
 this.$ = singleton.bind(null, $$[$0]);
 break;
-case 4: case 31:
+case 4: case 30:
 this.$ = push.bind(null, $$[$0-2], $$[$0]);
 break;
 case 5:
@@ -512,7 +512,7 @@ break;
 case 6:
 this.$ = 'before';
 break;
-case 7: case 21: case 29:
+case 7: case 20: case 28:
 this.$ = $$[$0-1];
 break;
 case 8:
@@ -524,98 +524,98 @@ this.$ = (function(a, b) {
 break;
 case 9:
 this.$ = (function(a, b) {
-            return {value: a(), name: b()};
+            return new yy.bbObj(a(), b());
          }).bind(null, $$[$0-2], $$[$0]);
 break;
-case 10: case 26: case 27: case 36:
-this.$ = $$[$0];
-break;
-case 11:
+case 10:
 this.$ = (function(a, b) {
             return a() || b();
         }).bind(null, $$[$0-2], $$[$0]);
 break;
-case 12:
+case 11:
 this.$ = (function(a, b) {
             return a() && b();
         }).bind(null, $$[$0-2], $$[$0]);
 break;
-case 13:
+case 12:
 this.$ = (function(a, b) {
             return a() == b();
         }).bind(null, $$[$0-2], $$[$0]);
 break;
-case 14:
+case 13:
 this.$ = (function(a, b) {
             return a() != b();
         }).bind(null, $$[$0-2], $$[$0]);
 break;
-case 15:
+case 14:
 this.$ = (function(a, b) {
             return a() <= b();
         }).bind(null, $$[$0-2], $$[$0]);
 break;
-case 16:
+case 15:
 this.$ = (function(a, b) {
             return a() >= b();
         }).bind(null, $$[$0-2], $$[$0]);
 break;
-case 17:
+case 16:
 this.$ = (function(a, b) {
             return a() < b();
         }).bind(null, $$[$0-2], $$[$0]);
 break;
-case 18:
+case 17:
 this.$ = (function(a, b) {
             return a() > b();
         }).bind(null, $$[$0-2], $$[$0]);
 break;
-case 19:
+case 18:
 this.$ = (function(a, b) {
             return a() + b();
         }).bind(null, $$[$0-2], $$[$0]);
 break;
-case 20:
+case 19:
 this.$ = (function(a) {
             return !(a());
         }).bind(null, $$[$0]);
 break;
-case 22:
+case 21:
 this.$ = Number.bind(null, yytext);
 break;
-case 23:
+case 22:
 this.$ = function() {return quoteUnescape(String(yytext));}
 break;
-case 24:
+case 23:
 this.$ = function() {return true;}
 break;
-case 25:
+case 24:
 this.$ = function() {return false;}
 break;
-case 28:
+case 25: case 26: case 35:
+this.$ = $$[$0];
+break;
+case 27:
 this.$ = function() {
             return [];
         }
 break;
-case 32: case 33:
+case 31: case 32:
 this.$ = call.bind(null, $$[$0-1], $$[$0]);
 break;
-case 34: case 37:
+case 33: case 36:
 this.$ = getProperty.bind(null, $$[$0-3], $$[$0-1]);
 break;
-case 35: case 38:
+case 34: case 37:
 this.$ = getProperty.bind(null, $$[$0-2], $$[$0]);
 break;
-case 39:
+case 38:
 this.$ = String.bind(null, yytext);
 break;
-case 40:
+case 39:
 this.$ = yy.context.resolve.bind(yy.context, yytext);
 break;
 }
 },
-table: [{3:1,4:2,6:3,13:[1,12],25:$V0,26:$V1,28:$V2,29:$V3,30:$V4,31:$V5,32:10,33:11,38:13,39:$V6},{1:[3]},{5:[1,15],16:$V7,17:$V8,18:$V9,19:$Va,20:$Vb,21:$Vc,22:$Vd,23:$Ve,24:$Vf},{5:[1,25]},{4:26,25:$V0,26:$V1,28:$V2,29:$V3,30:$V4,31:$V5,32:10,33:11,38:13,39:$V6},{4:27,25:$V0,26:$V1,28:$V2,29:$V3,30:$V4,31:$V5,32:10,33:11,38:13,39:$V6},o($Vg,[2,22]),o($Vg,[2,23]),o($Vg,[2,24]),o($Vg,[2,25]),o($Vg,[2,26],{34:28,13:[1,29],26:$Vh,36:[1,30]}),o($Vg,[2,27],{34:32,13:[1,33],26:$Vh,36:[1,34]}),{4:37,7:35,8:36,25:$V0,26:$V1,28:$V2,29:$V3,30:$V4,31:$V5,32:10,33:11,38:13,39:$V6},o($Vi,[2,36]),o($Vi,[2,40]),{1:[2,1]},{4:38,25:$V0,26:$V1,28:$V2,29:$V3,30:$V4,31:$V5,32:10,33:11,38:13,39:$V6},{4:39,25:$V0,26:$V1,28:$V2,29:$V3,30:$V4,31:$V5,32:10,33:11,38:13,39:$V6},{4:40,25:$V0,26:$V1,28:$V2,29:$V3,30:$V4,31:$V5,32:10,33:11,38:13,39:$V6},{4:41,25:$V0,26:$V1,28:$V2,29:$V3,30:$V4,31:$V5,32:10,33:11,38:13,39:$V6},{4:42,25:$V0,26:$V1,28:$V2,29:$V3,30:$V4,31:$V5,32:10,33:11,38:13,39:$V6},{4:43,25:$V0,26:$V1,28:$V2,29:$V3,30:$V4,31:$V5,32:10,33:11,38:13,39:$V6},{4:44,25:$V0,26:$V1,28:$V2,29:$V3,30:$V4,31:$V5,32:10,33:11,38:13,39:$V6},{4:45,25:$V0,26:$V1,28:$V2,29:$V3,30:$V4,31:$V5,32:10,33:11,38:13,39:$V6},{4:46,25:$V0,26:$V1,28:$V2,29:$V3,30:$V4,31:$V5,32:10,33:11,38:13,39:$V6},{1:[2,2]},o($Vg,[2,20]),{16:$V7,17:$V8,18:$V9,19:$Va,20:$Vb,21:$Vc,22:$Vd,23:$Ve,24:$Vf,27:[1,47]},o($Vi,[2,33]),{4:48,25:$V0,26:$V1,28:$V2,29:$V3,30:$V4,31:$V5,32:10,33:11,38:13,39:$V6},{37:49,39:$Vj},{4:53,25:$V0,26:$V1,27:[1,51],28:$V2,29:$V3,30:$V4,31:$V5,32:10,33:11,35:52,38:13,39:$V6},o($Vi,[2,32]),{4:54,25:$V0,26:$V1,28:$V2,29:$V3,30:$V4,31:$V5,32:10,33:11,38:13,39:$V6},{37:55,39:$Vj},{9:[1,57],14:[1,56]},o($Vk,[2,3]),o($Vk,[2,10],{15:[1,58],16:$V7,17:$V8,18:$V9,19:$Va,20:$Vb,21:$Vc,22:$Vd,23:$Ve,24:$Vf}),o([5,9,14,15,16,27],[2,11],{17:$V8,18:$V9,19:$Va,20:$Vb,21:$Vc,22:$Vd,23:$Ve,24:$Vf}),o([5,9,14,15,16,17,27],[2,12],{18:$V9,19:$Va,20:$Vb,21:$Vc,22:$Vd,23:$Ve,24:$Vf}),o($Vl,[2,13],{24:$Vf}),o($Vl,[2,14],{24:$Vf}),o($Vl,[2,15],{24:$Vf}),o($Vl,[2,16],{24:$Vf}),o($Vl,[2,17],{24:$Vf}),o($Vl,[2,18],{24:$Vf}),o($Vg,[2,19]),o($Vg,[2,21]),{14:[1,59],16:$V7,17:$V8,18:$V9,19:$Va,20:$Vb,21:$Vc,22:$Vd,23:$Ve,24:$Vf},o($Vi,[2,35]),o($Vi,[2,39]),o($Vi,[2,28]),{9:[1,61],27:[1,60]},o($Vm,[2,30],{16:$V7,17:$V8,18:$V9,19:$Va,20:$Vb,21:$Vc,22:$Vd,23:$Ve,24:$Vf}),{14:[1,62],16:$V7,17:$V8,18:$V9,19:$Va,20:$Vb,21:$Vc,22:$Vd,23:$Ve,24:$Vf},o($Vi,[2,38]),{5:[2,7],10:63,11:[1,64],12:[1,65]},{4:37,8:66,25:$V0,26:$V1,28:$V2,29:$V3,30:$V4,31:$V5,32:10,33:11,38:13,39:$V6},{4:67,25:$V0,26:$V1,28:$V2,29:$V3,30:$V4,31:$V5,32:10,33:11,38:13,39:$V6},o($Vi,[2,34]),o($Vi,[2,29]),{4:68,25:$V0,26:$V1,28:$V2,29:$V3,30:$V4,31:$V5,32:10,33:11,38:13,39:$V6},o($Vi,[2,37]),{5:[2,8]},{5:[2,5]},{5:[2,6]},o($Vk,[2,4]),o($Vk,[2,9],{16:$V7,17:$V8,18:$V9,19:$Va,20:$Vb,21:$Vc,22:$Vd,23:$Ve,24:$Vf}),o($Vm,[2,31],{16:$V7,17:$V8,18:$V9,19:$Va,20:$Vb,21:$Vc,22:$Vd,23:$Ve,24:$Vf})],
-defaultActions: {15:[2,1],25:[2,2],63:[2,8],64:[2,5],65:[2,6]},
+table: [{3:1,4:2,6:3,12:[1,12],24:$V0,25:$V1,27:$V2,28:$V3,29:$V4,30:$V5,31:10,32:11,37:13,38:$V6},{1:[3]},{5:[1,15],14:$V7,15:$V8,16:$V9,17:$Va,18:$Vb,19:$Vc,20:$Vd,21:$Ve,22:$Vf,23:$Vg},{5:[1,26]},{4:27,24:$V0,25:$V1,27:$V2,28:$V3,29:$V4,30:$V5,31:10,32:11,37:13,38:$V6},{4:28,24:$V0,25:$V1,27:$V2,28:$V3,29:$V4,30:$V5,31:10,32:11,37:13,38:$V6},o($Vh,[2,21]),o($Vh,[2,22]),o($Vh,[2,23]),o($Vh,[2,24]),o($Vh,[2,25],{33:29,12:[1,30],25:$Vi,35:[1,31]}),o($Vh,[2,26],{33:33,12:[1,34],25:$Vi,35:[1,35]}),{4:37,7:36,24:$V0,25:$V1,27:$V2,28:$V3,29:$V4,30:$V5,31:10,32:11,37:13,38:$V6},o($Vj,[2,35]),o($Vj,[2,39]),{1:[2,1]},{4:38,24:$V0,25:$V1,27:$V2,28:$V3,29:$V4,30:$V5,31:10,32:11,37:13,38:$V6},{4:39,24:$V0,25:$V1,27:$V2,28:$V3,29:$V4,30:$V5,31:10,32:11,37:13,38:$V6},{4:40,24:$V0,25:$V1,27:$V2,28:$V3,29:$V4,30:$V5,31:10,32:11,37:13,38:$V6},{4:41,24:$V0,25:$V1,27:$V2,28:$V3,29:$V4,30:$V5,31:10,32:11,37:13,38:$V6},{4:42,24:$V0,25:$V1,27:$V2,28:$V3,29:$V4,30:$V5,31:10,32:11,37:13,38:$V6},{4:43,24:$V0,25:$V1,27:$V2,28:$V3,29:$V4,30:$V5,31:10,32:11,37:13,38:$V6},{4:44,24:$V0,25:$V1,27:$V2,28:$V3,29:$V4,30:$V5,31:10,32:11,37:13,38:$V6},{4:45,24:$V0,25:$V1,27:$V2,28:$V3,29:$V4,30:$V5,31:10,32:11,37:13,38:$V6},{4:46,24:$V0,25:$V1,27:$V2,28:$V3,29:$V4,30:$V5,31:10,32:11,37:13,38:$V6},{4:47,24:$V0,25:$V1,27:$V2,28:$V3,29:$V4,30:$V5,31:10,32:11,37:13,38:$V6},{1:[2,2]},o($Vh,[2,19]),{14:$V7,15:$V8,16:$V9,17:$Va,18:$Vb,19:$Vc,20:$Vd,21:$Ve,22:$Vf,23:$Vg,26:[1,48]},o($Vj,[2,32]),{4:49,24:$V0,25:$V1,27:$V2,28:$V3,29:$V4,30:$V5,31:10,32:11,37:13,38:$V6},{36:50,38:$Vk},{4:54,24:$V0,25:$V1,26:[1,52],27:$V2,28:$V3,29:$V4,30:$V5,31:10,32:11,34:53,37:13,38:$V6},o($Vj,[2,31]),{4:55,24:$V0,25:$V1,27:$V2,28:$V3,29:$V4,30:$V5,31:10,32:11,37:13,38:$V6},{36:56,38:$Vk},{8:[1,58],13:[1,57]},o($Vl,[2,3],{14:$V7,15:$V8,16:$V9,17:$Va,18:$Vb,19:$Vc,20:$Vd,21:$Ve,22:$Vf,23:$Vg}),o([5,8,13,14,26],[2,9],{15:$V8,16:$V9,17:$Va,18:$Vb,19:$Vc,20:$Vd,21:$Ve,22:$Vf,23:$Vg}),o([5,8,13,14,15,26],[2,10],{16:$V9,17:$Va,18:$Vb,19:$Vc,20:$Vd,21:$Ve,22:$Vf,23:$Vg}),o([5,8,13,14,15,16,26],[2,11],{17:$Va,18:$Vb,19:$Vc,20:$Vd,21:$Ve,22:$Vf,23:$Vg}),o($Vm,[2,12],{23:$Vg}),o($Vm,[2,13],{23:$Vg}),o($Vm,[2,14],{23:$Vg}),o($Vm,[2,15],{23:$Vg}),o($Vm,[2,16],{23:$Vg}),o($Vm,[2,17],{23:$Vg}),o($Vh,[2,18]),o($Vh,[2,20]),{13:[1,59],14:$V7,15:$V8,16:$V9,17:$Va,18:$Vb,19:$Vc,20:$Vd,21:$Ve,22:$Vf,23:$Vg},o($Vj,[2,34]),o($Vj,[2,38]),o($Vj,[2,27]),{8:[1,61],26:[1,60]},o($Vn,[2,29],{14:$V7,15:$V8,16:$V9,17:$Va,18:$Vb,19:$Vc,20:$Vd,21:$Ve,22:$Vf,23:$Vg}),{13:[1,62],14:$V7,15:$V8,16:$V9,17:$Va,18:$Vb,19:$Vc,20:$Vd,21:$Ve,22:$Vf,23:$Vg},o($Vj,[2,37]),{5:[2,7],9:63,10:[1,64],11:[1,65]},{4:66,24:$V0,25:$V1,27:$V2,28:$V3,29:$V4,30:$V5,31:10,32:11,37:13,38:$V6},o($Vj,[2,33]),o($Vj,[2,28]),{4:67,24:$V0,25:$V1,27:$V2,28:$V3,29:$V4,30:$V5,31:10,32:11,37:13,38:$V6},o($Vj,[2,36]),{5:[2,8]},{5:[2,5]},{5:[2,6]},o($Vl,[2,4],{14:$V7,15:$V8,16:$V9,17:$Va,18:$Vb,19:$Vc,20:$Vd,21:$Ve,22:$Vf,23:$Vg}),o($Vn,[2,30],{14:$V7,15:$V8,16:$V9,17:$Va,18:$Vb,19:$Vc,20:$Vd,21:$Ve,22:$Vf,23:$Vg})],
+defaultActions: {15:[2,1],26:[2,2],63:[2,8],64:[2,5],65:[2,6]},
 parseError: function parseError(str, hash) {
     if (hash.recoverable) {
         this.trace(str);
@@ -1122,53 +1122,53 @@ var YYSTATE=YY_START;
 switch($avoiding_name_collisions) {
 case 0:/* skip whitespace */
 break;
-case 1:return 28
+case 1:return 27
 break;
-case 2:return 16
+case 2:return 15
 break;
-case 3:return 17
+case 3:return 16
 break;
-case 4:return 18
+case 4:return 17
 break;
-case 5:return 19
+case 5:return 18
 break;
-case 6:return 20
+case 6:return 19
 break;
-case 7:return 21
+case 7:return 20
 break;
-case 8:return 22
+case 8:return 21
 break;
-case 9:return 23
+case 9:return 22
 break;
-case 10:return 12;
+case 10:return 11;
 break;
-case 11:return 11;
+case 11:return 10;
 break;
-case 12:return 24
+case 12:return 23
 break;
-case 13:return 25
+case 13:return 24
 break;
-case 14:return 26
+case 14:return 25
 break;
-case 15:return 27
+case 15:return 26
 break;
-case 16:return 30
+case 16:return 29
 break;
-case 17:return 31
+case 17:return 30
 break;
-case 18:return 9
+case 18:return 8
 break;
-case 19:return 36
+case 19:return 35
 break;
-case 20:return 13
+case 20:return 12
 break;
-case 21:return 14
+case 21:return 13
 break;
-case 22:return 15
+case 22:return 14
 break;
-case 23:yy_.yytext = yy_.yytext.substr(1, yy_.yyleng - 2); return 29
+case 23:yy_.yytext = yy_.yytext.substr(1, yy_.yyleng - 2); return 28
 break;
-case 24:return 39
+case 24:return 38
 break;
 case 25:return 5
 break;
@@ -1244,8 +1244,19 @@ context.pop = function() {
 	return this.stack.pop();
 };
 
+function bbObj(a, b) {
+    this.value = a;
+    this.name = b;
+}
+
+bbObj.prototype.toString = function() {
+    if (this.value) return this.name;
+    else return '';
+}
+
 var Parser = require('../parser.js');
 Parser.parser.yy.context = context;
+Parser.parser.yy.bbObj = bbObj;
 
 function Barbiche(node) {
 	if (typeof(node) == 'string') {
@@ -1263,6 +1274,8 @@ function Barbiche(node) {
 	}
 	return this;
 }
+
+Barbiche.bbObj = bbObj;
 
 Barbiche.setPrefix = function(str) {
 	prefix = str;
@@ -1507,19 +1520,14 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 				var name = item.name;
 				if (name) {
 					if (typeof value == "string") node.setAttribute(name, value);
-					else node.removeAttribute(name);
 				}
 			});
 		}
 		if (bbAttrs.class) {
 			var parsed = (template.closures[bbAttrs.class])();
 			parsed.forEach(function(item) {
-				var value = item.value;
-				var name = item.name;
-				if (name) {
-					if (value) node.classList.add(name);
-					else node.classList.remove(name);
-				}
+				var value = item.toString();
+				if (value) node.classList.add(value);
 			});
 		}
 		Array.from(node.children).forEach(function(child) {merge(child, template);});
