@@ -44,7 +44,7 @@ We get:
 ```html
 <div class="my-class">
 	<div>Jacynthe</div>
-	<ul attr-name="pOipOi">
+	<ul attr-name="lunchrOOm">
 		<li class="hen first">Elsa (index: 0) Elsa</li>
 		<li class="unknown">Zaza (index: 2)</li>
 	</ul>
