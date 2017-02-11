@@ -11,11 +11,12 @@ See Barbiche live examples [here](http://htmlpreview.github.io/?https://github.c
 We start with a simple template and a call to Barbiche:
 ```html
 <template id="test">
-	<div bb-class="[true: customClass]">
-		<ul bb-attr="[my_replace(attrValue): 'myAttr']">
+	<div bb-alias="[items[1].name: 'name']" bb-class="[customClass]">
+		<div>{{name}}</div>
+		<ul bb-attr="[my_replace(attrValue): 'attr-name']">
 			<template bb-repeat="[items: 'item']">
-				<li bb-if="item.show" bb-class="[true: item.species || 'unknown', _item_ <= 1: 'first']">
-					{{item.name}} (index: {{_item_}})
+				<li bb-if="item.show" bb-class="[item.species || 'unknown', (_item_ == 0): 'first']">
+					{{item.name}} (index: {{_item_}}) {{_item_ == 0: item.name}}
 				</li>
 			</template>
 		</ul>
@@ -25,25 +26,26 @@ We start with a simple template and a call to Barbiche:
 </template>
 ```
 ```js
-  Barbiche('test').merge({
-    "customClass": "list",
-    "items": [
-      {species: "hen", name: "Elsa", show: true},
-      {species: "cat", name: "Jacynthe", show: false},
-      {species: null, name: "Zaza", show: true}
-    ],
-    item: ["hen", "cat", "dog", "spider"],
-    some_html: "<div><p>This is...</p><p>...some HTML.</p></div>",
-    my_replace: function(str) {return str.replace(/o/g, "O");},
-    attrValue: "poipoi"
-  });
+Barbiche('test').merge({
+	customClass: "my-class",
+	"items": [
+		{species: "hen", name: "Elsa", show: true},
+		{species: "cat", name: "Jacynthe", show: false},
+		{species: null, name: "Zaza", show: true}
+	],
+	item: ["hen", "cat", "dog", "spider"],
+  some_html: "<div><p>This is...</p><p>...some HTML.</p></div>",
+ 	my_replace: function(str) {return str.replace(/o/g, "O");},
+	attrValue: "lunchroom"
+});
 ```
 
 We get:
 ```html
-<div class="list">
-	<ul myattr="pOipOi">
-		<li class="hen first">Elsa (index: 0)</li>
+<div class="my-class">
+	<div>Jacynthe</div>
+	<ul attr-name="pOipOi">
+		<li class="hen first">Elsa (index: 0) Elsa</li>
 		<li class="unknown">Zaza (index: 2)</li>
 	</ul>
 	<span>HEN, CAT, DOG, SPIDER</span>
