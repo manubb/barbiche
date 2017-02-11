@@ -34,8 +34,19 @@ context.pop = function() {
 	return this.stack.pop();
 };
 
+function bbObj(a, b) {
+    this.value = a;
+    this.name = b;
+}
+
+bbObj.prototype.toString = function() {
+    if (this.value) return this.name;
+    else return '';
+}
+
 var Parser = require('../parser.js');
 Parser.parser.yy.context = context;
+Parser.parser.yy.bbObj = bbObj;
 
 function Barbiche(node) {
 	if (typeof(node) == 'string') {
@@ -53,6 +64,8 @@ function Barbiche(node) {
 	}
 	return this;
 }
+
+Barbiche.bbObj = bbObj;
 
 Barbiche.setPrefix = function(str) {
 	prefix = str;
@@ -297,19 +310,14 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 				var name = item.name;
 				if (name) {
 					if (typeof value == "string") node.setAttribute(name, value);
-					else node.removeAttribute(name);
 				}
 			});
 		}
 		if (bbAttrs.class) {
 			var parsed = (template.closures[bbAttrs.class])();
 			parsed.forEach(function(item) {
-				var value = item.value;
-				var name = item.name;
-				if (name) {
-					if (value) node.classList.add(name);
-					else node.classList.remove(name);
-				}
+				var value = item.toString();
+				if (value) node.classList.add(value);
 			});
 		}
 		Array.from(node.children).forEach(function(child) {merge(child, template);});

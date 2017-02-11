@@ -53,6 +53,7 @@ StringLiteral (\"{DoubleStringCharacter}*\")|(\'{SingleStringCharacter}*\')
 /* operator associations and precedence */
 
 %left ','
+%left ':'
 %left '||'
 %left '&&'
 %left '==' '!=' '<=' '>=' '<' '>'
@@ -72,9 +73,9 @@ Main
     ;
 
 ArrayItemList
-    : ArrayItem
+    : SimpleExpression
         {$$ = singleton.bind(null, $1);}
-    | ArrayItemList ',' ArrayItem
+    | ArrayItemList ',' SimpleExpression
         {$$ = push.bind(null, $1, $3);}
     ;
 
@@ -96,17 +97,12 @@ Array
         }).bind(null, $2, $4);}
     ;
 
-ArrayItem
+SimpleExpression
     : SimpleExpression ':' SimpleExpression
         {$$ = (function(a, b) {
-            return {value: a(), name: b()};
+            return new yy.bbObj(a(), b());
          }).bind(null, $1, $3);}
-    | SimpleExpression
-        {$$ = $1;}
-    ;
-
-SimpleExpression
-    : SimpleExpression '||' SimpleExpression
+    | SimpleExpression '||' SimpleExpression
         {$$ = (function(a, b) {
             return a() || b();
         }).bind(null, $1, $3);}
