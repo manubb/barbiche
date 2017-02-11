@@ -7,111 +7,123 @@
 	<script type="text/javascript" src="https://cdn.rawgit.com/manubb/barbiche/8d75aa35/barbiche.js"></script>
 </head>
 <body>
-	<template id="test">
-		<div bb-class="[true: customClass]">
-			<ul bb-attr="[my_replace(attrValue): 'myAttr']">
-				<template bb-repeat="[items: 'item']">
-					<li bb-if="item.show" bb-class="[true: item.species || 'unknown', _item_ <= 1: 'first']">
-						{{item.name}} (index: {{_item_}})
-					</li>
-				</template>
+	<div id="quick-start">
+		<h1>Quick start</h1>
+		<template id="test">
+			<div bb-alias="[items[1].name: 'name']" bb-class="[customClass]">
+				<div>{{name}}</div>
+				<ul bb-attr="[my_replace(attrValue): 'attr-name']">
+					<template bb-repeat="[items: 'item']">
+						<li bb-if="item.show" bb-class="[item.species || 'unknown', (_item_ == 0): 'first']">
+							{{item.name}} (index: {{_item_}}) {{_item_ == 0: item.name}}
+						</li>
+					</template>
+				</ul>
+				<span>{{item.join(', ').toUpperCase()}}</span>
+				{{{some_html}}}
+			</div>
+		</template>
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				document.querySelector('#quick-start').appendChild(Barbiche('test').merge({
+					customClass: "ttt",
+					"items": [
+						{species: "hen", name: "Elsa", show: true},
+						{species: "cat", name: "Jacynthe", show: false},
+						{species: null, name: "Zaza", show: true}
+					],
+					item: ["hen", "cat", "dog", "spider"],
+			    some_html: "<div><p>This is...</p><p>...some HTML.</p></div>",
+			   	my_replace: function(str) {return str.replace(/o/g, "O");},
+					attrValue: "lunchroom"
+				}));
+			});
+			</script>
+	</div>
+	<div id="subtemplates">
+		<h1>Subtemplates</h1>
+		<template id="simple-subtemplate">
+			<div>
+				<template bb-import="'sub'"></template>
+			</div>
+		</template>
+		<template id="sub">
+			<span>I am a subtemplate!</span>
+		</template>
+		<template id="dynamic-subtemplate">
+			<div>
+				<template bb-repeat="[items: 'item']" bb-import="item"></template>
+			</div>
+		</template>
+		<template id="sub1">
+			<span>I am subtemplate1!</span>
+		</template>
+		<template id="sub2">
+			<span>I am subtemplate2!</span>
+		</template>
+		<template id="recursive">
+			<template bb-if="children.length" bb-import="'recursive-sub'"></template>
+		</template>
+		<template id="recursive-sub">
+			<ul>
+				<li bb-repeat="[children: 'child']">{{child.name}}
+					<template bb-if="child.children" bb-alias="[child.children: 'children']" bb-import="'recursive-sub'"></template>
+				</li>
 			</ul>
-			<span>{{item.join(', ').toUpperCase()}}</span>
-			{{{some_html}}}
-		</div>
-	</template>
-	<template id="simple-subtemplate">
-		<div>
-			<template bb-import="'sub'"></template>
-		</div>
-	</template>
-	<template id="sub">
-		<span>I am a subtemplate!</span>
-	</template>
-	<template id="dynamic-subtemplate">
-		<div>
-			<template bb-repeat="[items: 'item']" bb-import="item"></template>
-		</div>
-	</template>
-	<template id="sub1">
-		<span>I am subtemplate1!</span>
-	</template>
-	<template id="sub2">
-		<span>I am subtemplate2!</span>
-	</template>
-	<template id="recursive">
-		<template bb-if="children.length" bb-import="'recursive-sub'"></template>
-	</template>
-	<template id="recursive-sub">
-		<ul>
-			<li bb-repeat="[children: 'child']">{{child.name}}
-				<template bb-if="child.children" bb-alias="[child.children: 'children']" bb-import="'recursive-sub'"></template>
-			</li>
-		</ul>
-	</template>
-	<script>
-		document.addEventListener('DOMContentLoaded', function() {
-			document.body.appendChild(Barbiche('test').merge({
-				"customClass": "list",
-				"items": [
-					{species: "hen", name: "Elsa", show: true},
-					{species: "cat", name: "Jacynthe", show: false},
-					{species: null, name: "Zaza", show: true}
-				],
-				item: ["hen", "cat", "dog", "spider"],
-		    some_html: "<div><p>This is...</p><p>...some HTML.</p></div>",
-		   	my_replace: function(str) {return str.replace(/o/g, "O");},
-				attrValue: "poipoi"
-			}));
-			document.body.appendChild(Barbiche('simple-subtemplate').merge());
-			document.body.appendChild(Barbiche('dynamic-subtemplate').merge({
-				items: ['sub2', 'sub1']
-			}));
-			document.body.appendChild(Barbiche('recursive').merge({
-				children: [
-					{
-						name: "Solomon",
-						children: [
-							{
-								name : "Lexie",
-								children: [
-									{
-										name: "Shavon",
-										children: [
-											{
-												name : "Shirleen"
-											}, {
-												name : "Kathleen"
-											}
-										]
-									},
-									{
-										name: "Travis"
-									},
-									{
-										name: "Adele"
-									},
-									{
-										name: "Barney"
-									}
-								]
-							}, {
-								name : "Allie"
-							}
-						]
-					}, {
-						name: "Juliann",
-						children: [
-							{
-								name : "Guy"
-							}, {
-								name : "Yaeko"
-							}
-						]
-					}
-				]
-			}));
-		});
-	</script>
+		</template>
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				var node = document.querySelector('#subtemplates');
+				node.appendChild(Barbiche('simple-subtemplate').merge());
+				node.appendChild(Barbiche('dynamic-subtemplate').merge({
+					items: ['sub2', 'sub1']
+				}));
+				node.appendChild(Barbiche('recursive').merge({
+					children: [
+						{
+							name: "Solomon",
+							children: [
+								{
+									name : "Lexie",
+									children: [
+										{
+											name: "Shavon",
+											children: [
+												{
+													name : "Shirleen"
+												}, {
+													name : "Kathleen"
+												}
+											]
+										},
+										{
+											name: "Travis"
+										},
+										{
+											name: "Adele"
+										},
+										{
+											name: "Barney"
+										}
+									]
+								}, {
+									name : "Allie"
+								}
+							]
+						}, {
+							name: "Juliann",
+							children: [
+								{
+									name : "Guy"
+								}, {
+									name : "Yaeko"
+								}
+							]
+						}
+					]
+				}));
+			});
+		</script>
+	</div>
 </body>
 </html>
