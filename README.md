@@ -34,8 +34,8 @@ Barbiche('test').merge({
 		{species: null, name: "Zaza", show: true}
 	],
 	item: ["hen", "cat", "dog", "spider"],
-  some_html: "<div><p>This is...</p><p>...some HTML.</p></div>",
- 	my_replace: function(str) {return str.replace(/o/g, "O");},
+	some_html: "<div><p>This is...</p><p>...some HTML.</p></div>",
+	my_replace: function(str) {return str.replace(/o/g, "O");},
 	attrValue: "lunchroom"
 });
 ```
