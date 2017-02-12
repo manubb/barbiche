@@ -256,12 +256,12 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 		nodeContextPushed = true;
 	}
 	if (bbAttrs.text) {
-		var value = (template.closures[bbAttrs.text])();
+		var value = (template.closures[bbAttrs.text])().toString();
 		if (value) {
 			node.replaceWith(value);
 		} else node.remove();
 	} else if (bbAttrs.html) {
-		var value = (template.closures[bbAttrs.html])();
+		var value = (template.closures[bbAttrs.html])().toString();
 		if (value) {
 			var template = document.createElement('template');
 			template.innerHTML = value;
@@ -278,8 +278,8 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 				nodeContextPushed = true;
 			}
 			var parsed = (template.closures[bbAttrs.repeat])();
+			var order = parsed._order || 'before';
 			if (!Array.isArray(parsed)) parsed = [parsed];
-			var order = parsed.order || 'before';
 			//iterate on cartesian product of arrays:
 			(parsed.reduceRight(function(accu, task) {
 				var alias = task.name;
@@ -310,10 +310,8 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 			if (!Array.isArray(parsed)) parsed = [parsed];
 			parsed.forEach(function(item) {
 				var value = item.value;
-				var name = item.name;
-				if (name) {
-					if (typeof value == "string") node.setAttribute(name, value);
-				}
+				var name = item.name.toString();
+				if (typeof value == "string") node.setAttribute(name, value);
 			});
 		}
 		if (bbAttrs.class) {
