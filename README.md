@@ -98,7 +98,7 @@ This is currently secret.
 ## Template description
 
 ### `<template>`
-Barbiche heavily relies on the great properties of the `<template>` element. An essential point of Barbiche is that you can wrap any html fragment of the template in a `<template>` element without changing the merge result. Sooner or later, you will want to set a Barbiche attribute between an element and its parent: just wrap the element in a `<template>` tag and set the attribute on this tag.
+Barbiche heavily relies on the great properties of the `<template>` element. An essential point of Barbiche is that you can wrap any html fragment of the template in a `<template>` element without changing the merge result. Sooner or later, you will want to set a Barbiche attribute between an element and its parent: just wrap the element in a `<template>` tag and set the attribute on this new tag.
 
 ### Decorations
 
@@ -111,7 +111,7 @@ Barbiche templates are decorated with special attributes which are evaluated in 
 5. `bb-attr="expression"`
 6. `bb-class="expression"`
 
-and uses `{{expression}}` and `{{{expression}}}` for merging text and HTML.
+and uses `{{expression}}` and `{{{expression}}}` for merging text and HTML, respectively.
 #### Expressions
 
 Barbiche expressions support a subset of JavaScript:
