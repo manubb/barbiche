@@ -67,8 +67,6 @@ StringLiteral (\"{DoubleStringCharacter}*\")|(\'{SingleStringCharacter}*\')
 Main
     : Expression EOF
         {return $1;}
-    | Array EOF
-        {return $1;}
     ;
 
 Expression
@@ -76,8 +74,8 @@ Expression
         {return $1;}
     | SimpleExpression Order
         {$$ = (function(a, b) {
-            var ret = [a()];
-            ret.order = b;
+            var ret = a();
+            ret._order = b;
             return ret;
         }).bind(null, $1, $2);}
     ;
@@ -99,12 +97,6 @@ Order
 Array
     : '[' ArrayItemList ']'
         {$$ = $2;}
-    | '[' ArrayItemList ']' Order
-        {$$ = (function(a, b) {
-            var ret = a();
-            ret.order = b;
-            return ret;
-        }).bind(null, $2, $4);}
     ;
 
 SimpleExpression
@@ -165,6 +157,8 @@ SimpleExpression
     | CallExpression
         {$$ = $1;}
     | MemberExpression
+        {$$ = $1;}
+    | Array
         {$$ = $1;}
     ;
 
