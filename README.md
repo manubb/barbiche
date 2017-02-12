@@ -100,24 +100,34 @@ This is currently secret.
 ### `<template>`
 Barbiche heavily relies on the great properties of the `<template>` element. An essential point of Barbiche is that you can wrap any html fragment of the template in a `<template>` element without changing the merge result. Sooner or later, you will want to set a Barbiche attribute between an element and its parent: just wrap the element in a `<template>` tag and set the attribute on this tag.
 
-### Conditions
-
-
-### Attributes
+### Decorations
 
 Barbiche templates are decorated with special attributes which are evaluated in this order:
 
-1. `bb-if`
-2. `bb-alias`
-3. `bb-text`
-4. `bb-html`
-5. `bb-repeat`
-6. `bb-import`
-7. `bb-attr`
-8. `bb-class`
+1. `bb-if="exp"`
+2. `bb-alias="exp"`
+3. `bb-repeat="exp (|++|--)"`
+4. `bb-import="exp"`
+5. `bb-attr="exp"`
+6. `bb-class="exp"`
+
+and uses `{{exp}}` and `{{{exp}}}` for merging text and HTML.
+#### Expressions
+
+Barbiche expressions support a subset of JavaScript:
+
+* boolean expressions: `true`, `false`, `==`, `!=`, `<=`,`>=`, `<` ,`>` and `!`
+* arrays
+* function calls
+* property accessors: `object.property` and `object['property']`
+* numbers
+* strings
+* `+` operator
+
+and a special constructor: `exp: exp` that we call a Barbiche object.
 
 #### Conditions
-A `bb-if` attribute is resolved to a boolean value. If false, the current node (and its subtree) is removed.
+A `bb-if` attribute resolves to a boolean value. If false, the current node (and its subtree) is removed.
 
 Some examples of `bb-if` attributes:
 ```html
@@ -125,7 +135,7 @@ Some examples of `bb-if` attributes:
 <span bb-if="my_crazy_filter(obj.items[2], obj.other.another)">...</span>
 ```
 #### Aliases
-A `bb-alias` attribute is resolved to a Barbiche object or an array of Barbiche objects. For each object `value: name`, `name` is bound to `value` during the processing of the current subtree.
+A `bb-alias` attribute resolves to a Barbiche object or an array of Barbiche objects. For each object `value: name`, `name` is bound to `value` during the processing of the current subtree.
 
 Some examples of `bb-alias` attributes:
 ```html
@@ -149,8 +159,13 @@ Inserting HTML is done via `{{{content}}}` where `content` resolves to a string 
 #### Loops
 A `bb-repeat` attribute resolves to a Barbiche expression or an array of Barbiche expressions and ends with an optional `--` or `++` keyword. For each expression `array: string`, a loop is executed on `array`, binding each array item to `string` and item index to `_string_`. A `++` ending keyword will insert items in natural order; `--` will insert items in reverse order; no ending keyword is the same as `++`.
 
+####Imports
+A `bb-import` attributes resolves to a string `id`. The template with id `id`, if any, is then merged using current context and the current node is replaced with the merge result. The `bb-import` attribute is reserved to `<template>` elements.
+
+Some usage examples can be found [below](#subtemplates).
+
 #### Attributes
-A `bb-attr` attribute resolves to a Barbiche expression or an array of Barbiche expressions. For each expression `value: name`, `name` is resolved to a string value. If `name` is not empty and if `value` has type `string`, attribute `name` is set on the current node with value `value`.
+A `bb-attr` attribute resolves to a Barbiche expression or an array of Barbiche expressions. For each expression `value: name`, `name` resolves to a string value. If `name` is not empty and if `value` has type `string`, attribute `name` is set on the current node with value `value`.
 
 #### Classes
 A `bb-class` attribute resolves to a string, a Barbiche expression or an array containing strings and Barbiche expressions. For each item:
@@ -158,7 +173,6 @@ A `bb-class` attribute resolves to a string, a Barbiche expression or an array c
 * if item resolves to a Barbiche expression `boolean: name`, `boolean` is resolved to a boolean value and `name` to a string. If `boolean` is true and if `name` is not empty, class `name` is added to the current node.
 
 ### Subtemplates
-Barbiche supports subtemplating via `bb-import` attribute that is reserved to `<template>` elements. A `bb-import` attribute contains an expression that is resolved to a string value `id`. The template with id `id`, if any, is then merged using current context and the current node is replaced with the merge result.
 A simple example:
 ```html
 <template id="simple-subtemplate">
