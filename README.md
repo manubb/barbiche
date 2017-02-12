@@ -115,6 +115,7 @@ Barbiche templates are decorated with special attributes which are evaluated in 
 6. `bb-class="expression"`
 
 and use `{{expression}}` and `{{{expression}}}` for merging text and HTML, respectively.
+
 #### Expressions
 
 Barbiche expressions support a subset of JavaScript:
