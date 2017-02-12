@@ -126,6 +126,18 @@ Barbiche expressions support a subset of JavaScript:
 
 and a special constructor: `exp: exp` that we call a Barbiche object.
 
+#### Text
+Inserting text is done via `{{content}}` where `content` resolves to a string or a Barbiche object.
+
+* if `content` resolves to a string, a text node containing `content` value is inserted
+* if `content` resolves to a Barbiche object `bool: string`, if `bool` is true, a text node containing `string` value is inserted
+
+#### HTML
+Inserting HTML is done via `{{{content}}}` where `content` resolves to a string or a Barbiche object.
+
+* if `content` resolves to a string, its content is inserted as HTML
+* if `content` resolves to a Barbiche object `bool: string`, if `bool` is true, `string` value is inserted as HTML
+
 #### Conditions
 A `bb-if` attribute resolves to a boolean value. If false, the current node (and its subtree) is removed.
 
@@ -143,18 +155,6 @@ Some examples of `bb-alias` attributes:
 <div bb-alias="logo.resources.link[0]: 'link'">...</div>
 ```
 In the first line, the value of `JSON.stringify(obj)` is bound to `str1` identifier and the value of `obj.prop` to `str2`.
-
-#### Text
-Inserting text is done via `{{content}}` where `content` resolves to a string or a Barbiche object.
-
-* if `content` resolves to a string, a text node containing `content` value is inserted
-* if `content` resolves to a Barbiche object `bool: string`, if `bool` is true, a text node containing `string` value is inserted
-
-#### HTML
-Inserting HTML is done via `{{{content}}}` where `content` resolves to a string or a Barbiche object.
-
-* if `content` resolves to a string, its content is inserted as HTML
-* if `content` resolves to a Barbiche object `bool: string`, if `bool` is true, `string` value is inserted as HTML
 
 #### Loops
 A `bb-repeat` attribute resolves to a Barbiche expression or an array of Barbiche expressions and ends with an optional `--` or `++` keyword. For each expression `array: string`, a loop is executed on `array`, binding each array item to `string` and item index to `_string_`. A `++` ending keyword will insert items in natural order; `--` will insert items in reverse order; no ending keyword is the same as `++`.
