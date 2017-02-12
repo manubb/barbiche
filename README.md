@@ -16,7 +16,7 @@ We start with a simple template and a call to Barbiche:
 		<ul bb-attr="my_replace(attrValue): 'attr-name'">
 			<template bb-repeat="items: 'item'">
 				<li bb-if="item.show" bb-class="[item.species || 'unknown', (_item_ == 0): 'first']">
-					{{item.name}} (index: {{_item_}}) {{_item_ == 0: item.name}}
+					{{item.name}} (index: {{_item_}})
 				</li>
 			</template>
 		</ul>
@@ -45,7 +45,7 @@ We get:
 <div class="my-class">
 	<div>Jacynthe</div>
 	<ul attr-name="lunchrOOm">
-		<li class="hen first">Elsa (index: 0) Elsa</li>
+		<li class="hen first">Elsa (index: 0)</li>
 		<li class="unknown">Zaza (index: 2)</li>
 	</ul>
 	<span>HEN, CAT, DOG, SPIDER</span>
@@ -55,7 +55,7 @@ We get:
 
 ## Browser support
 
-Barbiche requires support of `<template>` tag, `Array.from` static method and some DOM convenience methods (currently `childNode.before`, `childNode.after`, `childNode.replaceWith`, `childNode.remove` and `element.classList` api). Early but not so simple tests show that properly polyfilled, Barbiche can be used with:
+Barbiche requires support of `<template>` tag, `Array.from` static method and some DOM convenience methods (currently `childNode.before`, `childNode.after`, `childNode.replaceWith`, `childNode.remove` and `element.classList` API). Early but not so simple tests show that properly polyfilled, Barbiche can be used with:
 
 * Chrome >= 15 (no test with previous releases)
 * Firefox >= 20
@@ -82,9 +82,12 @@ Setting ids on your templates is strongly recommended.
 
 Merging data into a Barbiche instance is done in this way:
 ```js
-Barbiche('my-template').merge(obj1, obj2, obj3,...);
+var frag = Barbiche('my-template').merge(obj1, obj2, obj3,...);
 ```
-This returns a DocumentFragment that can be inserted in the main document. The arguments of `merge` method are used to init the merge context: when Barbiche is looking for the value of an identifier, it searches first in `obj1`, then in `obj2`,..., then in `window`.
+The arguments of `merge` method are used to init the merge context: when Barbiche is looking for the value of an identifier, it searches first in `obj1`, then in `obj2`,..., then in `window`. A DocumentFragment is returned that can be inserted in the main document:
+```js
+document.body.appendChild(frag);
+```
 
 For example, in `Barbiche('my-template').merge(obj1, obj2, obj3)`, you may consider that:
 * `obj1` is a plain JSON object that comes from your database
@@ -111,7 +114,7 @@ Barbiche templates are decorated with special attributes which are evaluated in 
 5. `bb-attr="expression"`
 6. `bb-class="expression"`
 
-and uses `{{expression}}` and `{{{expression}}}` for merging text and HTML, respectively.
+and use `{{expression}}` and `{{{expression}}}` for merging text and HTML, respectively.
 #### Expressions
 
 Barbiche expressions support a subset of JavaScript:
@@ -130,7 +133,7 @@ and a special constructor: `expression: expression` that we call a Barbiche obje
 Inserting text is done via `{{content}}` where `content` resolves to a string or a Barbiche object.
 
 * if `content` resolves to a string, a text node containing `content` value is inserted
-* if `content` resolves to a Barbiche object `bool: string`, if `bool` is true, a text node containing `string` value is inserted
+* if `content` resolves to a Barbiche object `boolean: string`, if `boolean` is true, a text node containing `string` value is inserted
 
 Some examples:
 ```html
@@ -145,10 +148,10 @@ Some examples:
 Inserting HTML is done via `{{{content}}}` where `content` resolves to a string or a Barbiche object.
 
 * if `content` resolves to a string, its content is inserted as HTML
-* if `content` resolves to a Barbiche object `bool: string`, if `bool` is true, `string` value is inserted as HTML
+* if `content` resolves to a Barbiche object `boolean: string`, if `boolean` is true, `string` value is inserted as HTML
 
 #### Conditions
-A `bb-if` attribute resolves to a boolean value. If false, the current node (and its subtree) is removed.
+A `bb-if` attribute resolves to a boolean value. If this value is false, the current node (and its subtree) is removed.
 
 Some examples of `bb-if` attributes:
 ```html
@@ -166,15 +169,15 @@ Some examples of `bb-alias` attributes:
 In the first line, the value of `JSON.stringify(obj)` is bound to `str1` identifier and the value of `obj.prop` to `str2`.
 
 #### Loops
-A `bb-repeat` contains an expression and ends with an optional `--` or `++` keyword. The expression resolves to a Barbiche expression or an array of Barbiche expressions. For each Barbiche expression `array: 'string'`, a loop is executed on `array`, binding each array item to `'string'` and item index to `'_string_'`. A `++` ending keyword will insert merged items in natural order; `--` will insert merged items in reverse order; no ending keyword is the same as `++`.
+A `bb-repeat` attribute contains an expression and ends with an optional `--` or `++` keyword. The expression resolves to a Barbiche expression or an array of Barbiche expressions which defines a set of *nested* loops. For each Barbiche expression `array: 'string'`, a loop is executed on `array`, binding each array item to `'string'` and item index to `'_string_'`. A `++` ending keyword will insert merged items in natural order; `--` will insert merged items in reverse order; no ending keyword is the same as `++`.
 
 ####Imports
-A `bb-import` attributes resolves to a string `id`. The template with id `id`, if any, is then merged using current context and the current node is replaced with the merge result. The `bb-import` attribute is reserved to `<template>` elements.
+A `bb-import` attributes resolves to a string `id`. The template with id `id` is then merged using current context and the current node is replaced with the merge result. The `bb-import` attribute is reserved to `<template>` elements.
 
 Some usage examples can be found [below](#subtemplates).
 
 #### Attributes
-A `bb-attr` attribute resolves to a Barbiche expression or an array of Barbiche expressions. For each expression `value: name`, `name` resolves to a string value. If `name` is not empty and if `value` has type `string`, attribute `name` is set on the current node with value `value`.
+A `bb-attr` attribute resolves to a Barbiche expression or an array of Barbiche expressions. For each expression `value: name`, `name` resolves to a string value. If `value` has type `string`, attribute `name` is set on the current node with value `value`.
 
 #### Classes
 A `bb-class` attribute resolves to a string, a Barbiche expression or an array containing strings and Barbiche expressions. For each item:
