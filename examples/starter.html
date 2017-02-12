@@ -10,12 +10,12 @@
 	<div id="quick-start">
 		<h1>Quick start</h1>
 		<template id="test">
-			<div bb-alias="[items[1].name: 'name']" bb-class="[customClass]">
+			<div bb-alias="items[1].name: 'name'" bb-class="customClass">
 				<div>{{name}}</div>
-				<ul bb-attr="[my_replace(attrValue): 'attr-name']">
-					<template bb-repeat="[items: 'item']">
+				<ul bb-attr="my_replace(attrValue): 'attr-name'">
+					<template bb-repeat="items: 'item'">
 						<li bb-if="item.show" bb-class="[item.species || 'unknown', (_item_ == 0): 'first']">
-							{{item.name}} (index: {{_item_}}) {{_item_ == 0: item.name}}
+							{{item.name}} (index: {{_item_}})
 						</li>
 					</template>
 				</ul>
@@ -52,7 +52,7 @@
 		</template>
 		<template id="dynamic-subtemplate">
 			<div>
-				<template bb-repeat="[items: 'item']" bb-import="item"></template>
+				<template bb-repeat="items: 'item'" bb-import="item"></template>
 			</div>
 		</template>
 		<template id="sub1">
@@ -66,8 +66,8 @@
 		</template>
 		<template id="recursive-sub">
 			<ul>
-				<li bb-repeat="[children: 'child']">{{child.name}}
-					<template bb-if="child.children" bb-alias="[child.children: 'children']" bb-import="'recursive-sub'"></template>
+				<li bb-repeat="children: 'child'">{{child.name}}
+					<template bb-if="child.children" bb-alias="child.children: 'children'" bb-import="'recursive-sub'"></template>
 				</li>
 			</ul>
 		</template>
