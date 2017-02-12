@@ -248,6 +248,7 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 	}
 	if (bbAttrs.alias) {
 		var parsed = (template.closures[bbAttrs.alias])();
+		if (!Array.isArray(parsed)) parsed = [parsed];
 		parsed.forEach(function(item) {
 			nodeContext[item.name] = item.value;
 		});
@@ -277,6 +278,7 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 				nodeContextPushed = true;
 			}
 			var parsed = (template.closures[bbAttrs.repeat])();
+			if (!Array.isArray(parsed)) parsed = [parsed];
 			var order = parsed.order || 'before';
 			//iterate on cartesian product of arrays:
 			(parsed.reduceRight(function(accu, task) {
@@ -305,6 +307,7 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 	} else {
 		if (bbAttrs.attr) {
 			var parsed = (template.closures[bbAttrs.attr])();
+			if (!Array.isArray(parsed)) parsed = [parsed];
 			parsed.forEach(function(item) {
 				var value = item.value;
 				var name = item.name;
@@ -315,6 +318,7 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 		}
 		if (bbAttrs.class) {
 			var parsed = (template.closures[bbAttrs.class])();
+			if (!Array.isArray(parsed)) parsed = [parsed];
 			parsed.forEach(function(item) {
 				var value = item.toString();
 				if (value) node.classList.add(value);

@@ -11,10 +11,10 @@ See Barbiche live examples [here](http://htmlpreview.github.io/?https://github.c
 We start with a simple template and a call to Barbiche:
 ```html
 <template id="test">
-	<div bb-alias="[items[1].name: 'name']" bb-class="[customClass]">
+	<div bb-alias="items[1].name: 'name'" bb-class="customClass">
 		<div>{{name}}</div>
-		<ul bb-attr="[my_replace(attrValue): 'attr-name']">
-			<template bb-repeat="[items: 'item']">
+		<ul bb-attr="my_replace(attrValue): 'attr-name'">
+			<template bb-repeat="items: 'item'">
 				<li bb-if="item.show" bb-class="[item.species || 'unknown', (_item_ == 0): 'first']">
 					{{item.name}} (index: {{_item_}}) {{_item_ == 0: item.name}}
 				</li>
@@ -127,7 +127,7 @@ A `bb-alias` attribute resolves to an array of objects that have properties `nam
 Some examples of `bb-alias` attributes:
 ```html
 <div bb-alias="[JSON.stringify(obj): 'str1', obj.prop: 'str2']">...</div>
-<div bb-alias="[logo.resources.link[0]: 'link']">...</div>
+<div bb-alias="logo.resources.link[0]: 'link'">...</div>
 ```
 In the first line, the value of `JSON.stringify(obj)` is bound to `str1` identifier and the value of `obj.prop` to `str2`.
 
@@ -166,7 +166,7 @@ Subtemplate import is dynamic:
 ```html
 <template id="dynamic-subtemplate">
 	<div>
-		<template bb-repeat="[items: 'item']" bb-import="item"></template>
+		<template bb-repeat="items: 'item'" bb-import="item"></template>
 	</div>
 </template>
 <template id="sub1">
@@ -195,8 +195,8 @@ Recursion is also supported:
 </template>
 <template id="recursive-sub">
 	<ul>
-		<li bb-repeat="[children: 'child']">{{child.name}}
-			<template bb-if="child.children" bb-alias="[child.children: 'children']"
+		<li bb-repeat="children: 'child'">{{child.name}}
+			<template bb-if="child.children" bb-alias="child.children: 'children'"
 				bb-import="'recursive-sub'"></template>
 		</li>
 	</ul>

@@ -66,10 +66,21 @@ StringLiteral (\"{DoubleStringCharacter}*\")|(\'{SingleStringCharacter}*\')
 %% /* language grammar */
 
 Main
-    : SimpleExpression EOF
+    : Expression EOF
         {return $1;}
     | Array EOF
         {return $1;}
+    ;
+
+Expression
+    : SimpleExpression
+        {return $1;}
+    | SimpleExpression Order
+        {$$ = (function(a, b) {
+            var ret = [a()];
+            ret.order = b;
+            return ret;
+        }).bind(null, $1, $2);}
     ;
 
 ArrayItemList
