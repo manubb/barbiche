@@ -1,6 +1,6 @@
 # Barbiche - Template engine for DOM &amp; JS
 
-Barbiche is a logic-full template engine for browser environment. It is currently ~~alpha and should be used only for testing as syntactic changes are very likely to happen~~ beta and syntactic changes are less likely to happen.
+Barbiche is a logic-full template engine for browser environment. It is currently beta and syntactic changes are less likely to happen.
 
 Source code is clean, readable and short (around 600 lines parser included).
 
@@ -166,7 +166,7 @@ Some examples of `bb-alias` attributes:
 In the first line, the value of `JSON.stringify(obj)` is bound to `str1` identifier and the value of `obj.prop` to `str2`.
 
 #### Loops
-A `bb-repeat` attribute resolves to a Barbiche expression or an array of Barbiche expressions and ends with an optional `--` or `++` keyword. For each expression `array: string`, a loop is executed on `array`, binding each array item to `string` and item index to `_string_`. A `++` ending keyword will insert items in natural order; `--` will insert items in reverse order; no ending keyword is the same as `++`.
+A `bb-repeat` contains an expression and ends with an optional `--` or `++` keyword. The expression resolves to a Barbiche expression or an array of Barbiche expressions. For each Barbiche expression `array: 'string'`, a loop is executed on `array`, binding each array item to `'string'` and item index to `'_string_'`. A `++` ending keyword will insert merged items in natural order; `--` will insert merged items in reverse order; no ending keyword is the same as `++`.
 
 ####Imports
 A `bb-import` attributes resolves to a string `id`. The template with id `id`, if any, is then merged using current context and the current node is replaced with the merge result. The `bb-import` attribute is reserved to `<template>` elements.
