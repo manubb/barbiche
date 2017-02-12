@@ -104,14 +104,14 @@ Barbiche heavily relies on the great properties of the `<template>` element. An 
 
 Barbiche templates are decorated with special attributes which are evaluated in this order:
 
-1. `bb-if="exp"`
-2. `bb-alias="exp"`
-3. `bb-repeat="exp (|++|--)"`
-4. `bb-import="exp"`
-5. `bb-attr="exp"`
-6. `bb-class="exp"`
+1. `bb-if="expression"`
+2. `bb-alias="expression"`
+3. `bb-repeat="expression (++|--)?"`
+4. `bb-import="expression"`
+5. `bb-attr="expression"`
+6. `bb-class="expression"`
 
-and uses `{{exp}}` and `{{{exp}}}` for merging text and HTML.
+and uses `{{expression}}` and `{{{expression}}}` for merging text and HTML.
 #### Expressions
 
 Barbiche expressions support a subset of JavaScript:
@@ -124,7 +124,7 @@ Barbiche expressions support a subset of JavaScript:
 * strings
 * `+` operator
 
-and a special constructor: `exp: exp` that we call a Barbiche object.
+and a special constructor: `expression: expression` that we call a Barbiche object.
 
 #### Text
 Inserting text is done via `{{content}}` where `content` resolves to a string or a Barbiche object.
@@ -132,6 +132,15 @@ Inserting text is done via `{{content}}` where `content` resolves to a string or
 * if `content` resolves to a string, a text node containing `content` value is inserted
 * if `content` resolves to a Barbiche object `bool: string`, if `bool` is true, a text node containing `string` value is inserted
 
+Some examples:
+```html
+<div>
+{{"You see me"}}
+{{(2 == 1 + 1): "You see me too"}}
+{{(1 == 4): "You won't see me"}}
+{{Math.random() > 0.5: "Well, maybe..."}}
+</div>
+```
 #### HTML
 Inserting HTML is done via `{{{content}}}` where `content` resolves to a string or a Barbiche object.
 
@@ -143,8 +152,8 @@ A `bb-if` attribute resolves to a boolean value. If false, the current node (and
 
 Some examples of `bb-if` attributes:
 ```html
-<div bb-if="children.length >= 4 || species != 'cat'">...</div>
-<span bb-if="my_crazy_filter(obj.items[2], obj.other.another)">...</span>
+<div bb-if="pet.species != 'cat'">...</div>
+<span bb-if="my_crazy_test(obj.items[2], obj.other.another)">...</span>
 ```
 #### Aliases
 A `bb-alias` attribute resolves to a Barbiche object or an array of Barbiche objects. For each object `value: name`, `name` is bound to `value` during the processing of the current subtree.
