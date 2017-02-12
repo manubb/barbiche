@@ -181,8 +181,8 @@ A `bb-attr` attribute resolves to a Barbiche expression or an array of Barbiche 
 
 #### Classes
 A `bb-class` attribute resolves to a string, a Barbiche expression or an array containing strings and Barbiche expressions. For each item:
-* if item resolves to a string `name`, if `name` is not empty, class `name` is added to the current node
-* if item resolves to a Barbiche expression `boolean: name`, `boolean` is resolved to a boolean value and `name` to a string. If `boolean` is true and if `name` is not empty, class `name` is added to the current node.
+* if item resolves to a string `name`, class `name` is added to the current node
+* if item resolves to a Barbiche expression `boolean: name`, `boolean` is resolved to a boolean value and `name` to a string. If `boolean` is true, class `name` is added to the current node.
 
 ### Subtemplates
 A simple example:
