@@ -21,7 +21,7 @@ StringLiteral (\"{DoubleStringCharacter}*\")|(\'{SingleStringCharacter}*\')
 %%
 
 \s+                   /* skip whitespace */
-[0-9]+("."[0-9]+)?\b  return 'NUMBER'
+("-")?[0-9]+("."[0-9]+)?\b  return 'NUMBER'
 "||"                  return '||'
 "&&"                  return '&&'
 "=="                  return '=='
