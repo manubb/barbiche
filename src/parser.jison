@@ -224,11 +224,14 @@ function push(a, b) {
 }
 
 function getProperty(a, b) {
-    var val = a();
-    var ret = val && val[b()];
-    if (typeof(ret) == 'function') {
-        return ret.bind(val);
-    } else return ret;
+	var val = a();
+	if (val == null) return;
+	else {
+		var ret = val[b()];
+		if (typeof(ret) == 'function') {
+			return ret.bind(val);
+		} else return ret;
+	}
 }
 
 function call(a, b) {
