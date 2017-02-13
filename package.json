@@ -24,8 +24,10 @@
   },
   "devDependencies": {
     "browserify": "^14.0.0",
+    "codemirror": "^5.23.0",
     "jison": "^0.4.17",
     "js-polyfills": "^0.1.31",
+    "semantic-ui-css": "^2.2.4",
     "template": "https://github.com/webcomponents/template.git",
     "uglify-js": "^2.7.5"
   },
