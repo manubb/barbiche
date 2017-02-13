@@ -56,9 +56,13 @@ StringLiteral (\"{DoubleStringCharacter}*\")|(\'{SingleStringCharacter}*\')
 %left ':'
 %left '||'
 %left '&&'
-%left '==' '!=' '<=' '>=' '<' '>'
+%left '==' '!='
+%left '<=' '>=' '<' '>'
 %left '+'
-%left UMINUS
+%right '!'
+%left '('
+%left '.' '['
+%nonassoc GROUP
 
 %start Main
 
@@ -140,11 +144,11 @@ SimpleExpression
 		{$$ = (function(a, b) {
 			return a() + b();
 		}).bind(null, $1, $3);}
-	| '!' SimpleExpression %prec UMINUS
+	| '!' SimpleExpression
 		{$$ = (function(a) {
 			return !(a());
 		}).bind(null, $2);}
-	| '(' SimpleExpression ')'
+	| '(' SimpleExpression ')' %prec GROUP
 		{$$ = $2;}
 	| NUMBER
 		{$$ = Number.bind(null, yytext);}
@@ -154,12 +158,16 @@ SimpleExpression
 		{$$ = function() {return true;}}
 	| FALSE
 		{$$ = function() {return false;}}
-	| CallExpression
-		{$$ = $1;}
-	| MemberExpression
-		{$$ = $1;}
+	| SimpleExpression Arguments
+		{$$ = call.bind(null, $1, $2);}
+	| SimpleExpression "[" SimpleExpression "]"
+		{$$ = getProperty.bind(null, $1, $3);}
+	| SimpleExpression"." PropertyName
+		{$$ = getProperty.bind(null, $1, $3);}
 	| Array
 		{$$ = $1;}
+	| VAR
+		{$$ = yy.context.resolve.bind(yy.context, yytext);}
 	;
 
 Arguments
@@ -178,34 +186,9 @@ ArgumentList
 		{$$ = push.bind(null, $1, $3);}
 	;
 
-CallExpression
-	: MemberExpression Arguments
-		{$$ = call.bind(null, $1, $2);}
-	| CallExpression Arguments
-		{$$ = call.bind(null, $1, $2);}
-	| CallExpression "[" SimpleExpression "]"
-		{$$ = getProperty.bind(null, $1, $3);}
-	| CallExpression "." PropertyName
-		{$$ = getProperty.bind(null, $1, $3);}
-	;
-
-MemberExpression
-	: IdentifierName
-		{$$ = $1;}
-	| MemberExpression "[" SimpleExpression "]"
-		{$$ = getProperty.bind(null, $1, $3);}
-	| MemberExpression "." PropertyName
-		{$$ = getProperty.bind(null, $1, $3);}
-	;
-
 PropertyName
 	: VAR
 		{$$ = String.bind(null, yytext);}
-	;
-
-IdentifierName
-	: VAR
-		{$$ = yy.context.resolve.bind(yy.context, yytext);}
 	;
 
 %%
