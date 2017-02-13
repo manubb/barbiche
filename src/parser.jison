@@ -69,19 +69,10 @@ StringLiteral (\"{DoubleStringCharacter}*\")|(\'{SingleStringCharacter}*\')
 %% /* language grammar */
 
 Main
-	: Expression EOF
+	: SimpleExpression EOF
 		{return $1;}
-	;
-
-Expression
-	: SimpleExpression
-		{return $1;}
-	| SimpleExpression Order
-		{$$ = (function(a, b) {
-			var ret = a();
-			ret._order = b;
-			return ret;
-		}).bind(null, $1, $2);}
+	| SimpleExpression Order EOF
+		{return order.bind(null, $1, $2);}
 	;
 
 ArrayItemList
@@ -105,59 +96,37 @@ Array
 
 SimpleExpression
 	: SimpleExpression ':' SimpleExpression
-		{$$ = (function(a, b) {
-			return new yy.bbObj(a(), b());
-		 }).bind(null, $1, $3);}
+		{$$ = bbObj.bind(yy, $1, $3);}
 	| SimpleExpression '||' SimpleExpression
-		{$$ = (function(a, b) {
-			return a() || b();
-		}).bind(null, $1, $3);}
+		{$$ = OR.bind(null, $1, $3);}
 	| SimpleExpression '&&' SimpleExpression
-		{$$ = (function(a, b) {
-			return a() && b();
-		}).bind(null, $1, $3);}
+		{$$ = AND.bind(null, $1, $3);}
 	| SimpleExpression '==' SimpleExpression
-		{$$ = (function(a, b) {
-			return a() == b();
-		}).bind(null, $1, $3);}
+		{$$ = EQUAL.bind(null, $1, $3);}
 	| SimpleExpression '!=' SimpleExpression
-		{$$ = (function(a, b) {
-			return a() != b();
-		}).bind(null, $1, $3);}
+		{$$ = NOT_EQ.bind(null, $1, $3);}
 	| SimpleExpression '<=' SimpleExpression
-		{$$ = (function(a, b) {
-			return a() <= b();
-		}).bind(null, $1, $3);}
+		{$$ = LEQ.bind(null, $1, $3);}
 	| SimpleExpression '>=' SimpleExpression
-		{$$ = (function(a, b) {
-			return a() >= b();
-		}).bind(null, $1, $3);}
+		{$$ = GEQ.bind(null, $1, $3);}
 	| SimpleExpression '<' SimpleExpression
-		{$$ = (function(a, b) {
-			return a() < b();
-		}).bind(null, $1, $3);}
+		{$$ = LESS.bind(null, $1, $3);}
 	| SimpleExpression '>' SimpleExpression
-		{$$ = (function(a, b) {
-			return a() > b();
-		}).bind(null, $1, $3);}
+		{$$ = GREATER.bind(null, $1, $3);}
 	| SimpleExpression '+' SimpleExpression
-		{$$ = (function(a, b) {
-			return a() + b();
-		}).bind(null, $1, $3);}
+		{$$ = plus.bind(null, $1, $3);}
 	| '!' SimpleExpression
-		{$$ = (function(a) {
-			return !(a());
-		}).bind(null, $2);}
+		{$$ = NOT.bind(null, $2);}
 	| '(' SimpleExpression ')' %prec GROUP
 		{$$ = $2;}
 	| NUMBER
 		{$$ = Number.bind(null, yytext);}
 	| STRING
-		{$$ = function() {return quoteUnescape(String(yytext));}}
+		{$$ = quoteUnescape.bind(null, yytext);}
 	| TRUE
-		{$$ = function() {return true;}}
+		{$$ = TRUE}
 	| FALSE
-		{$$ = function() {return false;}}
+		{$$ = FALSE}
 	| SimpleExpression Arguments
 		{$$ = call.bind(null, $1, $2);}
 	| SimpleExpression "[" SimpleExpression "]"
@@ -165,16 +134,13 @@ SimpleExpression
 	| SimpleExpression"." PropertyName
 		{$$ = getProperty.bind(null, $1, $3);}
 	| Array
-		{$$ = $1;}
 	| VAR
 		{$$ = yy.context.resolve.bind(yy.context, yytext);}
 	;
 
 Arguments
 	: "(" ")"
-		{$$ = function() {
-			return [];
-		}}
+		{$$ = emptyArray}
 	| "(" ArgumentList ")"
 		{$$ = $2;}
 	;
@@ -196,9 +162,45 @@ function quoteUnescape(str) {
 	return str.replace(/(\\('|"|\n|\t|\r))/g, function() {return arguments[2];});
 }
 
-function singleton(a) {
-	return [a()];
+function OR(a, b) {
+	return a() || b();
 }
+
+function AND(a, b) {
+	return a() && b();
+}
+
+function EQUAL(a, b) {
+	return a() == b();
+}
+
+function NOT_EQ(a, b) {
+	return a() != b();
+}
+
+function LEQ(a, b) {
+	return a() <= b();
+}
+
+function LESS(a, b) {
+	return a() < b();
+}
+
+function GEQ(a, b) {
+	return a() >= b();
+}
+
+function GREATER(a, b) {
+	return a() > b();
+}
+
+function NOT(a) {
+	return !(a());
+}
+
+function emptyArray() {return [];}
+
+function singleton(a) {return [a()];}
 
 function push(a, b) {
 	var ret = a();
@@ -220,3 +222,20 @@ function getProperty(a, b) {
 function call(a, b) {
 	return (a()).apply(null, b());
 }
+
+function bbObj(a, b) {
+	return new this.bbObj(a(), b());
+}
+
+function plus(a, b) {
+	return a() + b();
+}
+
+function order(a, b) {
+	var ret = a();
+	ret._order = b;
+	return ret;
+}
+
+function TRUE() {return true;}
+function FALSE() {return false;}
