@@ -126,9 +126,9 @@ SimpleExpression
 	| STRING
 		{$$ = quoteUnescape.bind(null, yytext);}
 	| TRUE
-		{$$ = TRUE}
+		{$$ = TRUE;}
 	| FALSE
-		{$$ = FALSE}
+		{$$ = FALSE;}
 	| SimpleExpression Arguments
 		{$$ = call.bind(null, $1, $2);}
 	| SimpleExpression "[" SimpleExpression "]"
@@ -142,7 +142,7 @@ SimpleExpression
 
 Arguments
 	: "(" ")"
-		{$$ = emptyArray}
+		{$$ = emptyArray;}
 	| "(" ArgumentList ")"
 		{$$ = $2;}
 	;
