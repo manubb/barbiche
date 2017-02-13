@@ -178,7 +178,7 @@ A `bb-import` attributes resolves to a string `id`. The template with id `id` is
 Some usage examples can be found [below](#subtemplates).
 
 #### Attributes
-A `bb-attr` attribute resolves to a Barbiche expression or an array of Barbiche expressions. For each expression `value: name`, `name` resolves to a string value. If `value` has type `string`, attribute `name` is set on the current node with value `value`.
+A `bb-attr` attribute resolves to a Barbiche expression or an array of Barbiche expressions. For each expression `value: name`, `name` resolves to a string value. If `value` is not `undefined` or `null`, attribute `name` is set on the current node with value `value`.
 
 #### Classes
 A `bb-class` attribute resolves to a string, a Barbiche expression or an array containing strings and Barbiche expressions. For each item:
