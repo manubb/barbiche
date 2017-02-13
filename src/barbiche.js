@@ -311,7 +311,7 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 			parsed.forEach(function(item) {
 				var value = item.value;
 				var name = item.name.toString();
-				if (typeof value == "string") node.setAttribute(name, value);
+				if (value != null) node.setAttribute(name, value);
 			});
 		}
 		if (bbAttrs.class) {
