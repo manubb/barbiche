@@ -90,7 +90,9 @@ Order
 	;
 
 Array
-	: '[' ArrayItemList ']'
+	: '[' ']'
+		{$$ = emptyArray;}
+	| '[' ArrayItemList ']'
 		{$$ = $2;}
 	;
 
