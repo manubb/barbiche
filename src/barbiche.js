@@ -292,9 +292,8 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 					})
 				};
 			}, function() {
-				var target = closure && Barbiche(closure()).node;
-				var copy = (target || node).cloneNode(true);
-				node[order](merge(copy.content, template));
+				var target = closure && Barbiche(closure())._clone();
+				node[order](merge((target && target.node|| node.cloneNode(true)).content, target || template));
 			}))();
 		} else if (bbAttrs.import) {
 			var importId = (template.closures[bbAttrs.import])();
