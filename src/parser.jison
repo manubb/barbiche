@@ -65,162 +65,162 @@ StringLiteral (\"{DoubleStringCharacter}*\")|(\'{SingleStringCharacter}*\')
 %% /* language grammar */
 
 Main
-    : Expression EOF
-        {return $1;}
-    ;
+	: Expression EOF
+		{return $1;}
+	;
 
 Expression
-    : SimpleExpression
-        {return $1;}
-    | SimpleExpression Order
-        {$$ = (function(a, b) {
-            var ret = a();
-            ret._order = b;
-            return ret;
-        }).bind(null, $1, $2);}
-    ;
+	: SimpleExpression
+		{return $1;}
+	| SimpleExpression Order
+		{$$ = (function(a, b) {
+			var ret = a();
+			ret._order = b;
+			return ret;
+		}).bind(null, $1, $2);}
+	;
 
 ArrayItemList
-    : SimpleExpression
-        {$$ = singleton.bind(null, $1);}
-    | ArrayItemList ',' SimpleExpression
-        {$$ = push.bind(null, $1, $3);}
-    ;
+	: SimpleExpression
+		{$$ = singleton.bind(null, $1);}
+	| ArrayItemList ',' SimpleExpression
+		{$$ = push.bind(null, $1, $3);}
+	;
 
 Order
-    : '--'
-        {$$ = 'after';}
-    | '++'
-        {$$ = 'before';}
-    ;
+	: '--'
+		{$$ = 'after';}
+	| '++'
+		{$$ = 'before';}
+	;
 
 Array
-    : '[' ArrayItemList ']'
-        {$$ = $2;}
-    ;
+	: '[' ArrayItemList ']'
+		{$$ = $2;}
+	;
 
 SimpleExpression
-    : SimpleExpression ':' SimpleExpression
-        {$$ = (function(a, b) {
-            return new yy.bbObj(a(), b());
-         }).bind(null, $1, $3);}
-    | SimpleExpression '||' SimpleExpression
-        {$$ = (function(a, b) {
-            return a() || b();
-        }).bind(null, $1, $3);}
-    | SimpleExpression '&&' SimpleExpression
-        {$$ = (function(a, b) {
-            return a() && b();
-        }).bind(null, $1, $3);}
-    | SimpleExpression '==' SimpleExpression
-        {$$ = (function(a, b) {
-            return a() == b();
-        }).bind(null, $1, $3);}
-    | SimpleExpression '!=' SimpleExpression
-        {$$ = (function(a, b) {
-            return a() != b();
-        }).bind(null, $1, $3);}
-    | SimpleExpression '<=' SimpleExpression
-        {$$ = (function(a, b) {
-            return a() <= b();
-        }).bind(null, $1, $3);}
-    | SimpleExpression '>=' SimpleExpression
-        {$$ = (function(a, b) {
-            return a() >= b();
-        }).bind(null, $1, $3);}
-    | SimpleExpression '<' SimpleExpression
-        {$$ = (function(a, b) {
-            return a() < b();
-        }).bind(null, $1, $3);}
-    | SimpleExpression '>' SimpleExpression
-        {$$ = (function(a, b) {
-            return a() > b();
-        }).bind(null, $1, $3);}
-    | SimpleExpression '+' SimpleExpression
-        {$$ = (function(a, b) {
-            return a() + b();
-        }).bind(null, $1, $3);}
-    | '!' SimpleExpression %prec UMINUS
-        {$$ = (function(a) {
-            return !(a());
-        }).bind(null, $2);}
-    | '(' SimpleExpression ')'
-        {$$ = $2;}
-    | NUMBER
-        {$$ = Number.bind(null, yytext);}
-    | STRING
-        {$$ = function() {return quoteUnescape(String(yytext));}}
-    | TRUE
-        {$$ = function() {return true;}}
-    | FALSE
-        {$$ = function() {return false;}}
-    | CallExpression
-        {$$ = $1;}
-    | MemberExpression
-        {$$ = $1;}
-    | Array
-        {$$ = $1;}
-    ;
+	: SimpleExpression ':' SimpleExpression
+		{$$ = (function(a, b) {
+			return new yy.bbObj(a(), b());
+		 }).bind(null, $1, $3);}
+	| SimpleExpression '||' SimpleExpression
+		{$$ = (function(a, b) {
+			return a() || b();
+		}).bind(null, $1, $3);}
+	| SimpleExpression '&&' SimpleExpression
+		{$$ = (function(a, b) {
+			return a() && b();
+		}).bind(null, $1, $3);}
+	| SimpleExpression '==' SimpleExpression
+		{$$ = (function(a, b) {
+			return a() == b();
+		}).bind(null, $1, $3);}
+	| SimpleExpression '!=' SimpleExpression
+		{$$ = (function(a, b) {
+			return a() != b();
+		}).bind(null, $1, $3);}
+	| SimpleExpression '<=' SimpleExpression
+		{$$ = (function(a, b) {
+			return a() <= b();
+		}).bind(null, $1, $3);}
+	| SimpleExpression '>=' SimpleExpression
+		{$$ = (function(a, b) {
+			return a() >= b();
+		}).bind(null, $1, $3);}
+	| SimpleExpression '<' SimpleExpression
+		{$$ = (function(a, b) {
+			return a() < b();
+		}).bind(null, $1, $3);}
+	| SimpleExpression '>' SimpleExpression
+		{$$ = (function(a, b) {
+			return a() > b();
+		}).bind(null, $1, $3);}
+	| SimpleExpression '+' SimpleExpression
+		{$$ = (function(a, b) {
+			return a() + b();
+		}).bind(null, $1, $3);}
+	| '!' SimpleExpression %prec UMINUS
+		{$$ = (function(a) {
+			return !(a());
+		}).bind(null, $2);}
+	| '(' SimpleExpression ')'
+		{$$ = $2;}
+	| NUMBER
+		{$$ = Number.bind(null, yytext);}
+	| STRING
+		{$$ = function() {return quoteUnescape(String(yytext));}}
+	| TRUE
+		{$$ = function() {return true;}}
+	| FALSE
+		{$$ = function() {return false;}}
+	| CallExpression
+		{$$ = $1;}
+	| MemberExpression
+		{$$ = $1;}
+	| Array
+		{$$ = $1;}
+	;
 
 Arguments
-    : "(" ")"
-        {$$ = function() {
-            return [];
-        }}
-    | "(" ArgumentList ")"
-        {$$ = $2;}
-    ;
+	: "(" ")"
+		{$$ = function() {
+			return [];
+		}}
+	| "(" ArgumentList ")"
+		{$$ = $2;}
+	;
 
 ArgumentList
-    : SimpleExpression
-        {$$ = singleton.bind(null, $1);}
-    | ArgumentList "," SimpleExpression
-        {$$ = push.bind(null, $1, $3);}
-    ;
+	: SimpleExpression
+		{$$ = singleton.bind(null, $1);}
+	| ArgumentList "," SimpleExpression
+		{$$ = push.bind(null, $1, $3);}
+	;
 
 CallExpression
-    : MemberExpression Arguments
-        {$$ = call.bind(null, $1, $2);}
-    | CallExpression Arguments
-        {$$ = call.bind(null, $1, $2);}
-    | CallExpression "[" SimpleExpression "]"
-        {$$ = getProperty.bind(null, $1, $3);}
-    | CallExpression "." PropertyName
-        {$$ = getProperty.bind(null, $1, $3);}
-    ;
+	: MemberExpression Arguments
+		{$$ = call.bind(null, $1, $2);}
+	| CallExpression Arguments
+		{$$ = call.bind(null, $1, $2);}
+	| CallExpression "[" SimpleExpression "]"
+		{$$ = getProperty.bind(null, $1, $3);}
+	| CallExpression "." PropertyName
+		{$$ = getProperty.bind(null, $1, $3);}
+	;
 
 MemberExpression
-    : IdentifierName
-        {$$ = $1;}
-    | MemberExpression "[" SimpleExpression "]"
-        {$$ = getProperty.bind(null, $1, $3);}
-    | MemberExpression "." PropertyName
-        {$$ = getProperty.bind(null, $1, $3);}
-    ;
+	: IdentifierName
+		{$$ = $1;}
+	| MemberExpression "[" SimpleExpression "]"
+		{$$ = getProperty.bind(null, $1, $3);}
+	| MemberExpression "." PropertyName
+		{$$ = getProperty.bind(null, $1, $3);}
+	;
 
 PropertyName
-    : VAR
-        {$$ = String.bind(null, yytext);}
-    ;
+	: VAR
+		{$$ = String.bind(null, yytext);}
+	;
 
 IdentifierName
-    : VAR
-        {$$ = yy.context.resolve.bind(yy.context, yytext);}
-    ;
+	: VAR
+		{$$ = yy.context.resolve.bind(yy.context, yytext);}
+	;
 
 %%
 function quoteUnescape(str) {
-    return str.replace(/(\\('|"|\n|\t|\r))/g, function() {return arguments[2];});
+	return str.replace(/(\\('|"|\n|\t|\r))/g, function() {return arguments[2];});
 }
 
 function singleton(a) {
-    return [a()];
+	return [a()];
 }
 
 function push(a, b) {
-    var ret = a();
-    ret.push(b());
-    return ret;
+	var ret = a();
+	ret.push(b());
+	return ret;
 }
 
 function getProperty(a, b) {
@@ -235,5 +235,5 @@ function getProperty(a, b) {
 }
 
 function call(a, b) {
-    return (a()).apply(null, b());
+	return (a()).apply(null, b());
 }
