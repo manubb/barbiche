@@ -1234,7 +1234,7 @@ if (typeof module !== 'undefined' && require.main === module) {
 }).call(this,require('_process'))
 },{"_process":3,"fs":1,"path":2}],5:[function(require,module,exports){
 // Barbiche
-// version: 0.3.2
+// version: 0.3.3
 // author: Manuel Baclet <manuel@eda.sarl>
 // license: MIT
 
