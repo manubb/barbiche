@@ -327,6 +327,7 @@
 			Barbiche.clean();
 			t = document.createElement('template');
 			temp.innerHTML = templateCodeMirror.getValue();
+			window.HTMLTemplateElement.bootstrap && window.HTMLTemplateElement.bootstrap(temp);
 			var content = dataCodeMirror.getValue();
 			try {
 				eval(content);
