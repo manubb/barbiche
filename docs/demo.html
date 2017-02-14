@@ -15,211 +15,211 @@
 	var examples = {
 		basic: {
 			template:
-`<template id="basic">
-	<div bb-class="class" bb-attr="attribute.value: attribute.name">{{text}}</div>
-</template>`,
+'<template id="basic">\n' +
+'	<div bb-class="class" bb-attr="attribute.value: attribute.name">{{text}}</div>\n' +
+'</template>',
 			js:
-`Barbiche('basic').merge({
-	class: "barbiche",
-	attribute: {name: "my-attr", value: "my-val"},
-	text: "Hello World!"
-});`
+'Barbiche(\'basic\').merge({\n' +
+'	class: "barbiche",\n' +
+'	attribute: {name: "my-attr", value: "my-val"},\n' +
+'	text: "Hello World!"\n' +
+'});'
 		},
 		starter: {
 			template:
-`<template id="starter">
-	<div bb-alias="items[1].name: 'name'" bb-class="customClass">
-		<div>{{name}}</div>
-		<ul bb-attr="my_replace(attrValue): 'attr-name'">
-			<template bb-repeat="items: 'item'">
-				<li bb-if="item.show" bb-class="[item.species || 'unknown', (_item_ == 0): 'first']">
-				{{item.name}} (index: {{_item_}})
-				</li>
-			</template>
-		</ul>
-		<span>{{item.join(', ').toUpperCase()}}</span>
-		{{{some_html}}}
-	</div>
-</template>`,
-		js:
-`Barbiche('starter').merge({
-	customClass: "my-class",
-	"items": [
-		{species: "hen", name: "Elsa", show: true},
-		{species: "cat", name: "Jacynthe", show: false},
-		{species: null, name: "Zaza", show: true}
-	],
-	item: ["hen", "cat", "dog", "spider"],
-	some_html: "<div><p>This is...</p><p>...some HTML.</p></div>",
-	my_replace: function(str) {return str.replace(/o/g, "O");},
-	attrValue: "lunchroom"
-});`
+'<template id="starter">\n' +
+'	<div bb-alias="items[1].name: \'name\'" bb-class="customClass">\n' +
+'		<div>{{name}}</div>\n' +
+'		<ul bb-attr="my_replace(attrValue): \'attr-name\'">\n' +
+'			<template bb-repeat="items: \'item\'">\n' +
+'				<li bb-if="item.show" bb-class="[item.species || \'unknown\', (_item_ == 0): \'first\']">\n' +
+'				{{item.name}} (index: {{_item_}})\n' +
+'				</li>\n' +
+'			</template>\n' +
+'		</ul>\n' +
+'		<span>{{item.join(\', \').toUpperCase()}}</span>\n' +
+'		{{{some_html}}}\n' +
+'	</div>\n' +
+'</template>',
+			js:
+'Barbiche(\'starter\').merge({\n' +
+'	customClass: "my-class",\n' +
+'	"items": [\n' +
+'		{species: "hen", name: "Elsa", show: true},\n' +
+'		{species: "cat", name: "Jacynthe", show: false},\n' +
+'		{species: null, name: "Zaza", show: true}\n' +
+'	],\n' +
+'	item: ["hen", "cat", "dog", "spider"],\n' +
+'	some_html: "<div><p>This is...</p><p>...some HTML.</p></div>",\n' +
+'	my_replace: function(str) {return str.replace(/o/g, "O");},\n' +
+'	attrValue: "lunchroom"\n' +
+'});'
 		},
 		text: {
 			template:
-`<template id="text">
-	<div>
-		<span>{{yes}}</span>
-		<span>{{(2 == 1 + 1): again}}</span>
-		<span>{{(1 == 4): no}}</span>
-		<span>{{Math.random() > 0.5: maybe}}</span>
-	</div>
-</template>
-
-
-<template id="html">
-	<div>
-		<span>{{{some_html}}}</span>
-		<span>{{some_html}}</span>
-	</div>
-</template>`,
+'<template id="text">\n' +
+'	<div>\n' +
+'		<span>{{yes}}</span>\n' +
+'		<span>{{(2 == 1 + 1): again}}</span>\n' +
+'		<span>{{(1 == 4): no}}</span>\n' +
+'		<span>{{Math.random() > 0.5: maybe}}</span>\n' +
+'	</div>\n' +
+'</template>\n' +
+'\n' +
+'\n' +
+'<template id="html">\n' +
+'	<div>\n' +
+'		<span>{{{some_html}}}</span>\n' +
+'		<span>{{some_html}}</span>\n' +
+'	</div>\n' +
+'</template>',
 			js:
-`var obj = {
-	yes: "You see me",
-	again: "You see me too",
-	no: "You won't see me",
-	maybe: "Well, maybe...",
-	some_html: "<div><p>This is...</p><p>...some HTML.</p></div>"
-};
-Barbiche('text').merge(obj);
-Barbiche('html').merge(obj);`
+'var obj = {\n' +
+'	yes: "You see me",\n' +
+'	again: "You see me too",\n' +
+'	no: "You won\'t see me",\n' +
+'	maybe: "Well, maybe...",\n' +
+'	some_html: "<div><p>This is...</p><p>...some HTML.</p></div>"\n' +
+'};\n' +
+'Barbiche(\'text\').merge(obj);\n' +
+'Barbiche(\'html\').merge(obj);'
 		},
 		loops: {
 			template:
-`<template id="loop">
-	<div>
-		<span bb-repeat="items: 'item'">{{item.name}} ({{_item_}})</span>
-	</div>
-</template>
-
-<template id="desc_loop">
-	<div>
-		<span bb-repeat="items: 'item' --">{{item.name}} ({{_item_}})</span>
-	</div>
-</template>
-
-<template id="table">
-	<table>
-		<tbody>
-			<tr bb-repeat="rows: 'row'">
-				<td bb-repeat="row: 'cell'">{{cell}}</td>
-			</tr>
-		</tbody>
-	</table>
-</template>
-
-<template id="nested">
-	<div>
-		<span bb-repeat="[arr1: 'item1', arr2: 'item2']">{{item1}}{{item2}}</span>
-	</div>
-</template>`,
+'<template id="loop">\n' +
+'	<div>\n' +
+'		<span bb-repeat="items: \'item\'">{{item.name}} ({{_item_}})</span>\n' +
+'	</div>\n' +
+'</template>\n' +
+'\n' +
+'<template id="desc_loop">\n' +
+'	<div>\n' +
+'		<span bb-repeat="items: \'item\' --">{{item.name}} ({{_item_}})</span>\n' +
+'	</div>\n' +
+'</template>\n' +
+'\n' +
+'<template id="table">\n' +
+'	<table>\n' +
+'		<tbody>\n' +
+'			<tr bb-repeat="rows: \'row\'">\n' +
+'				<td bb-repeat="row: \'cell\'">{{cell}}</td>\n' +
+'			</tr>\n' +
+'		</tbody>\n' +
+'	</table>\n' +
+'</template>\n' +
+'\n' +
+'<template id="nested">\n' +
+'	<div>\n' +
+'		<span bb-repeat="[arr1: \'item1\', arr2: \'item2\']">{{item1}}{{item2}}</span>\n' +
+'	</div>\n' +
+'</template>',
 		js:
-`var data = {
-	items: [
-		{species: "hen", name: "Elsa", show: true},
-		{species: "cat", name: "Jacynthe", show: false},
-		{species: null, name: "Zaza", show: true}
-	]
-};
-Barbiche('loop').merge(data);
-Barbiche('desc_loop').merge(data);
-Barbiche('table').merge({
-	rows: [
-		["A1", "B1", "C1"],
-		["A2", "B2", "C2"]
-	]
-});
-Barbiche('nested').merge({
-	arr1: ["A", "B"],
-	arr2: [1, 2, 3]
-});`
+'var data = {\n' +
+'	items: [\n' +
+'		{species: "hen", name: "Elsa", show: true},\n' +
+'		{species: "cat", name: "Jacynthe", show: false},\n' +
+'		{species: null, name: "Zaza", show: true}\n' +
+'	]\n' +
+'};\n' +
+'Barbiche(\'loop\').merge(data);\n' +
+'Barbiche(\'desc_loop\').merge(data);\n' +
+'Barbiche(\'table\').merge({\n' +
+'	rows: [\n' +
+'		["A1", "B1", "C1"],\n' +
+'		["A2", "B2", "C2"]\n' +
+'	]\n' +
+'});\n' +
+'Barbiche(\'nested\').merge({\n' +
+'	arr1: ["A", "B"],\n' +
+'	arr2: [1, 2, 3]\n' +
+'});'
 		},
 		imports: {
 			template:
-`<template id="simple-subtemplate">
-	<div>
-		<template bb-import="'sub'"></template>
-	</div>
-</template>
-
-<template id="sub">
-	<span>I am a subtemplate!</span>
-</template>
-
-<template id="dynamic-subtemplate">
-	<div>
-		<template bb-repeat="items: 'item'" bb-import="item.sub"></template>
-	</div>
-</template>
-
-<template id="sub1">
-	<span>I am subtemplate1! ({{item.name}})</span>
-</template>
-
-<template id="sub2">
-	<span>I am subtemplate2! ({{item.name}})</span>
-</template>
-
-<template id="recursive">
-	<template bb-if="children.length" bb-import="'recursive-sub'"></template>
-</template>
-
-<template id="recursive-sub">
-	<ul>
-		<li bb-repeat="children: 'child'">{{child.name}}
-			<template bb-if="child.children" bb-alias="child.children: 'children'" bb-import="'recursive-sub'"></template>
-		</li>
-	</ul>
-</template>`,
+'<template id="simple-subtemplate">\n' +
+'	<div>\n' +
+'		<template bb-import="\'sub\'"></template>\n' +
+'	</div>\n' +
+'</template>\n' +
+'\n' +
+'<template id="sub">\n' +
+'	<span>I am a subtemplate!</span>\n' +
+'</template>\n' +
+'\n' +
+'<template id="dynamic-subtemplate">\n' +
+'	<div>\n' +
+'		<template bb-repeat="items: \'item\'" bb-import="item.sub"></template>\n' +
+'	</div>\n' +
+'</template>\n' +
+'\n' +
+'<template id="sub1">\n' +
+'	<span>I am subtemplate1! ({{item.name}})</span>\n' +
+'</template>\n' +
+'\n' +
+'<template id="sub2">\n' +
+'	<span>I am subtemplate2! ({{item.name}})</span>\n' +
+'</template>\n' +
+'\n' +
+'<template id="recursive">\n' +
+'	<template bb-if="children.length" bb-import="\'recursive-sub\'"></template>\n' +
+'</template>\n' +
+'\n' +
+'<template id="recursive-sub">\n' +
+'	<ul>\n' +
+'		<li bb-repeat="children: \'child\'">{{child.name}}\n' +
+'			<template bb-if="child.children" bb-alias="child.children: \'children\'" bb-import="\'recursive-sub\'"></template>\n' +
+'		</li>\n' +
+'	</ul>\n' +
+'</template>',
 	js:
-`Barbiche('simple-subtemplate').merge();
-Barbiche('dynamic-subtemplate').merge({
-	items: [{name: 'item1', sub: 'sub2'}, {name: 'item2', sub: 'sub1'}]
-});
-Barbiche('recursive').merge({
-	children: [
-		{
-			name: "Solomon",
-			children: [
-				{
-					name : "Lexie",
-					children: [
-						{
-							name: "Shavon",
-							children: [
-								{
-									name : "Shirleen"
-								}, {
-									name : "Kathleen"
-								}
-							]
-						},
-						{
-							name: "Travis"
-						},
-						{
-							name: "Adele"
-						},
-						{
-							name: "Barney"
-						}
-					]
-				}, {
-					name : "Allie"
-				}
-			]
-		}, {
-			name: "Juliann",
-			children: [
-				{
-					name : "Guy"
-				}, {
-					name : "Yaeko"
-				}
-			]
-		}
-	]
-});`
+'Barbiche(\'simple-subtemplate\').merge();\n' +
+'Barbiche(\'dynamic-subtemplate\').merge({\n' +
+'	items: [{name: \'item1\', sub: \'sub2\'}, {name: \'item2\', sub: \'sub1\'}]\n' +
+'});\n' +
+'Barbiche(\'recursive\').merge({\n' +
+'	children: [\n' +
+'		{\n' +
+'			name: "Solomon",\n' +
+'			children: [\n' +
+'				{\n' +
+'					name : "Lexie",\n' +
+'					children: [\n' +
+'						{\n' +
+'							name: "Shavon",\n' +
+'							children: [\n' +
+'								{\n' +
+'									name : "Shirleen"\n' +
+'								}, {\n' +
+'									name : "Kathleen"\n' +
+'								}\n' +
+'							]\n' +
+'						},\n' +
+'						{\n' +
+'							name: "Travis"\n' +
+'						},\n' +
+'						{\n' +
+'							name: "Adele"\n' +
+'						},\n' +
+'						{\n' +
+'							name: "Barney"\n' +
+'						}\n' +
+'					]\n' +
+'				}, {\n' +
+'					name : "Allie"\n' +
+'				}\n' +
+'			]\n' +
+'		}, {\n' +
+'			name: "Juliann",\n' +
+'			children: [\n' +
+'				{\n' +
+'					name : "Guy"\n' +
+'				}, {\n' +
+'					name : "Yaeko"\n' +
+'				}\n' +
+'			]\n' +
+'		}\n' +
+'	]\n' +
+'});'
 		}
 	};
 	</script>
