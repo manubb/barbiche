@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<title>Barbiche - interactive demo</title>
+	<link rel="stylesheet" type="text/css" href="css/semantic.min.css">
+	<link rel="stylesheet" type="text/css" href="css/codemirror.css">
+	<link rel="stylesheet" type="text/css" href="css/custom.css">
+	<script type="text/javascript" src="js/polyfill.min.js"></script>
+	<script type="text/javascript" src="js/barbiche.min.js"></script>
+	<script type="text/javascript" src="js/editor.min.js"></script>
+	<script>
+	var examples = {
+		starter: {
+			template:
+`<template id="test">
+<div bb-alias="items[1].name: 'name'" bb-class="customClass">
+	<div>{{name}}</div>
+	<ul bb-attr="my_replace(attrValue): 'attr-name'">
+		<template bb-repeat="items: 'item'">
+		<li bb-if="item.show" bb-class="[item.species || 'unknown', (_item_ == 0): 'first']">
+		{{item.name}} (index: {{_item_}})
+		</li>
+		</template>
+	</ul>
+	<span>{{item.join(', ').toUpperCase()}}</span>
+	{{{some_html}}}
+</div>
+</template>`,
+		js:
+`Barbiche('test').merge({
+	customClass: "my-class",
+	"items": [
+		{species: "hen", name: "Elsa", show: true},
+		{species: "cat", name: "Jacynthe", show: false},
+		{species: null, name: "Zaza", show: true}
+	],
+	item: ["hen", "cat", "dog", "spider"],
+	some_html: "<div><p>This is...</p><p>...some HTML.</p></div>",
+	my_replace: function(str) {return str.replace(/o/g, "O");},
+	attrValue: "lunchroom"
+});`
+		},
+		imports: {
+			template:
+`<template id="simple-subtemplate">
+<div>
+	<template bb-import="'sub'"></template>
+</div>
+</template>
+
+<template id="sub">
+<span>I am a subtemplate!</span>
+</template>
+
+<template id="dynamic-subtemplate">
+<div>
+	<template bb-repeat="items: 'item'" bb-import="item"></template>
+</div>
+</template>
+
+<template id="sub1">
+<span>I am subtemplate1! {{_item_}}</span>
+</template>
+
+<template id="sub2">
+<span>I am subtemplate2! {{_item_}}</span>
+</template>
+
+<template id="recursive">
+<template bb-if="children.length" bb-import="'recursive-sub'"></template>
+</template>
+
+<template id="recursive-sub">
+<ul>
+	<li bb-repeat="children: 'child'">{{child.name}}
+		<template bb-if="child.children" bb-alias="child.children: 'children'" bb-import="'recursive-sub'"></template>
+	</li>
+</ul>
+</template>`,
+	js:
+`Barbiche('simple-subtemplate').merge();
+Barbiche('dynamic-subtemplate').merge({
+	items: ['sub2', 'sub1']
+});
+Barbiche('recursive').merge({
+	children: [
+		{
+			name: "Solomon",
+			children: [
+				{
+					name : "Lexie",
+					children: [
+						{
+							name: "Shavon",
+							children: [
+								{
+									name : "Shirleen"
+								}, {
+									name : "Kathleen"
+								}
+							]
+						},
+						{
+							name: "Travis"
+						},
+						{
+							name: "Adele"
+						},
+						{
+							name: "Barney"
+						}
+					]
+				}, {
+					name : "Allie"
+				}
+			]
+		}, {
+			name: "Juliann",
+			children: [
+				{
+					name : "Guy"
+				}, {
+					name : "Yaeko"
+				}
+			]
+		}
+	]
+});`
+		}
+	};
+	</script>
+</head>
+<body>
+	<div class="page-wrap">
+		<div id="header" class="ui fixed inverted massive menu">
+			<div class="ui container">
+				<a href="index.html" class="header item">
+					Barbiche
+				</a>
+				<a href="demo.html" class="item active">Try it</a>
+				<a href="documentation.html" class="item">Documentation</a>
+				<a href="https://github.com/manubb/barbiche" class="item">Github repository</a>
+				<a href="https://github.com/edasarl" class="item floated right">
+					<div style="display:block;position:relative;width:74px;height:20px;background-color:#fff;margin-right:10px;">
+						<div style="width:4px;height:4px;top:16px;left:0px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:10px;height:4px;top:4px;left:4px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:10px;height:4px;top:12px;left:4px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:4px;height:20px;top:0px;left:12px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:4px;height:12px;top:4px;left:20px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:12px;height:4px;top:0px;left:24px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:8px;height:4px;top:16px;left:24px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:4px;height:16px;top:4px;left:28px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:4px;height:8px;top:4px;left:36px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:4px;height:4px;top:16px;left:36px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:38px;height:4px;top:0px;left:40px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:30px;height:17px;top:3px;left:44px;background-color:#000;display:block;position:absolute;"></div>
+					</div>
+				</a>
+			</div>
+		</div>
+		<div class="main">
+			<div class="ui container margin-top-30">
+				<h1 class="ui header">Choose an example, edit code and click process button</h1>
+				<div id="buttons" class="ui segment">
+					<h2 class="ui header">Examples</h2>
+					<button name="basic" class="ui button">Basic</button>
+					<button name="starter" class="ui button">Starter</button>
+					<button name="conditions" class="ui button">Conditions</button>
+					<button name="loops"class="ui button">Loops</button>
+					<button name="imports"class="ui button">Imports</button>
+				</div>
+				<div class="ui segment">
+					<h2 class="ui header">HTML</h2>
+					<div id="template" class="ui segment"></div>
+				</div>
+				<div class="ui segment">
+					<h2 class="ui header">JavaScript</h2>
+					<div id="data" class="ui segment"></div>
+				</div>
+				<button id="process" class="fluid ui button">Process</button>
+				<div id="result" class="ui segment hide"></div>
+				<div id="temp"></div>
+			</div>
+		</div>
+	</div>
+	<div id="footer" class="ui inverted vertical footer segment">
+		<div class="ui center aligned container">
+			<div class="ui horizontal inverted large divided link list">
+				<a class="item" href="index.html">Barbiche home</a>
+				<a class="item" href="demo.html">Try it</a>
+				<a class="item" href="documentation.html">Documentation</a>
+				<a class="item" href="https://github.com/manubb/barbiche">Github repository</a>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+	var temp = document.querySelector('#temp');
+	var result = document.querySelector('#result');
+	var resultCodeMirror = CodeMirror(result, {
+		mode: "htmlmixed",
+		readOnly: "nocursor",
+		lineWrapping: true
+	});
+	var templateCodeMirror = CodeMirror(document.querySelector('#template'), {
+		mode:  "htmlmixed",
+		lineWrapping: true
+	});
+	var dataCodeMirror = CodeMirror(document.querySelector('#data'), {
+		mode: "javascript",
+		lineWrapping: true
+	});
+	var t;
+	var pristineMerge = Barbiche.prototype.merge;
+	Barbiche.prototype.merge = function() {
+		var frag = pristineMerge.apply(this, arguments);
+		t.content.appendChild(frag);
+	};
+
+	document.querySelector('#process').addEventListener('click', function() {
+		result.classList.remove('hide');
+		Barbiche.clean();
+		t = document.createElement('template');
+		temp.innerHTML = templateCodeMirror.getValue();
+		var script = document.createElement('script');
+		script.innerText = dataCodeMirror.getValue();
+		document.body.appendChild(script);
+		script.remove();
+		resultCodeMirror.setValue(html_beautify(t.innerHTML, {'preserve_newlines': false}));
+		setTimeout(function() {
+			resultCodeMirror.refresh();
+		});
+	});
+	document.querySelector('#buttons').addEventListener('click', function(e) {
+		var target = e.target;
+		if (target.classList.contains('button')) {
+			var example = examples[target.getAttribute('name')];
+			if (example) {
+				templateCodeMirror.setValue(example.template);
+				dataCodeMirror.setValue(example.js);
+				setTimeout(function() {
+					dataCodeMirror.refresh();
+					templateCodeMirror.refresh();
+				});
+				result.classList.add('hide');
+			}
+		}
+	});
+</script>
+</html>

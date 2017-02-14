@@ -1,0 +1,72 @@
+html, body {
+	height: 100%;
+}
+.page-wrap {
+	min-height: 100%;
+	margin-bottom: -230px;
+}
+.page-wrap:after {
+	content: "";
+	display: block;
+}
+.ui.footer.segment, .page-wrap:after {
+	height: 160px;
+}
+.hide {display: none;}
+.main {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+.CodeMirror {
+	height: auto;
+}
+
+#header {
+	height: 60px;
+}
+
+#footer{
+	margin: 5em 0em 0em;
+	padding: 5em 0em;
+}
+
+.masthead h1.ui.header {
+	margin-top: 3em;
+}
+
+.masthead.segment {
+	height: 500px;
+	padding: 1em 0em;
+}
+
+.masthead h1.ui.header {
+	margin-top: 1em;
+	margin-bottom: 0em;
+	font-size: 6em;
+	font-weight: normal;
+}
+
+.masthead h2 {
+	font-size: 1.7em;
+	font-weight: normal;
+}
+
+.masthead .primary.button{
+	margin-top: 10px;
+}
+
+.margin-top-30 {
+	margin-top: 30px;
+}
+
+.ui.vertical.stripe {
+	padding: 8em 0em;
+}
+
+.ui.vertical.stripe h3 {
+	font-size: 2em;
+}
+
+.ui.vertical.stripe p {
+	font-size: 1.33em;
+}
