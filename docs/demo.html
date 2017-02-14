@@ -13,24 +13,36 @@
 	<script type="text/javascript" src="js/editor.min.js"></script>
 	<script>
 	var examples = {
+		basic: {
+			template:
+`<template id="basic">
+	<div bb-class="class" bb-attr="attribute.value: attribute.name">{{text}}</div>
+</template>`,
+			js:
+`Barbiche('basic').merge({
+	class: "barbiche",
+	attribute: {name: "my-attr", value: "my-val"},
+	text: "Hello World!"
+});`
+		},
 		starter: {
 			template:
-`<template id="test">
-<div bb-alias="items[1].name: 'name'" bb-class="customClass">
-	<div>{{name}}</div>
-	<ul bb-attr="my_replace(attrValue): 'attr-name'">
-		<template bb-repeat="items: 'item'">
-		<li bb-if="item.show" bb-class="[item.species || 'unknown', (_item_ == 0): 'first']">
-		{{item.name}} (index: {{_item_}})
-		</li>
-		</template>
-	</ul>
-	<span>{{item.join(', ').toUpperCase()}}</span>
-	{{{some_html}}}
-</div>
+`<template id="starter">
+	<div bb-alias="items[1].name: 'name'" bb-class="customClass">
+		<div>{{name}}</div>
+		<ul bb-attr="my_replace(attrValue): 'attr-name'">
+			<template bb-repeat="items: 'item'">
+				<li bb-if="item.show" bb-class="[item.species || 'unknown', (_item_ == 0): 'first']">
+				{{item.name}} (index: {{_item_}})
+				</li>
+			</template>
+		</ul>
+		<span>{{item.join(', ').toUpperCase()}}</span>
+		{{{some_html}}}
+	</div>
 </template>`,
 		js:
-`Barbiche('test').merge({
+`Barbiche('starter').merge({
 	customClass: "my-class",
 	"items": [
 		{species: "hen", name: "Elsa", show: true},
@@ -43,47 +55,126 @@
 	attrValue: "lunchroom"
 });`
 		},
+		text: {
+			template:
+`<template id="text">
+	<div>
+		<span>{{yes}}</span>
+		<span>{{(2 == 1 + 1): again}}</span>
+		<span>{{(1 == 4): no}}</span>
+		<span>{{Math.random() > 0.5: maybe}}</span>
+	</div>
+</template>
+
+
+<template id="html">
+	<div>
+		<span>{{{some_html}}}</span>
+		<span>{{some_html}}</span>
+	</div>
+</template>`,
+			js:
+`var obj = {
+	yes: "You see me",
+	again: "You see me too",
+	no: "You won't see me",
+	maybe: "Well, maybe...",
+	some_html: "<div><p>This is...</p><p>...some HTML.</p></div>"
+};
+Barbiche('text').merge(obj);
+Barbiche('html').merge(obj);`
+		},
+		loops: {
+			template:
+`<template id="loop">
+	<div>
+		<span bb-repeat="items: 'item'">{{item.name}} ({{_item_}})</span>
+	</div>
+</template>
+
+<template id="desc_loop">
+	<div>
+		<span bb-repeat="items: 'item' --">{{item.name}} ({{_item_}})</span>
+	</div>
+</template>
+
+<template id="table">
+	<table>
+		<tbody>
+			<tr bb-repeat="rows: 'row'">
+				<td bb-repeat="row: 'cell'">{{cell}}</td>
+			</tr>
+		</tbody>
+	</table>
+</template>
+
+<template id="nested">
+	<div>
+		<span bb-repeat="[arr1: 'item1', arr2: 'item2']">{{item1}}{{item2}}</span>
+	</div>
+</template>`,
+		js:
+`var data = {
+	items: [
+		{species: "hen", name: "Elsa", show: true},
+		{species: "cat", name: "Jacynthe", show: false},
+		{species: null, name: "Zaza", show: true}
+	]
+};
+Barbiche('loop').merge(data);
+Barbiche('desc_loop').merge(data);
+Barbiche('table').merge({
+	rows: [
+		["A1", "B1", "C1"],
+		["A2", "B2", "C2"]
+	]
+});
+Barbiche('nested').merge({
+	arr1: ["A", "B"],
+	arr2: [1, 2, 3]
+});`
+		},
 		imports: {
 			template:
 `<template id="simple-subtemplate">
-<div>
-	<template bb-import="'sub'"></template>
-</div>
+	<div>
+		<template bb-import="'sub'"></template>
+	</div>
 </template>
 
 <template id="sub">
-<span>I am a subtemplate!</span>
+	<span>I am a subtemplate!</span>
 </template>
 
 <template id="dynamic-subtemplate">
-<div>
-	<template bb-repeat="items: 'item'" bb-import="item"></template>
-</div>
+	<div>
+		<template bb-repeat="items: 'item'" bb-import="item.sub"></template>
+	</div>
 </template>
 
 <template id="sub1">
-<span>I am subtemplate1! {{_item_}}</span>
+	<span>I am subtemplate1! ({{item.name}})</span>
 </template>
 
 <template id="sub2">
-<span>I am subtemplate2! {{_item_}}</span>
+	<span>I am subtemplate2! ({{item.name}})</span>
 </template>
 
 <template id="recursive">
-<template bb-if="children.length" bb-import="'recursive-sub'"></template>
+	<template bb-if="children.length" bb-import="'recursive-sub'"></template>
 </template>
 
 <template id="recursive-sub">
-<ul>
-	<li bb-repeat="children: 'child'">{{child.name}}
-		<template bb-if="child.children" bb-alias="child.children: 'children'" bb-import="'recursive-sub'"></template>
-	</li>
-</ul>
+	<ul>
+		<li bb-repeat="children: 'child'">{{child.name}}
+			<template bb-if="child.children" bb-alias="child.children: 'children'" bb-import="'recursive-sub'"></template>
+		</li>
+	</ul>
 </template>`,
 	js:
 `Barbiche('simple-subtemplate').merge();
 Barbiche('dynamic-subtemplate').merge({
-	items: ['sub2', 'sub1']
+	items: [{name: 'item1', sub: 'sub2'}, {name: 'item2', sub: 'sub1'}]
 });
 Barbiche('recursive').merge({
 	children: [
@@ -163,12 +254,12 @@ Barbiche('recursive').merge({
 		</div>
 		<div class="main">
 			<div class="ui container margin-top-30">
-				<h1 class="ui header">Choose an example, edit code and click process button</h1>
+				<h1 class="ui header">Choose an example, edit code (optional) and click process button</h1>
 				<div id="buttons" class="ui segment">
 					<h2 class="ui header">Examples</h2>
 					<button name="basic" class="ui button">Basic</button>
 					<button name="starter" class="ui button">Starter</button>
-					<button name="conditions" class="ui button">Conditions</button>
+					<button name="text" class="ui button">Text/HTML</button>
 					<button name="loops"class="ui button">Loops</button>
 					<button name="imports"class="ui button">Imports</button>
 				</div>
@@ -203,15 +294,21 @@ Barbiche('recursive').merge({
 	var resultCodeMirror = CodeMirror(result, {
 		mode: "htmlmixed",
 		readOnly: "nocursor",
-		lineWrapping: true
+		lineWrapping: true,
+		tabSize: 2,
+		indentWithTabs: true
 	});
 	var templateCodeMirror = CodeMirror(document.querySelector('#template'), {
 		mode:  "htmlmixed",
-		lineWrapping: true
+		lineWrapping: true,
+		tabSize: 2,
+		indentWithTabs: true
 	});
 	var dataCodeMirror = CodeMirror(document.querySelector('#data'), {
 		mode: "javascript",
-		lineWrapping: true
+		lineWrapping: true,
+		tabSize: 2,
+		indentWithTabs: true
 	});
 	var t;
 	var pristineMerge = Barbiche.prototype.merge;
@@ -219,34 +316,39 @@ Barbiche('recursive').merge({
 		var frag = pristineMerge.apply(this, arguments);
 		t.content.appendChild(frag);
 	};
-
+	function showResult(str) {
+		resultCodeMirror.setValue(str);
+		setTimeout(function() {
+			resultCodeMirror.refresh();
+		});
+	}
 	document.querySelector('#process').addEventListener('click', function() {
 		result.classList.remove('hide');
 		Barbiche.clean();
 		t = document.createElement('template');
 		temp.innerHTML = templateCodeMirror.getValue();
-		var script = document.createElement('script');
-		script.innerText = dataCodeMirror.getValue();
-		document.body.appendChild(script);
-		script.remove();
-		resultCodeMirror.setValue(html_beautify(t.innerHTML, {'preserve_newlines': false}));
-		setTimeout(function() {
-			resultCodeMirror.refresh();
-		});
+		var content = dataCodeMirror.getValue();
+		try {
+			eval(content);
+			showResult(html_beautify(t.innerHTML, {'preserve_newlines': false}));
+		} catch(e) {showResult(e.name + ": " + e.message);}
 	});
+	function setExample(example) {
+		if (example) {
+			templateCodeMirror.setValue(example.template);
+			dataCodeMirror.setValue(example.js);
+			setTimeout(function() {
+				dataCodeMirror.refresh();
+				templateCodeMirror.refresh();
+			});
+			result.classList.add('hide');
+		}
+	}
+	setExample(examples['basic']);
 	document.querySelector('#buttons').addEventListener('click', function(e) {
 		var target = e.target;
 		if (target.classList.contains('button')) {
-			var example = examples[target.getAttribute('name')];
-			if (example) {
-				templateCodeMirror.setValue(example.template);
-				dataCodeMirror.setValue(example.js);
-				setTimeout(function() {
-					dataCodeMirror.refresh();
-					templateCodeMirror.refresh();
-				});
-				result.classList.add('hide');
-			}
+			setExample(examples[target.getAttribute('name')]);
 		}
 	});
 </script>
