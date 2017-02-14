@@ -289,67 +289,69 @@ Barbiche('recursive').merge({
 	</div>
 </body>
 <script>
-	var temp = document.querySelector('#temp');
-	var result = document.querySelector('#result');
-	var resultCodeMirror = CodeMirror(result, {
-		mode: "htmlmixed",
-		readOnly: "nocursor",
-		lineWrapping: true,
-		tabSize: 2,
-		indentWithTabs: true
-	});
-	var templateCodeMirror = CodeMirror(document.querySelector('#template'), {
-		mode:  "htmlmixed",
-		lineWrapping: true,
-		tabSize: 2,
-		indentWithTabs: true
-	});
-	var dataCodeMirror = CodeMirror(document.querySelector('#data'), {
-		mode: "javascript",
-		lineWrapping: true,
-		tabSize: 2,
-		indentWithTabs: true
-	});
-	var t;
-	var pristineMerge = Barbiche.prototype.merge;
-	Barbiche.prototype.merge = function() {
-		var frag = pristineMerge.apply(this, arguments);
-		t.content.appendChild(frag);
-	};
-	function showResult(str) {
-		resultCodeMirror.setValue(str);
-		setTimeout(function() {
-			resultCodeMirror.refresh();
+	document.addEventListener('DOMContentLoaded', function() {
+		var temp = document.querySelector('#temp');
+		var result = document.querySelector('#result');
+		var resultCodeMirror = CodeMirror(result, {
+			mode: "htmlmixed",
+			readOnly: "nocursor",
+			lineWrapping: true,
+			tabSize: 2,
+			indentWithTabs: true
 		});
-	}
-	document.querySelector('#process').addEventListener('click', function() {
-		result.classList.remove('hide');
-		Barbiche.clean();
-		t = document.createElement('template');
-		temp.innerHTML = templateCodeMirror.getValue();
-		var content = dataCodeMirror.getValue();
-		try {
-			eval(content);
-			showResult(html_beautify(t.innerHTML, {'preserve_newlines': false}));
-		} catch(e) {showResult(e.name + ": " + e.message);}
-	});
-	function setExample(example) {
-		if (example) {
-			templateCodeMirror.setValue(example.template);
-			dataCodeMirror.setValue(example.js);
+		var templateCodeMirror = CodeMirror(document.querySelector('#template'), {
+			mode:  "htmlmixed",
+			lineWrapping: true,
+			tabSize: 2,
+			indentWithTabs: true
+		});
+		var dataCodeMirror = CodeMirror(document.querySelector('#data'), {
+			mode: "javascript",
+			lineWrapping: true,
+			tabSize: 2,
+			indentWithTabs: true
+		});
+		var t;
+		var pristineMerge = Barbiche.prototype.merge;
+		Barbiche.prototype.merge = function() {
+			var frag = pristineMerge.apply(this, arguments);
+			t.content.appendChild(frag);
+		};
+		function showResult(str) {
+			resultCodeMirror.setValue(str);
 			setTimeout(function() {
-				dataCodeMirror.refresh();
-				templateCodeMirror.refresh();
+				resultCodeMirror.refresh();
 			});
-			result.classList.add('hide');
 		}
-	}
-	setExample(examples['basic']);
-	document.querySelector('#buttons').addEventListener('click', function(e) {
-		var target = e.target;
-		if (target.classList.contains('button')) {
-			setExample(examples[target.getAttribute('name')]);
+		document.querySelector('#process').addEventListener('click', function() {
+			result.classList.remove('hide');
+			Barbiche.clean();
+			t = document.createElement('template');
+			temp.innerHTML = templateCodeMirror.getValue();
+			var content = dataCodeMirror.getValue();
+			try {
+				eval(content);
+				showResult(html_beautify(t.innerHTML, {'preserve_newlines': false}));
+			} catch(e) {showResult(e.name + ": " + e.message);}
+		});
+		function setExample(example) {
+			if (example) {
+				templateCodeMirror.setValue(example.template);
+				dataCodeMirror.setValue(example.js);
+				setTimeout(function() {
+					dataCodeMirror.refresh();
+					templateCodeMirror.refresh();
+				});
+				result.classList.add('hide');
+			}
 		}
+		setExample(examples['basic']);
+		document.querySelector('#buttons').addEventListener('click', function(e) {
+			var target = e.target;
+			if (target.classList.contains('button')) {
+				setExample(examples[target.getAttribute('name')]);
+			}
+		});
 	});
 </script>
 </html>
