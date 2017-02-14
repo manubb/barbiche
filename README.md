@@ -4,7 +4,8 @@ Barbiche is a logic-full template engine for browser environment. It is currentl
 
 Source code is clean, readable and short (around 600 lines parser included).
 
-See Barbiche live examples [here](https://manubb.github.io/barbiche/starter.html).
+
+Try our *new interactive [demo] (https://manubb.github.io/barbiche/demo.html)*.
 
 ## Quick start
 
