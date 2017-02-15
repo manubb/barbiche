@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="Content-Script-Type" content="text/javascript" />
+	<link rel="stylesheet" type="text/css" href="css/mocha.css">
+	<script src="../barbiche.js"></script>
+	<script src="js/polyfills.min.js"></script>
+	<script src="js/mocha.js"></script>
+	<script src="js/should.js"></script>
+</head>
+<body>
+	<div id="mocha"></div>
+	<script>
+		mocha.setup('bdd');
+
+		describe('Text', function() {
+			describe('{{expression}}', function() {
+				it('should insert text if expression is not null or undefined', function() {
+					var t = Barbiche(new Barbiche.bbObj('<h1 id="target">{{path.to.value}}</h1>'));
+					t.merge({
+						path: {
+							to: {
+								value: 15
+							}
+						}
+					}).querySelector('#target').textContent.should.equal("15");
+					t.merge({
+						path: {
+							to: {
+								value: 0
+							}
+						}
+					}).querySelector('#target').textContent.should.equal("0");
+					t.merge({
+						path: {
+							to: {
+								value: null
+							}
+						}
+					}).querySelector('#target').textContent.should.equal("");
+					t.merge({
+						path: {
+							to: {}
+						}
+					}).querySelector('#target').textContent.should.equal("");
+
+				});
+			});
+			describe('{{bool: expression}}', function() {
+				it('should insert text if expression is not null or undefined and bool is true', function() {
+					var t = Barbiche(new Barbiche.bbObj('<h1 id="target">{{bool: path.to.value}}</h1>'));
+					t.merge({
+						bool: true,
+						path: {
+							to: {
+								value: 15
+							}
+						}
+					}).querySelector('#target').textContent.should.equal("15");
+					t.merge({
+						bool: false,
+						path: {
+							to: {
+								value: 15
+							}
+						}
+					}).querySelector('#target').textContent.should.equal("");
+					t.merge({
+						bool: true,
+						path: {
+							to: {
+								value: 0
+							}
+						}
+					}).querySelector('#target').textContent.should.equal("0");
+					t.merge({
+						bool: false,
+						path: {
+							to: {
+								value: 0
+							}
+						}
+					}).querySelector('#target').textContent.should.equal("");
+					t.merge({
+						bool: true,
+						path: {
+							to: {
+								value: null
+							}
+						}
+					}).querySelector('#target').textContent.should.equal("");
+					t.merge({
+						bool: false,
+						path: {
+							to: {
+								value: null
+							}
+						}
+					}).querySelector('#target').textContent.should.equal("");
+					t.merge({
+						bool: true,
+						path: {
+							to: {}
+						}
+					}).querySelector('#target').textContent.should.equal("");
+					t.merge({
+						bool: false,
+						path: {
+							to: {}
+						}
+					}).querySelector('#target').textContent.should.equal("");
+
+				});
+			});
+		});
+
+		describe('HTML', function() {
+			describe('{{{expression}}}', function() {
+				it('should insert html if expression is not null or undefined', function() {
+					var t = Barbiche(new Barbiche.bbObj('<h1 id="target">{{{path.to.value}}}</h1>'));
+					t.merge({
+						path: {
+							to: {
+								value: '<span><p>15</p></span>'
+							}
+						}
+					}).querySelector('#target').innerHTML.should.equal("<span><p>15</p></span>");
+					t.merge({
+						path: {
+							to: {
+								value: null
+							}
+						}
+					}).querySelector('#target').innerHTML.should.equal("");
+					t.merge({
+						path: {
+							to: {}
+						}
+					}).querySelector('#target').innerHTML.should.equal("");
+
+				});
+			});
+			describe('{{bool: expression}}', function() {
+				it('should insert html if expression is not null or undefined and bool is true', function() {
+					var t = Barbiche(new Barbiche.bbObj('<h1 id="target">{{{bool: path.to.value}}}</h1>'));
+					t.merge({
+						bool: true,
+						path: {
+							to: {
+								value: '<span><p>15</p></span>'
+							}
+						}
+					}).querySelector('#target').innerHTML.should.equal("<span><p>15</p></span>");
+					t.merge({
+						bool: false,
+						path: {
+							to: {
+								value: '<span><p>15</p></span>'
+							}
+						}
+					}).querySelector('#target').innerHTML.should.equal("");
+					t.merge({
+						bool: true,
+						path: {
+							to: {
+								value: null
+							}
+						}
+					}).querySelector('#target').innerHTML.should.equal("");
+					t.merge({
+						bool: false,
+						path: {
+							to: {
+								value: null
+							}
+						}
+					}).querySelector('#target').innerHTML.should.equal("");
+					t.merge({
+						bool: true,
+						path: {
+							to: {}
+						}
+					}).querySelector('#target').innerHTML.should.equal("");
+					t.merge({
+						bool: false,
+						path: {
+							to: {}
+						}
+					}).querySelector('#target').innerHTML.should.equal("");
+
+				});
+			});
+		});
+		describe('Conditions', function() {
+			describe('bb-if="expression"', function() {
+				it('should remove the node if expression is false', function() {
+					var t = Barbiche(new Barbiche.bbObj('<div><span id="target" bb-if="bool"><p>789</p></span></div>'));
+					var target = t.merge({
+						bool: true,
+					}).querySelector('#target') || {};
+					target.innerHTML = target.innerHTML || null;
+					target.innerHTML.should.equal('<p>789</p>');
+
+					(t.merge({
+						bool: false,
+					}).querySelector('#target') === null).should.be.true();
+				});
+			});
+		});
+		describe('Aliases', function() {
+			describe('bb-alias="exp: \'str\'"', function() {
+				it('should bind exp to \'str\' in current subtree', function() {
+					var t = Barbiche(new Barbiche.bbObj('<div><span id="t1" bb-alias="a: \'b\'" bb-attr="b: \'test\'"></span><span id="t2" bb-attr="b: \'test\'"></span></div>'));
+					var clone = t.merge({
+						a: 'val1',
+						b: 'val2'
+					});
+					clone.querySelector('#t1').getAttribute('test').should.equal('val1');
+					clone.querySelector('#t2').getAttribute('test').should.equal('val2');
+				});
+			});
+			describe('bb-alias="[exp: \'str\',...]"', function() {
+				it('should bind each exp to each \'str\' in current subtree', function() {
+					var t = Barbiche(new Barbiche.bbObj('<div><div bb-alias="[a: \'c\', b: \'d\']"><span id="t1" bb-attr="[c: \'test1\', d: \'test2\']"></span></div><span id="t2" bb-attr="[c: \'test1\', d: \'test2\']"></span></span></div>'));
+					var clone = t.merge({
+						a: 'val1',
+						b: 'val2'
+					})
+					var node1 = clone.querySelector('#t1');
+					node1.getAttribute('test1').should.equal('val1');
+					node1.getAttribute('test2').should.equal('val2');
+					var node2 = clone.querySelector('#t2');
+					node2.hasAttribute('test1').should.be.false();
+					node2.hasAttribute('test2').should.be.false();
+				});
+			});
+		});
+		describe('Loops', function() {
+			describe('bb-repeat="exp: \'str\'"', function() {
+				it('should repeat for each item in array exp binding item to \'str\' and index to \'_str_\` in current subtree', function() {
+					var t = Barbiche(new Barbiche.bbObj('<div id="t1"><span bb-repeat="array: \'var\'" bb-attr="[var: \'val\', _var_: \'index\']"></span></div>'));
+					var array = ["a", "b", "c", "d"];
+					var clone = t.merge({
+						array: array
+					});
+					Array.from(clone.querySelector('#t1').children).forEach(function(node, index) {
+						node.getAttribute('val').should.equal(array[index]);
+						node.getAttribute('index').should.equal(index.toString());
+					});
+				});
+			});
+			describe('bb-repeat="[exp: \'str\',...]"', function() {
+				it('should execute nested loops for each item in array exp binding item to \'str\' and index to \'_str_\` in current subtree', function() {
+					var t = Barbiche(new Barbiche.bbObj('<div id="t1"><span bb-repeat="[array1: \'var1\', array2: \'var2\']" bb-attr="[var1: \'val1\', var2: \'val2\']"></span></div>'));
+					var array1 = ["a", "b"];
+					var array2 = ["x", "y", "z"];
+					var clone = t.merge({
+						array1: array1,
+						array2: array2
+					});
+					Array.from(clone.querySelector('#t1').children).forEach(function(node, index) {
+						var i = Math.floor(index / array2.length);
+						var j = index % array2.length;
+						node.getAttribute('val1').should.equal(array1[i]);
+						node.getAttribute('val2').should.equal(array2[j]);
+					});
+				});
+			});
+			describe('bb-repeat="exp: \'str\'"...bb-repeat="exp: \'str\'"', function() {
+				it('should repeat on the first array, then on second array', function() {
+					var t = Barbiche(new Barbiche.bbObj('<table><tbody id="t1"><tr bb-repeat="array: \'row\'"><td bb-repeat="row: \'cell\'">{{cell}}</td></tr></tbody></table>'));
+					var array = [["a", "b"], ["c"]];
+					var clone = t.merge({
+						array: array
+					});
+					clone.querySelector('#t1').innerHTML.should.equal('<tr><td>a</td><td>b</td></tr><tr><td>c</td></tr>');
+				});
+			});
+		});
+		describe('Classes', function() {
+			describe('bb-class="exp"', function() {
+				it('should had class exp to current node', function() {
+					var t = Barbiche(new Barbiche.bbObj('<div id="t1" bb-class="class"></div>'));
+					var clone = t.merge({
+						class: "my-class"
+					});
+					clone.querySelector('#t1').classList.contains("my-class").should.be.true();
+					var clone = t.merge({
+						class: null
+					});
+					clone.querySelector('#t1').hasAttribute('class').should.be.false();
+					var clone = t.merge({
+						class: ""
+					});
+					clone.querySelector('#t1').hasAttribute('class').should.be.false();
+					(function() {
+						t.merge({
+							class: "poi poi"
+						});
+					}).should.throw();
+				});
+			});
+			describe('bb-class="bool: exp"', function() {
+				it('should had class exp to current node depending on bool value', function() {
+					var t = Barbiche(new Barbiche.bbObj('<div id="t1" bb-class="bool: class"></div>'));
+					var clone = t.merge({
+						bool: true,
+						class: "my-class"
+					});
+					clone.querySelector('#t1').classList.contains("my-class").should.be.true();
+					var clone = t.merge({
+						bool: false,
+						class: "my-class"
+					});
+					clone.querySelector('#t1').classList.contains("my-class").should.be.false();
+					var clone = t.merge({
+						bool: true,
+						class: null
+					});
+					clone.querySelector('#t1').hasAttribute('class').should.be.false();
+					var clone = t.merge({
+						bool: false,
+						class: null
+					});
+					clone.querySelector('#t1').hasAttribute('class').should.be.false();
+					var clone = t.merge({
+						bool: true,
+						class: ""
+					});
+					clone.querySelector('#t1').hasAttribute('class').should.be.false();
+					var clone = t.merge({
+						bool: false,
+						class: ""
+					});
+					clone.querySelector('#t1').hasAttribute('class').should.be.false();
+					(function() {
+						t.merge({
+							bool: true,
+							class: "poi poi"
+						});
+					}).should.throw();
+					(function() {
+						t.merge({
+							bool: false,
+							class: "poi poi"
+						});
+					}).should.not.throw();
+				});
+			});
+		});
+		describe('Attributes', function() {
+			describe('bb-attr="exp: \'str\'"', function() {
+				it('should set attribute \'str\' to exp value on current node', function() {
+					var t = Barbiche(new Barbiche.bbObj('<div id="t1"><div bb-attr="value: name"></div></div>'));
+					var clone = t.merge({
+						name: null,
+						value: "val"
+					});
+					clone.querySelector('#t1').innerHTML.should.equal('<div></div>');
+					var clone = t.merge({
+						name: undefined,
+						value: "val"
+					});
+					clone.querySelector('#t1').innerHTML.should.equal('<div></div>');
+					var clone = t.merge({
+						name: "",
+						value: "val"
+					});
+					clone.querySelector('#t1').innerHTML.should.equal('<div></div>');
+
+					var clone = t.merge({
+						name: null,
+						value: null
+					});
+					clone.querySelector('#t1').innerHTML.should.equal('<div></div>');
+					var clone = t.merge({
+						name: undefined,
+						value: null
+					});
+					clone.querySelector('#t1').innerHTML.should.equal('<div></div>');
+					var clone = t.merge({
+						name: "",
+						value: null
+					});
+					clone.querySelector('#t1').innerHTML.should.equal('<div></div>');
+
+					var clone = t.merge({
+						name: null,
+						value: undefined
+					});
+					clone.querySelector('#t1').innerHTML.should.equal('<div></div>');
+					var clone = t.merge({
+						name: undefined,
+						value: undefined
+					});
+					clone.querySelector('#t1').innerHTML.should.equal('<div></div>');
+					var clone = t.merge({
+						name: "",
+						value: undefined
+					});
+					clone.querySelector('#t1').innerHTML.should.equal('<div></div>');
+
+					var clone = t.merge({
+						name: "a",
+						value: null
+					});
+					clone.querySelector('#t1').innerHTML.should.equal('<div></div>');
+					var clone = t.merge({
+						name: "a",
+						value: undefined
+					});
+					clone.querySelector('#t1').innerHTML.should.equal('<div></div>');
+					var clone = t.merge({
+						name: "a",
+						value: ""
+					});
+					clone.querySelector('#t1 div').hasAttribute('a').should.be.true();
+					clone.querySelector('#t1 div').getAttribute('a').should.equal("");
+
+					var clone = t.merge({
+						name: "a",
+						value: "b"
+					});
+					clone.querySelector('#t1 div').hasAttribute('a').should.be.true();
+					clone.querySelector('#t1 div').getAttribute('a').should.equal("b");
+
+					(function() {
+						t.merge({
+							name: "poi poi",
+							value: "a"
+						});
+					}).should.throw();
+					(function() {
+						t.merge({
+							name: "poi poi",
+							value: null
+						});
+					}).should.not.throw();
+
+					var t = Barbiche(new Barbiche.bbObj('<div><span id="t1" bb-attr="a: \'a\'"></span><span id="t2" bb-attr="\'a\': a"></span><span id="t3" bb-attr="\'a\': \'a\'"></span><span id="t4" bb-attr="a: a"></span></div>'));
+					var clone = t.merge({
+						a: 'val'
+					});
+					clone.querySelector('#t1').getAttribute('a').should.equal('val');
+					clone.querySelector('#t2').getAttribute('val').should.equal('a');
+					clone.querySelector('#t3').getAttribute('a').should.equal('a');
+					clone.querySelector('#t4').getAttribute('val').should.equal('val');
+				});
+			});
+			describe('bb-attr="[exp: \'str\',...]"', function() {
+				it('should set attribute \'str\' to exp value on current node for each array item', function() {
+					var t = Barbiche(new Barbiche.bbObj('<div><span id="t1" bb-attr="[a: \'a\', \'a\': a]"></span><span id="t2" bb-attr="[\'a\': \'a\', a: a]"></span></div>'));
+					var clone = t.merge({
+						a: 'val'
+					});
+					clone.querySelector('#t1').getAttribute('a').should.equal('val');
+					clone.querySelector('#t1').getAttribute('val').should.equal('a');
+					clone.querySelector('#t2').getAttribute('a').should.equal('a');
+					clone.querySelector('#t2').getAttribute('val').should.equal('val');
+				});
+			});
+		});
+
+		describe('Imports', function() {
+			describe('bb-import="string"', function() {
+				it('should import and merge template with id \'string\'', function() {
+					Barbiche(new Barbiche.bbObj('<div>{{name}}</div>', "sub1"));
+					Barbiche(new Barbiche.bbObj('<div>{{species}}</div>', "sub2"));
+					var t = Barbiche(new Barbiche.bbObj('<div id="t1"><template bb-import="sub"></template></div>'));
+					var clone = t.merge({
+						name: "a",
+						specie: "b",
+						sub: "sub1"
+					});
+					clone.querySelector('#t1').innerHTML.should.equal('<div>a</div>');
+				});
+			});
+			describe('bb-import="html: name"', function() {
+				it('should merge template with innerHTML html', function() {
+					var t = Barbiche(new Barbiche.bbObj('<div id="t1"><template bb-import="template.content: template.name"></template></div>'));
+					var clone = t.merge({
+						name: "a",
+						species: "b",
+						template: {
+							content: '<div>{{species}}</div>',
+							name: null
+						}
+					});
+					clone.querySelector('#t1').innerHTML.should.equal('<div>b</div>');
+				});
+			});
+		});
+		mocha.checkLeaks();
+		mocha.run();
+	</script>
+</body>
+</html>
