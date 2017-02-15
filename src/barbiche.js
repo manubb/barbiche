@@ -271,10 +271,6 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 		} else node.remove();
 	} else if (node.nodeName == "TEMPLATE") {
 		if (bbAttrs.repeat) {
-			var closure;
-			if (bbAttrs.import) {
-				closure = template.closures[bbAttrs.import];
-			}
 			if (!nodeContextPushed) {
 				context.push(nodeContext);
 				nodeContextPushed = true;
@@ -282,6 +278,17 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 			var parsed = (template.closures[bbAttrs.repeat])();
 			var order = parsed._order || 'before';
 			if (!Array.isArray(parsed)) parsed = [parsed];
+
+			var reduceInit = (function(str) {
+				var closure = template.closures[bbAttrs.import];
+				if (closure) return function() {
+					var clone = Barbiche(closure())._clone();
+					node[order](merge(clone.node.content, clone));
+				}; else return function() {
+					node[order](merge(node.cloneNode(true).content, template));
+				};
+			})(bbAttrs.import);
+
 			//iterate on cartesian product of arrays:
 			(parsed.reduceRight(function(accu, task) {
 				var alias = task.name;
@@ -293,10 +300,7 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 						accu();
 					})
 				};
-			}, function() {
-				var target = closure && Barbiche(closure())._clone();
-				node[order](merge((target && target.node|| node.cloneNode(true)).content, target || template));
-			}))();
+			}, reduceInit))();
 		} else if (bbAttrs.import) {
 			var importId = (template.closures[bbAttrs.import])();
 			var clone = Barbiche(importId)._clone();
