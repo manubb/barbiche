@@ -4,6 +4,7 @@
 // license: MIT
 
 var prefix = 'bb-';
+var globalAttr = 'bb-global';
 var destructive = false;
 var re;
 var store = {};
@@ -69,6 +70,7 @@ Barbiche.bbObj = bbObj;
 
 Barbiche.setPrefix = function(str) {
 	prefix = str;
+	globalAttr = str + 'global';
 };
 
 Barbiche.setDestructive = function(bool) {
@@ -127,7 +129,7 @@ compile_works[Node.ELEMENT_NODE] = function(node, template) {
 			node.removeAttribute(prefix + attr);
 		}
 	});
-	if (attrFound) node.setAttribute(prefix + 'global', JSON.stringify(bbAttrs));
+	if (attrFound) node.setAttribute(globalAttr, JSON.stringify(bbAttrs));
 	if (node.nodeName == 'TEMPLATE') {
 		compile(node.content, template);
 	} else {
@@ -237,9 +239,9 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 	var nodeContext = {};
 	var nodeContextPushed = false;
 	var bbAttrs;
-	if (node.hasAttribute(prefix + 'global')) {
-		bbAttrs = JSON.parse(node.getAttribute(prefix + 'global'));
-		node.removeAttribute(prefix + 'global');
+	if (node.hasAttribute(globalAttr)) {
+		bbAttrs = JSON.parse(node.getAttribute(globalAttr));
+		node.removeAttribute(globalAttr);
 	}
 	bbAttrs = bbAttrs || {};
 	if (bbAttrs.if) {
