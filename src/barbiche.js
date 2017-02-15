@@ -52,6 +52,16 @@ Parser.parser.yy.context = context;
 Parser.parser.yy.bbObj = bbObj;
 
 function Barbiche(node) {
+	if (node instanceof bbObj) {
+		var name = node.name;
+		if (store[name]) return store[name];
+		else {
+			var t = document.createElement('template');
+			t.innerHTML = node.value;
+			if (name) t.id = name;
+			node = t;
+		}
+	}
 	if (typeof(node) == 'string') {
 		if (store[node]) return store[node];
 		else node = document.querySelector('#' + node);
