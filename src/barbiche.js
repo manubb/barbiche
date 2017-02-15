@@ -41,7 +41,7 @@ function bbObj(a, b) {
 }
 
 bbObj.prototype.toString = function() {
-    if (this.value) return this.name;
+    if (this.value && this.name != null) return this.name.toString();
     else return '';
 }
 
@@ -258,12 +258,14 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 		nodeContextPushed = true;
 	}
 	if (bbAttrs.text) {
-		var value = (template.closures[bbAttrs.text])().toString();
+		var value = (template.closures[bbAttrs.text])();
+		if (value != null) value = value.toString();
 		if (value) {
 			node.replaceWith(value);
 		} else node.remove();
 	} else if (bbAttrs.html) {
-		var value = (template.closures[bbAttrs.html])().toString();
+		var value = (template.closures[bbAttrs.html])();
+		if (value != null) value = value.toString();
 		if (value) {
 			var template = document.createElement('template');
 			template.innerHTML = value;
@@ -315,16 +317,18 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 			if (!Array.isArray(parsed)) parsed = [parsed];
 			parsed.forEach(function(item) {
 				var value = item.value;
-				var name = item.name.toString();
-				if (value != null) node.setAttribute(name, value);
+				var name = item.name && item.name.toString();
+				if (name && value != null) node.setAttribute(name, value);
 			});
 		}
 		if (bbAttrs.class) {
 			var parsed = (template.closures[bbAttrs.class])();
 			if (!Array.isArray(parsed)) parsed = [parsed];
 			parsed.forEach(function(item) {
-				var value = item.toString();
-				if (value) node.classList.add(value);
+				if (item != null) {
+					var value = item.toString();
+					if (value) node.classList.add(value);
+				}
 			});
 		}
 		Array.from(node.children).forEach(function(child) {merge(child, template);});
