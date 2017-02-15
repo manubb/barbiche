@@ -3,6 +3,8 @@
 // author: Manuel Baclet <manuel@eda.sarl>
 // license: MIT
 
+'use strict';
+
 var prefix = 'bb-';
 var globalAttr = 'bb-global';
 var destructive = false;
