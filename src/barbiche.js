@@ -254,12 +254,8 @@ var works = {};
 works[Node.ELEMENT_NODE] = function(node, template) {
 	var nodeContext = {};
 	var nodeContextPushed = false;
-	var bbAttrs;
-	if (node.hasAttribute(globalAttr)) {
-		bbAttrs = JSON.parse(node.getAttribute(globalAttr));
-		node.removeAttribute(globalAttr);
-	}
-	bbAttrs = bbAttrs || {};
+	var bbAttrs = JSON.parse(node.getAttribute(globalAttr));
+	node.removeAttribute(globalAttr);
 	if (bbAttrs.if) {
 		var value = (template.closures[bbAttrs.if])();
 		if (!value) return node.remove();
@@ -347,17 +343,15 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 				}
 			});
 		}
-		Array.from(node.children).forEach(function(child) {merge(child, template);});
+		var child;
+		while(child = node.querySelector(globalAttrSel)) {merge(child, template);}
 	}
 	if (nodeContextPushed) context.pop();
 };
 
-works[Node.TEXT_NODE] = function(node, template) {};
-
-works[Node.COMMENT_NODE] = function(node, template) {};
-
 works[Node.DOCUMENT_FRAGMENT_NODE] = function(node, template) {
-	Array.from(node.children || node.childNodes).forEach(function(child) {merge(child, template);});
+	var child;
+	while(child = node.querySelector(globalAttrSel)) {merge(child, template);}
 };
 
 function merge(node, template) {
