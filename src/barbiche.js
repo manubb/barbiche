@@ -320,8 +320,6 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 			var importId = (template.closures[bbAttrs.import])();
 			var clone = Barbiche(importId)._clone();
 			node.before(merge(clone.node.content, clone));
-		} else {
-			node.before(merge(node.content, template));
 		}
 		node.remove();
 	} else {
