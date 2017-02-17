@@ -38,13 +38,13 @@ context.pop = function() {
 };
 
 function bbObj(a, b) {
-    this.value = a;
-    this.name = b;
+	this.value = a;
+	this.name = b;
 }
 
 bbObj.prototype.toString = function() {
-    if (this.value && this.name != null) return this.name.toString();
-    else return '';
+	if (this.value && this.name != null) return this.name.toString();
+	else return '';
 }
 
 var Parser = require('../parser.js');
