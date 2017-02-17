@@ -280,9 +280,9 @@ works[Node.ELEMENT_NODE] = function(node, template) {
 		var value = (template.closures[bbAttrs.html])();
 		if (value != null) value = value.toString();
 		if (value) {
-			var template = document.createElement('template');
-			template.innerHTML = value;
-			node.replaceWith(template.content);
+			var aux = document.createElement('template');
+			aux.innerHTML = value;
+			node.replaceWith(aux.content);
 		} else node.remove();
 	} else if (node.nodeName == "TEMPLATE") {
 		if (bbAttrs.repeat) {
