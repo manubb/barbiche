@@ -144,6 +144,7 @@ compile_works[Node.ELEMENT_NODE] = function(node, template) {
 	if (attrFound) node.setAttribute(globalAttr, JSON.stringify(bbAttrs));
 	if (node.nodeName == 'TEMPLATE') {
 		compile(node.content, template);
+		if (!attrFound) node.replaceWith(node.content);
 	} else {
 		Array.from(node.childNodes).forEach(function(child) {
 			compile(child, template);
