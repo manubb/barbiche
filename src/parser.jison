@@ -136,6 +136,7 @@ SimpleExpression
 	| SimpleExpression"." PropertyName
 		{$$ = getProperty.bind(null, $1, $3);}
 	| Array
+		{$$ = $1;}
 	| VAR
 		{$$ = yy.context.resolve.bind(yy.context, yytext);}
 	;
