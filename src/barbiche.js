@@ -7,6 +7,17 @@
 
 var prefix = 'bb-';
 var globalAttr = 'bb-global';
+var globalAttrSel = '[bb-global]';
+
+function addPrefix(str) {
+	return prefix + str;
+}
+var attrs = ['if', 'alias', 'text', 'html', 'repeat', 'import', 'attr', 'class'];
+var prefixedAttrs = attrs.map(addPrefix);
+var prefixedAttrsObj = {};
+prefixedAttrs.forEach(function(attr, index) {
+	prefixedAttrsObj[attr] = attrs[index];
+});
 var destructive = false;
 var re;
 var store = {};
@@ -83,6 +94,12 @@ Barbiche.bbObj = bbObj;
 Barbiche.setPrefix = function(str) {
 	prefix = str;
 	globalAttr = str + 'global';
+	globalAttrSel = '[' + globalAttr + ']';
+	prefixedAttrs = attrs.map(addPrefix);
+	prefixedAttrsObj = {};
+	prefixedAttrs.forEach(function(attr, index) {
+		prefixedAttrsObj[attr] = attrs[index];
+	});
 };
 
 Barbiche.setDestructive = function(bool) {
@@ -108,10 +125,6 @@ Barbiche.clean = function(name) {
 	}
 };
 
-function addPrefix(str) {
-	return prefix + str;
-}
-
 var compile_works = {};
 compile_works[Node.ELEMENT_NODE] = function(node, template) {
 	if (node.hasAttribute(prefix + 'repeat') && node.nodeName != 'TEMPLATE') {
@@ -133,14 +146,26 @@ compile_works[Node.ELEMENT_NODE] = function(node, template) {
 	}
 	var bbAttrs = {};
 	var attrFound = false;
-	['if', 'alias', 'text', 'html', 'repeat', 'import', 'attr', 'class'].forEach(function(attr) {
-		if (node.hasAttribute(prefix + attr)) {
-			attrFound = true;
-			var parsed = Parser.parse(node.getAttribute(prefix + attr));
-			bbAttrs[attr] = template._addClosure(parsed);
-			node.removeAttribute(prefix + attr);
+	if (node.attributes.length > attrs.length) {
+		prefixedAttrs.forEach(function(attr) {
+			if (node.hasAttribute(attr)) {
+				attrFound = true;
+				var parsed = Parser.parse(node.getAttribute(attr));
+				bbAttrs[prefixedAttrsObj[attr]] = template._addClosure(parsed);
+				node.removeAttribute(attr);
+			}
+		});
+	} else {
+		for (var i = node.attributes.length - 1; i >= 0; i--) {
+			var attr = node.attributes[i].name;
+			if (attr in prefixedAttrsObj) {
+				attrFound = true;
+				var parsed = Parser.parse(node.attributes[i].value);
+				bbAttrs[prefixedAttrsObj[attr]] = template._addClosure(parsed);
+				node.removeAttribute(attr);
+			}
 		}
-	});
+	}
 	if (attrFound) node.setAttribute(globalAttr, JSON.stringify(bbAttrs));
 	if (node.nodeName == 'TEMPLATE') {
 		compile(node.content, template);
