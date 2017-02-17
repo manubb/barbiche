@@ -240,7 +240,11 @@ Barbiche.prototype._clone = function() {
 
 Barbiche.prototype.merge = function() {
 	var clone = this._clone();
-	context.init(Array.from(arguments));
+	var args = new Array(arguments.length);
+	for(var i = 0; i < args.length; ++i) {
+		args[i] = arguments[i];
+	}
+	context.init(args);
 	merge(clone.node.content, clone);
 	context.init();
 	return clone.node.content;
