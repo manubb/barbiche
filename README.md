@@ -124,7 +124,7 @@ Barbiche expressions support a subset of JavaScript:
 * boolean expressions: `true`, `false`, `==`, `!=`, `<=`,`>=`, `<` ,`>` and `!`
 * arrays
 * function calls
-* property accessors: `object.property` and `object['property']`
+* property accessors: `object.property` and `object[computed property]`
 * numbers
 * strings
 * `+` operator
@@ -173,10 +173,12 @@ In the first line, the value of `JSON.stringify(obj)` is bound to `str1` identif
 #### Loops
 A `bb-repeat` attribute contains an expression and ends with an optional `--` or `++` keyword. The expression resolves to a Barbiche expression or an array of Barbiche expressions which defines a set of *nested* loops. For each Barbiche expression `array: 'string'`, a loop is executed on `array`, binding each array item to `'string'` and item index to `'_string_'`. A `++` ending keyword will insert merged items in natural order; `--` will insert merged items in reverse order; no ending keyword is the same as `++`.
 
+Some usage examples can be found [below](#loops-examples).
+
 ####Imports
 A `bb-import` attributes resolves to a string `id`. The template with id `id` is then merged using current context and the current node is replaced with the merge result. The `bb-import` attribute is reserved to `<template>` elements.
 
-Some usage examples can be found [below](#subtemplates).
+Some usage examples can be found [below](#subtemplates-examples).
 
 #### Attributes
 A `bb-attr` attribute resolves to a Barbiche expression or an array of Barbiche expressions. For each expression `value: name`, `name` resolves to a string value. If `value` is not `undefined` or `null`, attribute `name` is set on the current node with value `value`.
@@ -186,7 +188,125 @@ A `bb-class` attribute resolves to a string, a Barbiche expression or an array c
 * if item resolves to a string `name`, class `name` is added to the current node
 * if item resolves to a Barbiche expression `boolean: name`, `boolean` is resolved to a boolean value and `name` to a string. If `boolean` is true, class `name` is added to the current node.
 
-### Subtemplates
+### Loops examples
+A simple examples:
+```html
+<template id="loop">
+	<div>
+		<span bb-repeat="items: 'item'">{{item.name}} ({{_item_}})</span>
+	</div>
+</template>
+```
+```js
+Barbiche('loop').merge({
+	items: [
+		{species: "hen", name: "Elsa", show: true},
+		{species: "cat", name: "Jacynthe", show: false},
+		{species: null, name: "Zaza", show: true}
+	]
+});
+```
+will produce:
+```html
+}
+<div>
+	<span>Elsa (0)</span>
+	<span>Jacynthe (1)</span>
+	<span>Zaza (2)</span>
+</div>
+```
+A descending loop:
+```html
+<template id="loop">
+	<div>
+		<span bb-repeat="items: 'item' --">{{item.name}} ({{_item_}})</span>
+	</div>
+</template>
+```
+```js
+Barbiche('loop').merge({
+	items: [
+		{species: "hen", name: "Elsa", show: true},
+		{species: "cat", name: "Jacynthe", show: false},
+		{species: null, name: "Zaza", show: true}
+	]
+});
+```
+will produce:
+```html
+}
+<div>
+	<span>Zaza (2)</span>
+	<span>Jacynthe (1)</span>
+	<span>Elsa (0)</span>
+</div>
+```
+Filling a table is easy:
+```html
+<template id="table">
+	<table>
+		<tbody>
+			<tr bb-repeat="rows: 'row'">
+				<td bb-repeat="row: 'cell'">{{cell}}</td>
+			</tr>
+		</tbody>
+	</table>
+</template>
+```
+```js
+Barbiche('table').merge({
+	rows: [
+		["A1", "B1", "C1"],
+		["A2", "B2", "C2"]
+	]
+});
+```
+will produce:
+```html
+}
+<table>
+	<tbody>
+		<tr>
+			<td>A1</td>
+			<td>B1</td>
+			<td>C1</td>
+		</tr>
+		<tr>
+			<td>A2</td>
+			<td>B2</td>
+			<td>C2</td>
+		</tr>
+	</tbody>
+</table>
+```
+and a one instruction nested loop:
+
+```html
+<template id="nested">
+	<div>
+		<span bb-repeat="[arr1: 'item1', arr2: 'item2']">{{item1}}{{item2}}</span>
+	</div>
+</template>
+```
+```js
+Barbiche('nested').merge({
+	arr1: ["A", "B"],
+	arr2: [1, 2, 3]
+});
+```
+will produce:
+```html
+<div>
+	<span>A1</span>
+	<span>A2</span>
+	<span>A3</span>
+	<span>B1</span>
+	<span>B2</span>
+	<span>B3</span>
+</div>
+```
+
+### Subtemplates examples
 A simple example:
 ```html
 <template id="simple-subtemplate">
