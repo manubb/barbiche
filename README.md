@@ -189,7 +189,7 @@ A `bb-class` attribute resolves to a string, a Barbiche expression or an array c
 * if item resolves to a Barbiche expression `boolean: name`, `boolean` is resolved to a boolean value and `name` to a string. If `boolean` is true, class `name` is added to the current node.
 
 ### Loops examples
-A simple examples:
+A simple example:
 ```html
 <template id="loop">
 	<div>
