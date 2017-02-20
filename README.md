@@ -290,7 +290,6 @@ barbiche('table').merge({
 ```
 will produce:
 ```html
-}
 <table>
 	<tbody>
 		<tr>
