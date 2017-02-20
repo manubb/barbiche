@@ -19,7 +19,7 @@
 '	<div bb-class="class" bb-attr="attribute.value: attribute.name">{{text}}</div>\n' +
 '</template>',
 			js:
-'Barbiche(\'basic\').merge({\n' +
+'barbiche(\'basic\').merge({\n' +
 '	class: "barbiche",\n' +
 '	attribute: {name: "my-attr", value: "my-val"},\n' +
 '	text: "Hello World!"\n' +
@@ -42,7 +42,7 @@
 '	</div>\n' +
 '</template>',
 			js:
-'Barbiche(\'starter\').merge({\n' +
+'barbiche(\'starter\').merge({\n' +
 '	customClass: "my-class",\n' +
 '	"items": [\n' +
 '		{species: "hen", name: "Elsa", show: true},\n' +
@@ -81,8 +81,8 @@
 '	maybe: "Well, maybe...",\n' +
 '	some_html: "<div><p>This is...</p><p>...some HTML.</p></div>"\n' +
 '};\n' +
-'Barbiche(\'text\').merge(obj);\n' +
-'Barbiche(\'html\').merge(obj);'
+'barbiche(\'text\').merge(obj);\n' +
+'barbiche(\'html\').merge(obj);'
 		},
 		loops: {
 			template:
@@ -121,15 +121,15 @@
 '		{species: null, name: "Zaza", show: true}\n' +
 '	]\n' +
 '};\n' +
-'Barbiche(\'loop\').merge(data);\n' +
-'Barbiche(\'desc_loop\').merge(data);\n' +
-'Barbiche(\'table\').merge({\n' +
+'barbiche(\'loop\').merge(data);\n' +
+'barbiche(\'desc_loop\').merge(data);\n' +
+'barbiche(\'table\').merge({\n' +
 '	rows: [\n' +
 '		["A1", "B1", "C1"],\n' +
 '		["A2", "B2", "C2"]\n' +
 '	]\n' +
 '});\n' +
-'Barbiche(\'nested\').merge({\n' +
+'barbiche(\'nested\').merge({\n' +
 '	arr1: ["A", "B"],\n' +
 '	arr2: [1, 2, 3]\n' +
 '});'
@@ -172,11 +172,11 @@
 '	</ul>\n' +
 '</template>',
 	js:
-'Barbiche(\'simple-subtemplate\').merge();\n' +
-'Barbiche(\'dynamic-subtemplate\').merge({\n' +
+'barbiche(\'simple-subtemplate\').merge();\n' +
+'barbiche(\'dynamic-subtemplate\').merge({\n' +
 '	items: [{name: \'item1\', sub: \'sub2\'}, {name: \'item2\', sub: \'sub1\'}]\n' +
 '});\n' +
-'Barbiche(\'recursive\').merge({\n' +
+'barbiche(\'recursive\').merge({\n' +
 '	children: [\n' +
 '		{\n' +
 '			name: "Solomon",\n' +
@@ -288,6 +288,7 @@
 		</div>
 	</div>
 <script>
+	var barbiche = Barbiche();
 	document.addEventListener('DOMContentLoaded', function() {
 		var temp = document.querySelector('#temp');
 		var result = document.querySelector('#result');
@@ -311,8 +312,8 @@
 			indentWithTabs: true
 		});
 		var t;
-		var pristineMerge = Barbiche.prototype.merge;
-		Barbiche.prototype.merge = function() {
+		var pristineMerge = barbiche.prototype.merge;
+		barbiche.prototype.merge = function() {
 			var frag = pristineMerge.apply(this, arguments);
 			t.content.appendChild(frag);
 		};
@@ -324,7 +325,7 @@
 		}
 		document.querySelector('#process').addEventListener('click', function() {
 			result.classList.remove('hide');
-			Barbiche.clean();
+			barbiche.clean();
 			t = document.createElement('template');
 			temp.innerHTML = templateCodeMirror.getValue();
 			window.HTMLTemplateElement.bootstrap && window.HTMLTemplateElement.bootstrap(temp);
