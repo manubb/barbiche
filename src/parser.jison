@@ -161,8 +161,17 @@ PropertyName
 	;
 
 %%
+var table = {
+	"n": "\n",
+	"'": "'",
+	"\"": "\"",
+	"t": "\t",
+	"r": "\r",
+	"\\": "\\"
+};
+
 function quoteUnescape(str) {
-	return str.replace(/(\\('|"|\n|\t|\r))/g, function() {return arguments[2];});
+	return str.replace(/(\\(\\|'|"|r|n|t))/g, function() {return table[arguments[2]];});
 }
 
 function OR(a, b) {

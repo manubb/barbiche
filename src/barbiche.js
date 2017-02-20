@@ -62,7 +62,6 @@ function Barbiche(opt) {
 		prefixedAttrsObj[attr] = attrs[index];
 	});
 	var destructive = false;
-	var re;
 	var store = {};
 
 	function Template(node) {
@@ -109,15 +108,33 @@ function Barbiche(opt) {
 		destructive = bool;
 	};
 
-	Template.setDelimiters = function(arr) {
-		var str = '{{([^{}]*)}}|{{{([^{}]*)}}}|([^{}]+)';
-		var escaped = arr.map(function(char) {
-			return char.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-		});
-		re = new RegExp(str.replace(/{|}/g, function(match) {if (match == '{') return escaped[0]; else return escaped[1];}), 'g');
-	};
+	var delimiters = ['{', '}'];
+	var reStringUnescape = '(\\\\(\\\\|' + escape(delimiters[0]) + '|' + escape(delimiters[1]) + '))';
+	var reUnescape = new RegExp(reStringUnescape, 'g');
 
-	Template.setDelimiters(['{', '}']);
+	function escape(str) {
+		return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+	}
+
+	function unescape(str) {
+		return str.replace(reUnescape, function() {return arguments[2];});
+	}
+
+	function setDelimiters() {
+		var strs = [
+			'aaa((?:a+f+c+d+e+b(?:a+f+c+d+e+b(?:a+f+c+d+e)))*)bbb',
+			'aa((?:a+f+c+d+e+b(?:a+f+c+d+e))*)bb',
+			'((?:b+f+c+d+e+a(?:b+f+c+d+e))(?:b+f+c+d+e+a(?:b+f+c+d+e))*(?:a(?!a)+b+f+c+d+e++a(?:b+f+c+d+e))+(?:a(?!a)))'
+		];
+
+		function prepare(str) {
+			return str.replace(/\+/g, '|').replace(/a/g, escape(delimiters[0])).replace(/b/g, escape(delimiters[1])).replace(/c/g, escape("\\" + delimiters[0])).replace(/d/g, escape("\\" + delimiters[1])).replace(/e/g, '[^' + escape(delimiters[0]) + escape(delimiters[1]) + ']').replace(/f/g, escape("\\\\"));
+		}
+
+		return new RegExp(strs.map(function(str) {
+			return '(?:' + prepare(str) + ')';
+		}).join('|'), 'g');
+	};
 
 	Template.clean = function(name) {
 		if (name) delete store[name];
@@ -127,6 +144,8 @@ function Barbiche(opt) {
 			}
 		}
 	};
+
+	var textNodeRegExp = setDelimiters();
 
 	var compile_works = {};
 	compile_works[Node.ELEMENT_NODE] = function(node, template) {
@@ -181,56 +200,22 @@ function Barbiche(opt) {
 	}
 
 	compile_works[Node.TEXT_NODE] = function(node, template) {
-		var value = node.nodeValue;
-		var tokenFound = false;
 		var res;
-		var stack = [];
-		while(res = re.exec(value)) {
+		while(res = textNodeRegExp.exec(node.nodeValue)) {
 			if (res[3]) {
-				stack.push({
-					content: res[3],
-					type: 'plain'
-				});
-			} else if (res[1]) {
-				stack.push({
-					content: res[1],
-					type: 'text'
-				});
-				tokenFound = true;
+				var t = document.createTextNode(unescape(res[3]));
+				node.before(t);
+			} else if (res[2]) {
+				var t = document.createElement('template');
+				t.setAttribute(prefix + 'text', unescape(res[2]));
+				node.before(t);compile(t, template);
 			} else {
-				stack.push({
-					content: res[2],
-					type: 'html'
-				});
-				tokenFound = true;
+				var t = document.createElement('template');
+				t.setAttribute(prefix + 'html', unescape(res[1]));
+				node.before(t); compile(t, template);
 			}
 		}
-		if (tokenFound) {
-			function resolve(accu) {
-				var exp = accu.join('+');
-				if (exp) {
-					var t = document.createElement('template');
-					t.setAttribute(prefix + 'text', exp);
-					node.before(t); compile(t, template);
-				}
-			}
-			resolve(stack.reduce(function(accu, item) {
-				if (item.type == 'plain') {
-					accu.push('"' + item.content.replace(/('|"|\n|\t|\r)/g, function() {return '\\' + arguments[1];}) + '"');
-					return accu;
-				} else if (item.type == 'text') {
-					accu.push("(" + item.content + ")");
-					return accu;
-				} else {
-					resolve(accu);
-					var t = document.createElement('template');
-					t.setAttribute(prefix + 'html', item.content);
-					node.before(t); compile(t, template);
-					return [];
-				}
-			}, []));
-			node.remove();
-		}
+		node.remove();
 	};
 
 	compile_works[Node.COMMENT_NODE] = function(node, template) {};
