@@ -1,9 +1,10 @@
 # Barbiche - Template engine for DOM &amp; JS
 
-Barbiche is a logic-full template engine for browser environment. It is currently beta and syntactic changes are less likely to happen.
+Barbiche is a logic-full template engine for browser environment. It is currently beta.
+
+A small change occurs in the API (see below).
 
 Source code is clean, readable and short (around 600 lines parser included).
-
 
 Try our **new** [interactive demo](https://manubb.github.io/barbiche/demo.html).
 
@@ -27,7 +28,8 @@ We start with a simple template and a call to Barbiche:
 </template>
 ```
 ```js
-Barbiche('test').merge({
+var barbiche = Barbiche();
+barbiche('test').merge({
 	customClass: "my-class",
 	"items": [
 		{species: "hen", name: "Elsa", show: true},
@@ -67,37 +69,62 @@ Barbiche requires support of `<template>` tag, `Array.from` static method and so
 
 ## API
 ### Common usage
-Barbiche constructor expects the id string of a `<template>` element or a `<template>` element:
+First, we create a Barbiche instance:
 ```js
-Barbiche('my-template');
+var barbiche = Barbiche();
+```
+Now, `barbiche` is a constructor that expects the id string of a `<template>` element or a `<template>` element:
+```js
+barbiche('my-template');
 // or
-Barbiche(document.querySelector('#my-template'));
+barbiche(document.querySelector('#my-template'));
 ```
 If the template has an id attribute, Barbiche internally stores the template for later reuse:
 ```js
-var inst1 = Barbiche('my-template');
-var inst2 = Barbiche('my-template');
+var inst1 = barbiche('my-template');
+var inst2 = barbiche('my-template');
 // inst1 === inst2
 ```
 Setting ids on your templates is strongly recommended.
 
 Merging data into a Barbiche instance is done in this way:
 ```js
-var frag = Barbiche('my-template').merge(obj1, obj2, obj3,...);
+var frag = barbiche('my-template').merge(obj1, obj2, obj3,...);
 ```
 The arguments of `merge` method are used to init the merge context: when Barbiche is looking for the value of an identifier, it searches first in `obj1`, then in `obj2`,..., then in `window`. A DocumentFragment is returned that can be inserted in the main document:
 ```js
 document.body.appendChild(frag);
 ```
 
-For example, in `Barbiche('my-template').merge(obj1, obj2, obj3)`, you may consider that:
+For example, in `barbiche('my-template').merge(obj1, obj2, obj3)`, you may consider that:
 * `obj1` is a plain JSON object that comes from your database
 * `obj2` is an object that contains functions and data specific to `my-template`
 * `obj3` is an object that contains functions and data common to all your templates
 
+When you are done with your merge operations, you can clean the `barbiche` store:
+```js
+barbiche.clean('my-template');
+//or
+barbiche.clean(); // clear all registered templates
+
+```
+
 ### Settings
 
-This is currently secret.
+Barbiche instance constructor accepts an optional settings object which defaults to:
+```js
+Barbiche({
+	delimiters: ['{', '}'],
+	prefix: 'bb-',
+	document: document,
+	destructive: true
+});
+```
+
+* `delimiters` is an array containing two distinct one character strings that will be used as delimiters for text and HTML insertion.
+* `prefix` is the word used to prefix Barbiche attributes. Internally, Barbiche uses the following attributes: `bb-if`, `bb-alias`, `bb-text`, `bb-html`, `bb-repeat`, `bb-import`, `bb-attr`, `bb-class` and `bb-global`. If you need to use one of these attributes, you can set Barbiche prefix according to your needs.
+* `document` is the HTML document where Barbiche will search for templates.
+* `destructive` is a boolean that allows Barbiche to modify the HTML of the registered templates. (If false, Barbiche will use deep clones of the templates leaving your HTML untouched.)
 
 ## Template description
 
@@ -198,7 +225,7 @@ A simple example:
 </template>
 ```
 ```js
-Barbiche('loop').merge({
+barbiche('loop').merge({
 	items: [
 		{species: "hen", name: "Elsa", show: true},
 		{species: "cat", name: "Jacynthe", show: false},
@@ -224,7 +251,7 @@ A descending loop:
 </template>
 ```
 ```js
-Barbiche('loop').merge({
+barbiche('loop').merge({
 	items: [
 		{species: "hen", name: "Elsa", show: true},
 		{species: "cat", name: "Jacynthe", show: false},
@@ -254,7 +281,7 @@ Filling a table is easy:
 </template>
 ```
 ```js
-Barbiche('table').merge({
+barbiche('table').merge({
 	rows: [
 		["A1", "B1", "C1"],
 		["A2", "B2", "C2"]
@@ -289,7 +316,7 @@ and a one instruction nested loop:
 </template>
 ```
 ```js
-Barbiche('nested').merge({
+barbiche('nested').merge({
 	arr1: ["A", "B"],
 	arr2: [1, 2, 3]
 });
@@ -319,7 +346,7 @@ A simple example:
 </template>
 ```
 ```js
-Barbiche('simple-subtemplate').merge();
+barbiche('simple-subtemplate').merge();
 ```
 will produce:
 ```html
@@ -342,7 +369,7 @@ Subtemplate import is dynamic:
 </template>
 ```
 ```js
-Barbiche('dynamic-subtemplate').merge({
+barbiche('dynamic-subtemplate').merge({
 	items: ['sub2', 'sub1']
 })
 ```
@@ -368,7 +395,7 @@ Recursion is also supported:
 </template>
 ```
 ```js
-Barbiche('recursive').merge({
+barbiche('recursive').merge({
 	children: [
 		{
 			name: "Solomon",
