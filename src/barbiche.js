@@ -1,5 +1,5 @@
 // Barbiche
-// version: 0.6.0
+// version: 0.6.1
 // author: Manuel Baclet <manuel@eda.sarl>
 // license: MIT
 

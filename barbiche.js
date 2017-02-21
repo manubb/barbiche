@@ -2831,7 +2831,7 @@ if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
 
 },{}],2:[function(require,module,exports){
 // Barbiche
-// version: 0.6.0
+// version: 0.6.1
 // author: Manuel Baclet <manuel@eda.sarl>
 // license: MIT
 
@@ -2993,12 +2993,13 @@ function Barbiche(_opt) {
 			b: regExpEscape(delimiters[1]),
 			c: regExpEscape("\\" + delimiters[0]),
 			d: regExpEscape("\\" + delimiters[1]),
-			e: '[^' + regExpEscape(delimiters[0]) + regExpEscape(delimiters[1]) + ']'
+			e: '[^' + regExpEscape(delimiters[0]) + regExpEscape(delimiters[1]) + ']',
+			f: regExpEscape("\\\\")
 		};
 
 		var textNodeRegExp = new RegExp(regExpTemplate.map(function(str) {
 			return '(?:' +
-				str.replace(/\+/g, '|').replace(/a|b|c|d|e/g, function() {return table[arguments[0]];}) + ')';
+				str.replace(/\+/g, '|').replace(/a|b|c|d|e|f/g, function() {return table[arguments[0]];}) + ')';
 		}).join('|'), 'g');
 
 		return function(node, template) {
