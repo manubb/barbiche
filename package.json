@@ -16,23 +16,23 @@
   ],
   "main": "barbiche.js",
   "scripts": {
-    "build:doc": "npm run build && cp ./node_modules/semantic-ui-css/semantic.min.css ./docs/css && cp -r ./node_modules/semantic-ui-css/themes ./docs/css && cp barbiche.min.js ./docs/js/ && ./node_modules/uglify-js/bin/uglifyjs ./node_modules/codemirror/lib/codemirror.js ./node_modules/codemirror/mode/xml/xml.js ./node_modules/codemirror/mode/javascript/javascript.js ./node_modules/codemirror/mode/htmlmixed/htmlmixed.js ./node_modules/js-beautify/js/lib/beautify-html.js > ./docs/js/editor.min.js && cp ./node_modules/codemirror/lib/codemirror.css ./docs/css && ./node_modules/uglify-js/bin/uglifyjs ./polyfills/Array.from.js ./polyfills/childNode.js ./polyfills/classList.js ./polyfills/template.js > ./docs/js/polyfills.min.js",
-    "build:test": "./node_modules/uglify-js/bin/uglifyjs ./polyfills/Array.from.js ./polyfills/dom.js ./polyfills/template.js > ./test/js/polyfills.min.js",
+    "build:doc": "npm run build && cp ./node_modules/semantic-ui-css/semantic.min.css ./docs/css && cp -r ./node_modules/semantic-ui-css/themes ./docs/css && cp barbiche.min.js ./docs/js/ && ./node_modules/uglify-js/bin/uglifyjs ./node_modules/codemirror/lib/codemirror.js ./node_modules/codemirror/mode/xml/xml.js ./node_modules/codemirror/mode/javascript/javascript.js ./node_modules/codemirror/mode/htmlmixed/htmlmixed.js ./node_modules/js-beautify/js/lib/beautify-html.js -m -c -o ./docs/js/editor.min.js && cp ./node_modules/codemirror/lib/codemirror.css ./docs/css && ./node_modules/uglify-js/bin/uglifyjs ./polyfills/Array.from.js ./polyfills/dom.js ./polyfills/template.js -c -m -o ./docs/js/polyfills.min.js",
+    "build:test": "./node_modules/uglify-js/bin/uglifyjs ./polyfills/Array.from.js ./polyfills/dom.js ./polyfills/template.js -m -c -o ./test/js/polyfills.min.js",
     "build:parser": "./node_modules/jison-gho/lib/cli.js --no-default-action ./src/parser.jison",
     "build:js": "./node_modules/browserify/bin/cmd.js ./src/barbiche.js --standalone Barbiche > barbiche.js",
-    "build:uglify": "./node_modules/uglify-js/bin/uglifyjs barbiche.js > barbiche.min.js",
+    "build:uglify": "./node_modules/uglify-js/bin/uglifyjs barbiche.js -m -c -o barbiche.min.js",
     "build": "npm run build:parser && npm run build:js && npm run build:uglify"
   },
   "devDependencies": {
     "browserify": "^14.0.0",
     "codemirror": "^5.23.0",
-    "jison-gho": "^0.4.18-170",
+    "jison-gho": "^0.4.18-172",
     "js-beautify": "^1.6.9",
-    "js-polyfills": "^0.1.31",
+    "jshint": "^2.9.4",
     "mocha": "^3.2.0",
-    "semantic-ui-css": "^2.2.4",
+    "semantic-ui-css": "2.2.4",
     "should": "^11.2.0",
-    "template": "https://github.com/webcomponents/template.git",
+    "template": "https://github.com/webcomponents/template.git#47b57a73d15ae6b3f0cb26acc623e2cc918",
     "uglify-js": "^2.7.5"
   },
   "bugs": {
