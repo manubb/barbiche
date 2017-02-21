@@ -38,5 +38,10 @@
   "bugs": {
     "url": "https://github.com/manubb/barbiche/issues"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "jshintConfig": {
+    "browser": true,
+    "browserify": true,
+    "eqnull": true
+  }
 }
