@@ -98,7 +98,7 @@ Array
 
 SimpleExpression
 	: SimpleExpression ':' SimpleExpression
-		{$$ = bbObj.bind(yy, $1, $3);}
+		{$$ = BBObj.bind(yy, $1, $3);}
 	| SimpleExpression '||' SimpleExpression
 		{$$ = OR.bind(null, $1, $3);}
 	| SimpleExpression '&&' SimpleExpression
@@ -235,8 +235,8 @@ function call(a, b) {
 	return (a()).apply(null, b());
 }
 
-function bbObj(a, b) {
-	return new this.bbObj(a(), b());
+function BBObj(a, b) {
+	return new this.BBObj(a(), b());
 }
 
 function plus(a, b) {

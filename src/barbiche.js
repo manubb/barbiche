@@ -38,24 +38,23 @@ context.push = function(obj) {
 context.pop = function() {
 	return this.stack.pop();
 };
+/* BBObj class */
 
-/* bbObj class */
-
-function bbObj(a, b) {
+function BBObj(a, b) {
 	this.value = a;
 	this.name = b;
 }
 
-bbObj.prototype.toString = function() {
+BBObj.prototype.toString = function() {
 	if (this.value && this.name != null) return this.name.toString();
 	else return '';
-}
+};
 
 /* shared Parser*/
 
 var Parser = require('../parser.js');
 Parser.parser.yy.context = context;
-Parser.parser.yy.bbObj = bbObj;
+Parser.parser.yy.BBObj = BBObj;
 
 /* Barbiche instance builder */
 
@@ -312,7 +311,7 @@ function Barbiche(_opt) {
 	/* Template class */
 
 	function Template(node) {
-		if (node instanceof bbObj) {
+		if (node instanceof BBObj) {
 			var name = node.name;
 			if (store[name]) return store[name];
 			else {
@@ -340,7 +339,7 @@ function Barbiche(_opt) {
 
 	/* Statics */
 
-	Template.bbObj = bbObj;
+	Template.BBObj = BBObj;
 
 	Template.clean = function(name) {
 		if (name) delete store[name];
