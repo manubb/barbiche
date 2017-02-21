@@ -330,10 +330,13 @@ function Barbiche(_opt) {
 		}
 		if (node) {
 			if (node.id) store[node.id] = this;
-			this.closures = {};
 			this.node = destructive ? node : node.cloneNode(true);
 			this.ready = false;
+		} else {
+			this.node = createTemplate();
+			this.ready = true;
 		}
+		this.closures = {};
 		return this;
 	}
 
