@@ -14,30 +14,27 @@ var TEMPLATE = 'TEMPLATE';
 /* shared context */
 
 var context = {
-	stack: []
-};
-
-context.resolve = function(identifier) {
-	var m = this.stack.length - 1;
-	var value;
-	while (value === undefined && m >= 0) {
-		value = this.stack[m][identifier];
-		m--;
+	stack: [],
+	resolve: function(identifier) {
+		var m = this.stack.length - 1;
+		var value;
+		while (value === undefined && m >= 0) {
+			value = this.stack[m][identifier];
+			m--;
+		}
+		return (value === undefined) ? window[identifier] : value;
+	},
+	init: function(arr) {
+		this.stack = arr || [];
+	},
+	push: function(obj) {
+		this.stack.push(obj);
+	},
+	pop: function() {
+		return this.stack.pop();
 	}
-	return (value === undefined) ? window[identifier] : value;
 };
 
-context.init = function(arr) {
-	this.stack = arr || [];
-};
-
-context.push = function(obj) {
-	this.stack.push(obj);
-};
-
-context.pop = function() {
-	return this.stack.pop();
-};
 /* BBObj class */
 
 function BBObj(a, b) {
@@ -134,7 +131,7 @@ function Barbiche(_opt) {
 				compile(child, template);
 			});
 		}
-	}
+	};
 
 	compile_works[Node.TEXT_NODE] = (function() {
 		var delimiters = opt.delimiters || ['{', '}'];
@@ -171,16 +168,17 @@ function Barbiche(_opt) {
 
 		return function(node, template) {
 			var res;
-			while(res = textNodeRegExp.exec(node.nodeValue)) {
+			var t;
+			while((res = textNodeRegExp.exec(node.nodeValue))) {
 				if (res[3]) {
-					var t = doc.createTextNode(unescapeDelimiters(res[3]));
+					t = doc.createTextNode(unescapeDelimiters(res[3]));
 					node.before(t);
 				} else if (res[2]) {
-					var t = createTemplate();
+					t = createTemplate();
 					t.setAttribute(prefixedAttrs[BB_TEXT], unescapeDelimiters(res[2]));
 					node.before(t);compile(t, template);
 				} else {
-					var t = createTemplate();
+					t = createTemplate();
 					t.setAttribute(prefixedAttrs[BB_HTML], unescapeDelimiters(res[1]));
 					node.before(t); compile(t, template);
 				}
@@ -207,32 +205,34 @@ function Barbiche(_opt) {
 		var nodeContextPushed = false;
 		var bbAttrs = JSON.parse(node.getAttribute(globalAttr));
 		node.removeAttribute(globalAttr);
+		var value;
 		if (bbAttrs.if) {
-			var value = (template.closures[bbAttrs.if])();
+			value = (template.closures[bbAttrs.if])();
 			if (!value) return node.remove();
 		}
 		if (bbAttrs.alias) {
-			var parsed = (template.closures[bbAttrs.alias])();
-			if (!Array.isArray(parsed)) parsed = [parsed];
-			parsed.forEach(function(item) {
+			value = (template.closures[bbAttrs.alias])();
+			if (!Array.isArray(value)) value = [value];
+			value.forEach(function(item) {
 				nodeContext[item.name] = item.value;
 			});
 			context.push(nodeContext);
 			nodeContextPushed = true;
 		}
 		if (bbAttrs.text) {
-			var value = (template.closures[bbAttrs.text])();
+			value = (template.closures[bbAttrs.text])();
 			if (value != null) value = value.toString();
 			if (value) {
 				node.replaceWith(value);
 			} else node.remove();
 		} else if (bbAttrs.html) {
-			var value = (template.closures[bbAttrs.html])();
+			value = (template.closures[bbAttrs.html])();
 			if (value != null) value = value.toString();
 			if (value) {
-				var aux = createTemplate();
-				aux.innerHTML = value;
-				node.replaceWith(aux.content);
+				(function(t) {
+					t.innerHTML = value;
+					node.replaceWith(t.content);
+				})(createTemplate());
 			} else node.remove();
 		} else if (node.nodeName == TEMPLATE) {
 			if (bbAttrs.repeat) {
@@ -240,12 +240,12 @@ function Barbiche(_opt) {
 					context.push(nodeContext);
 					nodeContextPushed = true;
 				}
-				var parsed = (template.closures[bbAttrs.repeat])();
-				var order = parsed._order || 'before';
-				if (!Array.isArray(parsed)) parsed = [parsed];
+				value = (template.closures[bbAttrs.repeat])();
+				var order = value._order || 'before';
+				if (!Array.isArray(value)) value = [value];
 
 				var reduceInit = (function(str) {
-					var closure = template.closures[bbAttrs.import];
+					var closure = template.closures[str];
 					if (closure) return function() {
 						var clone = Template(closure())._clone();
 						node[order](merge(clone.node.content, clone));
@@ -255,7 +255,7 @@ function Barbiche(_opt) {
 				})(bbAttrs.import);
 
 				//iterate on cartesian product of arrays:
-				(parsed.reduceRight(function(accu, task) {
+				(value.reduceRight(function(accu, task) {
 					var alias = task.name;
 					var value = task.value;
 					return function() {
@@ -263,29 +263,29 @@ function Barbiche(_opt) {
 							nodeContext[alias] = value[index];
 							nodeContext['_' + alias + '_'] = index;
 							accu();
-						})
+						});
 					};
 				}, reduceInit))();
 			} else if (bbAttrs.import) {
-				var importId = (template.closures[bbAttrs.import])();
-				var clone = Template(importId)._clone();
+				value = (template.closures[bbAttrs.import])();
+				var clone = Template(value)._clone();
 				node.before(merge(clone.node.content, clone));
 			}
 			node.remove();
 		} else {
 			if (bbAttrs.attr) {
-				var parsed = (template.closures[bbAttrs.attr])();
-				if (!Array.isArray(parsed)) parsed = [parsed];
-				parsed.forEach(function(item) {
+				value = (template.closures[bbAttrs.attr])();
+				if (!Array.isArray(value)) value = [value];
+				value.forEach(function(item) {
 					var value = item.value;
 					var name = item.name && item.name.toString();
 					if (name && value != null) node.setAttribute(name, value);
 				});
 			}
 			if (bbAttrs.class) {
-				var parsed = (template.closures[bbAttrs.class])();
-				if (!Array.isArray(parsed)) parsed = [parsed];
-				parsed.forEach(function(item) {
+				value = (template.closures[bbAttrs.class])();
+				if (!Array.isArray(value)) value = [value];
+				value.forEach(function(item) {
 					if (item != null) {
 						var value = item.toString();
 						if (value) node.classList.add(value);
@@ -293,14 +293,14 @@ function Barbiche(_opt) {
 				});
 			}
 			var child;
-			while(child = node.querySelector(globalAttrSel)) {merge(child, template);}
+			while((child = node.querySelector(globalAttrSel))) {merge(child, template);}
 		}
 		if (nodeContextPushed) context.pop();
 	};
 
 	works[Node.DOCUMENT_FRAGMENT_NODE] = function(node, template) {
 		var child;
-		while(child = node.querySelector(globalAttrSel)) {merge(child, template);}
+		while((child = node.querySelector(globalAttrSel))) {merge(child, template);}
 	};
 
 	function merge(node, template) {
@@ -310,7 +310,8 @@ function Barbiche(_opt) {
 
 	/* Template class */
 
-	function Template(node) {
+	function Template(_node) {
+		var node = _node;
 		if (node instanceof BBObj) {
 			var name = node.name;
 			if (store[name]) return store[name];
@@ -365,7 +366,7 @@ function Barbiche(_opt) {
 		merge(clone.node.content, clone);
 		context.init();
 		return clone.node.content;
-	}
+	};
 
 	/* Private methods */
 
@@ -391,7 +392,7 @@ function Barbiche(_opt) {
 		t.node = this.node.cloneNode(true);
 		t.closures = this.closures;
 		return t;
-	}
+	};
 
 	return Template;
 }
