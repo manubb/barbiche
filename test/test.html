@@ -17,7 +17,7 @@
 		describe('Text', function() {
 			describe('{{expression}}', function() {
 				it('should insert text if expression is not null or undefined', function() {
-					var t = barbiche(new barbiche.bbObj('<h1 id="target">{{path.to.value}}</h1>'));
+					var t = barbiche(new barbiche.BBObj('<h1 id="target">{{path.to.value}}</h1>'));
 					t.merge({
 						path: {
 							to: {
@@ -48,7 +48,7 @@
 			});
 			describe('{{bool: expression}}', function() {
 				it('should insert text if expression is not null or undefined and bool is true', function() {
-					var t = barbiche(new barbiche.bbObj('<h1 id="target">{{bool: path.to.value}}</h1>'));
+					var t = barbiche(new barbiche.BBObj('<h1 id="target">{{bool: path.to.value}}</h1>'));
 					t.merge({
 						bool: true,
 						path: {
@@ -117,7 +117,7 @@
 		describe('HTML', function() {
 			describe('{{{expression}}}', function() {
 				it('should insert html if expression is not null or undefined', function() {
-					var t = barbiche(new barbiche.bbObj('<h1 id="target">{{{path.to.value}}}</h1>'));
+					var t = barbiche(new barbiche.BBObj('<h1 id="target">{{{path.to.value}}}</h1>'));
 					t.merge({
 						path: {
 							to: {
@@ -142,7 +142,7 @@
 			});
 			describe('{{bool: expression}}', function() {
 				it('should insert html if expression is not null or undefined and bool is true', function() {
-					var t = barbiche(new barbiche.bbObj('<h1 id="target">{{{bool: path.to.value}}}</h1>'));
+					var t = barbiche(new barbiche.BBObj('<h1 id="target">{{{bool: path.to.value}}}</h1>'));
 					t.merge({
 						bool: true,
 						path: {
@@ -194,7 +194,7 @@
 		describe('Conditions', function() {
 			describe('bb-if="expression"', function() {
 				it('should remove the node if expression is false', function() {
-					var t = barbiche(new barbiche.bbObj('<div><span id="target" bb-if="bool"><p>789</p></span></div>'));
+					var t = barbiche(new barbiche.BBObj('<div><span id="target" bb-if="bool"><p>789</p></span></div>'));
 					var target = t.merge({
 						bool: true,
 					}).querySelector('#target') || {};
@@ -210,7 +210,7 @@
 		describe('Aliases', function() {
 			describe('bb-alias="exp: \'str\'"', function() {
 				it('should bind exp to \'str\' in current subtree', function() {
-					var t = barbiche(new barbiche.bbObj('<div><span id="t1" bb-alias="a: \'b\'" bb-attr="b: \'test\'"></span><span id="t2" bb-attr="b: \'test\'"></span></div>'));
+					var t = barbiche(new barbiche.BBObj('<div><span id="t1" bb-alias="a: \'b\'" bb-attr="b: \'test\'"></span><span id="t2" bb-attr="b: \'test\'"></span></div>'));
 					var clone = t.merge({
 						a: 'val1',
 						b: 'val2'
@@ -221,7 +221,7 @@
 			});
 			describe('bb-alias="[exp: \'str\',...]"', function() {
 				it('should bind each exp to each \'str\' in current subtree', function() {
-					var t = barbiche(new barbiche.bbObj('<div><div bb-alias="[a: \'c\', b: \'d\']"><span id="t1" bb-attr="[c: \'test1\', d: \'test2\']"></span></div><span id="t2" bb-attr="[c: \'test1\', d: \'test2\']"></span></span></div>'));
+					var t = barbiche(new barbiche.BBObj('<div><div bb-alias="[a: \'c\', b: \'d\']"><span id="t1" bb-attr="[c: \'test1\', d: \'test2\']"></span></div><span id="t2" bb-attr="[c: \'test1\', d: \'test2\']"></span></span></div>'));
 					var clone = t.merge({
 						a: 'val1',
 						b: 'val2'
@@ -238,7 +238,7 @@
 		describe('Loops', function() {
 			describe('bb-repeat="exp: \'str\'"', function() {
 				it('should repeat for each item in array exp binding item to \'str\' and index to \'_str_\` in current subtree', function() {
-					var t = barbiche(new barbiche.bbObj('<div id="t1"><span bb-repeat="array: \'var\'" bb-attr="[var: \'val\', _var_: \'index\']"></span></div>'));
+					var t = barbiche(new barbiche.BBObj('<div id="t1"><span bb-repeat="array: \'var\'" bb-attr="[var: \'val\', _var_: \'index\']"></span></div>'));
 					var array = ["a", "b", "c", "d"];
 					var clone = t.merge({
 						array: array
@@ -251,7 +251,7 @@
 			});
 			describe('bb-repeat="[exp: \'str\',...]"', function() {
 				it('should execute nested loops for each item in array exp binding item to \'str\' and index to \'_str_\` in current subtree', function() {
-					var t = barbiche(new barbiche.bbObj('<div id="t1"><span bb-repeat="[array1: \'var1\', array2: \'var2\']" bb-attr="[var1: \'val1\', var2: \'val2\']"></span></div>'));
+					var t = barbiche(new barbiche.BBObj('<div id="t1"><span bb-repeat="[array1: \'var1\', array2: \'var2\']" bb-attr="[var1: \'val1\', var2: \'val2\']"></span></div>'));
 					var array1 = ["a", "b"];
 					var array2 = ["x", "y", "z"];
 					var clone = t.merge({
@@ -268,7 +268,7 @@
 			});
 			describe('bb-repeat="exp: \'str\'"...bb-repeat="exp: \'str\'"', function() {
 				it('should repeat on the first array, then on second array', function() {
-					var t = barbiche(new barbiche.bbObj('<table><tbody id="t1"><tr bb-repeat="array: \'row\'"><td bb-repeat="row: \'cell\'">{{cell}}</td></tr></tbody></table>'));
+					var t = barbiche(new barbiche.BBObj('<table><tbody id="t1"><tr bb-repeat="array: \'row\'"><td bb-repeat="row: \'cell\'">{{cell}}</td></tr></tbody></table>'));
 					var array = [["a", "b"], ["c"]];
 					var clone = t.merge({
 						array: array
@@ -280,7 +280,7 @@
 		describe('Classes', function() {
 			describe('bb-class="exp"', function() {
 				it('should had class exp to current node', function() {
-					var t = barbiche(new barbiche.bbObj('<div id="t1" bb-class="class"></div>'));
+					var t = barbiche(new barbiche.BBObj('<div id="t1" bb-class="class"></div>'));
 					var clone = t.merge({
 						class: "my-class"
 					});
@@ -302,7 +302,7 @@
 			});
 			describe('bb-class="bool: exp"', function() {
 				it('should had class exp to current node depending on bool value', function() {
-					var t = barbiche(new barbiche.bbObj('<div id="t1" bb-class="bool: class"></div>'));
+					var t = barbiche(new barbiche.BBObj('<div id="t1" bb-class="bool: class"></div>'));
 					var clone = t.merge({
 						bool: true,
 						class: "my-class"
@@ -351,7 +351,7 @@
 		describe('Attributes', function() {
 			describe('bb-attr="exp: \'str\'"', function() {
 				it('should set attribute \'str\' to exp value on current node', function() {
-					var t = barbiche(new barbiche.bbObj('<div id="t1"><div bb-attr="value: name"></div></div>'));
+					var t = barbiche(new barbiche.BBObj('<div id="t1"><div bb-attr="value: name"></div></div>'));
 					var clone = t.merge({
 						name: null,
 						value: "val"
@@ -437,7 +437,7 @@
 						});
 					}).should.not.throw();
 
-					var t = barbiche(new barbiche.bbObj('<div><span id="t1" bb-attr="a: \'a\'"></span><span id="t2" bb-attr="\'a\': a"></span><span id="t3" bb-attr="\'a\': \'a\'"></span><span id="t4" bb-attr="a: a"></span></div>'));
+					var t = barbiche(new barbiche.BBObj('<div><span id="t1" bb-attr="a: \'a\'"></span><span id="t2" bb-attr="\'a\': a"></span><span id="t3" bb-attr="\'a\': \'a\'"></span><span id="t4" bb-attr="a: a"></span></div>'));
 					var clone = t.merge({
 						a: 'val'
 					});
@@ -449,7 +449,7 @@
 			});
 			describe('bb-attr="[exp: \'str\',...]"', function() {
 				it('should set attribute \'str\' to exp value on current node for each array item', function() {
-					var t = barbiche(new barbiche.bbObj('<div><span id="t1" bb-attr="[a: \'a\', \'a\': a]"></span><span id="t2" bb-attr="[\'a\': \'a\', a: a]"></span></div>'));
+					var t = barbiche(new barbiche.BBObj('<div><span id="t1" bb-attr="[a: \'a\', \'a\': a]"></span><span id="t2" bb-attr="[\'a\': \'a\', a: a]"></span></div>'));
 					var clone = t.merge({
 						a: 'val'
 					});
@@ -464,9 +464,9 @@
 		describe('Imports', function() {
 			describe('bb-import="string"', function() {
 				it('should import and merge template with id \'string\'', function() {
-					barbiche(new barbiche.bbObj('<div>{{name}}</div>', "sub1"));
-					barbiche(new barbiche.bbObj('<div>{{species}}</div>', "sub2"));
-					var t = barbiche(new barbiche.bbObj('<div id="t1"><template bb-import="sub"></template></div>'));
+					barbiche(new barbiche.BBObj('<div>{{name}}</div>', "sub1"));
+					barbiche(new barbiche.BBObj('<div>{{species}}</div>', "sub2"));
+					var t = barbiche(new barbiche.BBObj('<div id="t1"><template bb-import="sub"></template></div>'));
 					var clone = t.merge({
 						name: "a",
 						specie: "b",
@@ -477,7 +477,7 @@
 			});
 			describe('bb-import="html: name"', function() {
 				it('should merge template with innerHTML html', function() {
-					var t = barbiche(new barbiche.bbObj('<div id="t1"><template bb-import="template.content: template.name"></template></div>'));
+					var t = barbiche(new barbiche.BBObj('<div id="t1"><template bb-import="template.content: template.name"></template></div>'));
 					var clone = t.merge({
 						name: "a",
 						species: "b",
