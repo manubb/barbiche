@@ -5,9 +5,11 @@
 
 'use strict';
 
-var attrs = ['if', 'alias', 'text', 'html', 'repeat', 'import', 'attr', 'class', 'global'];
+var attrs = ['if', 'alias', 'text', 'html', 'repeat', 'import', 'attr', 'class'];
 var BB_IF = 0, BB_ALIAS = 1, BB_TEXT = 2, BB_HTML = 3, BB_REPEAT = 4,
-		BB_IMPORT = 5, BB_ATTR = 6, BB_CLASS = 7, BB_GLOBAL = 8;
+		BB_IMPORT = 5, BB_ATTR = 6, BB_CLASS = 7;
+
+var globalAttr = 'global';
 
 var TEMPLATE = 'TEMPLATE';
 
@@ -69,8 +71,8 @@ function Barbiche(opt) {
 		prefixedAttrsObj[attr] = attrs[index];
 	});
 
-	var globalAttr = prefixedAttrs[BB_GLOBAL];
-	var globalAttrSel = '[' + globalAttr + ']';
+	var prefixedGlobalAttr = (opt.prefix || 'bb-') + globalAttr;
+	var prefixedGlobalAttrSelector = '[' + prefixedGlobalAttr + ']';
 
 	function createTemplate() {
 		return doc.createElement('template');
@@ -118,7 +120,7 @@ function Barbiche(opt) {
 				if (attr in prefixedAttrsObj) setAttr(attr, node.attributes[i].value);
 			}
 		}
-		if (attrFound) node.setAttribute(globalAttr, JSON.stringify(bbAttrs));
+		if (attrFound) node.setAttribute(prefixedGlobalAttr, JSON.stringify(bbAttrs));
 		if (node.nodeName == TEMPLATE) {
 			compile(node.content, template);
 			if (!attrFound) node.replaceWith(node.content);
@@ -199,8 +201,8 @@ function Barbiche(opt) {
 	works[Node.ELEMENT_NODE] = function(node, template) {
 		var nodeContext = {};
 		var nodeContextPushed = false;
-		var bbAttrs = JSON.parse(node.getAttribute(globalAttr));
-		node.removeAttribute(globalAttr);
+		var bbAttrs = JSON.parse(node.getAttribute(prefixedGlobalAttr));
+		node.removeAttribute(prefixedGlobalAttr);
 		var value;
 		if (bbAttrs.if) {
 			value = (template.closures[bbAttrs.if])();
@@ -289,14 +291,14 @@ function Barbiche(opt) {
 				});
 			}
 			var child;
-			while((child = node.querySelector(globalAttrSel))) {merge(child, template);}
+			while((child = node.querySelector(prefixedGlobalAttrSelector))) {merge(child, template);}
 		}
 		if (nodeContextPushed) context.pop();
 	};
 
 	works[Node.DOCUMENT_FRAGMENT_NODE] = function(node, template) {
 		var child;
-		while((child = node.querySelector(globalAttrSel))) {merge(child, template);}
+		while((child = node.querySelector(prefixedGlobalAttrSelector))) {merge(child, template);}
 	};
 
 	function merge(node, template) {
