@@ -337,7 +337,7 @@ function Barbiche(opt) {
 
 	/* Statics */
 
-	Template.BBObj = BBObj;
+	Template.bbObj = function(a, b) {return new BBObj(a, b);};
 
 	Template.clean = function(name) {
 		if (name) delete store[name];
