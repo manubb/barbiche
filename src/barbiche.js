@@ -314,8 +314,7 @@ function Barbiche(opt) {
 				if (name) t.id = name;
 				node = t;
 			}
-		}
-		if (typeof(node) == 'string') {
+		} else if (typeof(node) == 'string') {
 			if (store[node]) return store[node];
 			else node = doc.querySelector('#' + node);
 		}
