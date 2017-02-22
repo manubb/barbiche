@@ -1,6 +1,8 @@
 parser.js
 examples
 docs
+docs_src
 private
 polyfills
 test
+scripts
