@@ -55,8 +55,8 @@ Parser.parser.yy.BBObj = BBObj;
 
 /* Barbiche instance builder */
 
-function Barbiche(_opt) {
-	var opt = _opt || {};
+function Barbiche(opt) {
+	opt = opt || {};
 	var doc = opt.document || document;
 
 	var destructive = (opt.destructive !== undefined) ? !!opt.destructive : true;
@@ -310,8 +310,7 @@ function Barbiche(_opt) {
 
 	/* Template class */
 
-	function Template(_node) {
-		var node = _node;
+	function Template(node) {
 		if (node instanceof BBObj) {
 			var name = node.name;
 			if (store[name]) return store[name];
