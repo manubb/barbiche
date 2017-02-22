@@ -217,16 +217,14 @@ function Barbiche(opt) {
 		}
 		if (bbAttrs.text) {
 			value = (template.closures[bbAttrs.text])();
-			if (value != null) value = value.toString();
-			if (value) {
-				node.replaceWith(value);
+			if (value != null) {
+				node.replaceWith(value.toString());
 			} else node.remove();
 		} else if (bbAttrs.html) {
 			value = (template.closures[bbAttrs.html])();
-			if (value != null) value = value.toString();
-			if (value) {
+			if (value != null) {
 				(function(t) {
-					t.innerHTML = value;
+					t.innerHTML = value.toString();
 					node.replaceWith(t.content);
 				})(createTemplate());
 			} else node.remove();
