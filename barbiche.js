@@ -3022,7 +3022,7 @@ if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
 
 },{}],2:[function(require,module,exports){
 // Barbiche
-// version: 0.7.0
+// version: 0.7.1
 // author: Manuel Baclet <manuel@eda.sarl>
 // license: MIT
 
@@ -3078,6 +3078,14 @@ BBObj.prototype.toString = function() {
 var Parser = require('../parser.js');
 Parser.parser.yy.context = context;
 Parser.parser.yy.BBObj = BBObj;
+
+/* Curly braces parsing error */
+
+function ParseError(res) {
+	this.message = 'Unexpected characters "' + res[0] + '":\n' +
+		res.input.replace(/\t|\n/g, ".") + "\n" + (new Array(res.index + 1).join('-')) + '^';
+	this.name = "ParseError";
+}
 
 /* Barbiche instance builder */
 
@@ -3173,9 +3181,10 @@ function Barbiche(opt) {
 		}
 
 		var regExpTemplate = [
-			'aaa((?:a+f+c+d+e+b(?:a+f+c+d+e+b(?:a+f+c+d+e)))*)bbb',
-			'aa((?:a+f+c+d+e+b(?:a+f+c+d+e))*)bb',
-			'((?:b+f+c+d+e+a(?:b+f+c+d+e))(?:b+f+c+d+e+a(?:b+f+c+d+e))*(?:a(?!a)+b+f+c+d+e++a(?:b+f+c+d+e))+(?:a(?!a)))'
+			'aaa((?:a|f|c|d|e|b(?:a|f|c|d|e|b(?:a|f|c|d|e)))*)bbb',
+			'aa((?:a|f|c|d|e|b(?:a|f|c|d|e))*)bb',
+			'((?:b|f|c|d|e|a(?:b|f|c|d|e))(?:b|f|c|d|e|a(?:b|f|c|d|e))*(?:a(?!a)|b|f|c|d|e||a(?:b|f|c|d|e))|(?:a(?!a)))',
+			'(.+)'
 		];
 		var table = {
 			a: regExpEscape(delimiters[0]),
@@ -3188,7 +3197,7 @@ function Barbiche(opt) {
 
 		var textNodeRegExp = new RegExp(regExpTemplate.map(function(str) {
 			return '(?:' +
-				str.replace(/\+/g, '|').replace(/a|b|c|d|e|f/g, function() {return table[arguments[0]];}) + ')';
+				str.replace(/a|b|c|d|e|f/g, function() {return table[arguments[0]];}) + ')';
 		}).join('|'), 'g');
 
 		return function(node, template) {
@@ -3202,11 +3211,11 @@ function Barbiche(opt) {
 					t = createTemplate();
 					t.setAttribute(prefixedAttrs[BB_TEXT], unescapeDelimiters(res[2]));
 					node.before(t);compile(t, template);
-				} else {
+				} else if (res[1]) {
 					t = createTemplate();
 					t.setAttribute(prefixedAttrs[BB_HTML], unescapeDelimiters(res[1]));
 					node.before(t); compile(t, template);
-				}
+				} else throw new ParseError(res);
 			}
 			node.remove();
 		};
