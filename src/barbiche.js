@@ -326,7 +326,9 @@ function Barbiche(opt) {
 			this.node = destructive ? node : node.cloneNode(true);
 			this.ready = false;
 		} else {
-			this.node = createTemplate();
+			if (node !== undefined) {
+				this.node = createTemplate();
+			}
 			this.ready = true;
 		}
 		this.closures = {};
