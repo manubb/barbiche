@@ -101,25 +101,21 @@ function Barbiche(opt) {
 			}
 		}
 		var bbAttrs = {};
+		function setAttr(name, value) {
+			attrFound = true;
+			var parsed = Parser.parse(value);
+			bbAttrs[prefixedAttrsObj[attr]] = template._addClosure(parsed);
+			node.removeAttribute(attr);
+		}
 		var attrFound = false;
 		if (node.attributes.length > attrs.length) {
 			prefixedAttrs.forEach(function(attr) {
-				if (node.hasAttribute(attr)) {
-					attrFound = true;
-					var parsed = Parser.parse(node.getAttribute(attr));
-					bbAttrs[prefixedAttrsObj[attr]] = template._addClosure(parsed);
-					node.removeAttribute(attr);
-				}
+				if (node.hasAttribute(attr)) setAttr(attr, node.getAttribute(attr));
 			});
 		} else {
 			for (var i = node.attributes.length - 1; i >= 0; i--) {
 				var attr = node.attributes[i].name;
-				if (attr in prefixedAttrsObj) {
-					attrFound = true;
-					var parsed = Parser.parse(node.attributes[i].value);
-					bbAttrs[prefixedAttrsObj[attr]] = template._addClosure(parsed);
-					node.removeAttribute(attr);
-				}
+				if (attr in prefixedAttrsObj) setAttr(attr, node.attributes[i].value);
 			}
 		}
 		if (attrFound) node.setAttribute(globalAttr, JSON.stringify(bbAttrs));
