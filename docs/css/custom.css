@@ -14,6 +14,7 @@ html, body {
 }
 .hide {display: none;}
 .main {
+	/*margin-top: 60px;*/
 	padding-top: 60px;
 	padding-bottom: 40px;
 }
@@ -60,13 +61,69 @@ html, body {
 }
 
 .ui.vertical.stripe {
-	padding: 8em 0em;
+	padding: 5em 0em;
 }
 
 .ui.vertical.stripe h3 {
 	font-size: 2em;
 }
 
+.ui.vertical.stripe h4 {
+	font-size: 1.5em;
+}
+
 .ui.vertical.stripe p {
 	font-size: 1.33em;
+}
+
+.ui.code {
+	width: 98%;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.ui.list li {
+	font-size: 1.25em;
+}
+ul.ui.list, ol.ui.list {
+	margin-left: 2.5rem;
+}
+
+@media only screen and (max-width: 1750px) {
+	.main.container {
+		width: auto !important;
+		max-width: 1300px !important;
+		margin-right: 387px !important;
+		margin-left: 3em !important;
+	}
+}
+
+@media only screen and (max-width: 1272px) {
+	#toc.right.rail {
+		padding-left: 1.5em;
+		width: 260px;
+	}
+	.main.container {
+    margin-right: 318px !important;
+	}
+}
+
+@media only screen and (max-width: 1272px) {
+	.main.container {
+		margin-left: 2em !important;
+	}
+}
+@media only screen and (max-width: 992px) {
+	#toc.right.rail {display: none;}
+	.main.container {
+    margin-left: 1em !important;
+    margin-right: 1em !important;
+    max-width: none !important;
+	}
+}
+
+.main.container .right.rail {
+    margin-left: 3em;
+    padding-top: 0.75em;
+    width: 319px;
 }

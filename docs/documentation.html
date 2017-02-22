@@ -1,14 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<!DOCTYPE html><html><head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 	<title>Barbiche - documentation</title>
 	<link rel="stylesheet" type="text/css" href="css/semantic.min.css">
+	<link rel="stylesheet" type="text/css" href="css/codemirror.css">
 	<link rel="stylesheet" href="css/custom.css">
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/editor.min.js"></script>
 </head>
 <body>
+	<template id="toc-template">
+		<template bb-global="{&quot;repeat&quot;:&quot;fun1&quot;}"><div class="item">
+			<a class="title" bb-global="{&quot;attr&quot;:&quot;fun2&quot;}">
+				<b><template bb-global="{&quot;text&quot;:&quot;fun3&quot;}"></template></b>
+			</a>
+			<div class="content menu" bb-global="{&quot;if&quot;:&quot;fun4&quot;}">
+				<template bb-global="{&quot;repeat&quot;:&quot;fun5&quot;}"><a class="item" bb-global="{&quot;attr&quot;:&quot;fun6&quot;}"><template bb-global="{&quot;text&quot;:&quot;fun7&quot;}"></template></a></template>
+			</div>
+		</div></template>
+	</template>
 	<div class="page-wrap">
 		<div class="ui fixed inverted massive menu">
 			<div class="ui container">
@@ -16,7 +27,7 @@
 					Barbiche
 				</a>
 				<a href="demo.html" class="item">Try it</a>
-				<a href="doc.html" class="item active">Documentation</a>
+				<a href="documentation.html" class="item active">Documentation</a>
 				<a href="https://github.com/manubb/barbiche" class="item">Github repository</a>
 				<a href="https://github.com/edasarl" class="item floated right">
 					<div style="display:block;position:relative;width:74px;height:20px;background-color:#fff;margin-right:10px;">
@@ -36,8 +47,359 @@
 				</a>
 			</div>
 		</div>
-		<div class="ui main text container">
-			Work in progress. Please consult this <a href="https://github.com/manubb/barbiche">page</a>.
+		<div class="main ui container">
+			<div class="ui vertical stripe segment">
+				<div id="toc" class="ui dividing right rail" style="min-height: 308px;margin-top: 60px;">
+					<div style="position: fixed; width: 283px !important; height: 308px !important;">
+						<h4 class="ui header">Table of content</h4>
+						<div id="toc-menu" class="ui vertical following fluid text menu">
+		<div class="item">
+			<a class="title" href="#installation">
+				<b>Installation</b>
+			</a>
+			
+		</div><div class="item">
+			<a class="title" href="#barbicheapi">
+				<b>Barbiche API</b>
+			</a>
+			<div class="content menu">
+				<a class="item" href="#commonusage">Common usage</a><a class="item" href="#settings">Settings</a>
+			</div>
+		</div><div class="item">
+			<a class="title" href="#templatedescription">
+				<b>Template description</b>
+			</a>
+			<div class="content menu">
+				<a class="item" href="#template">&lt;template&gt;</a><a class="item" href="#decorations">Decorations</a><a class="item" href="#loopsexamples">Loops examples</a><a class="item" href="#subtemplatesexamples">Subtemplates examples</a>
+			</div>
+		</div>
+	</div>
+					</div>
+				</div>
+				<div id="target" class="ui text"><h4 class="ui horizontal header divider"></h4><h2 id="installation">Installation</h2>
+<p>Barbiche is available as a <a href="https://www.npmjs.com/">npm</a> package:</p>
+<p><code>npm install barbiche</code></p>
+<h4 class="ui horizontal header divider"></h4><h2 id="barbicheapi">Barbiche API</h2>
+<h3 id="commonusage">Common usage</h3>
+<p>First, we create a Barbiche instance:</p>
+<div class="ui code raised segment hide"><textarea class="js language-js">var barbiche = Barbiche();</textarea></div>
+<p>Now, <code>barbiche</code> is a constructor that expects the id string of a <code>&lt;template&gt;</code> element or a <code>&lt;template&gt;</code> element:</p>
+<div class="ui code raised segment hide"><textarea class="js language-js">barbiche('my-template');
+// or
+barbiche(document.querySelector('#my-template'));</textarea></div>
+<p>If the template has an id attribute, Barbiche internally stores the template for later reuse:</p>
+<div class="ui code raised segment hide"><textarea class="js language-js">var inst1 = barbiche('my-template');
+var inst2 = barbiche('my-template');
+// inst1 === inst2</textarea></div>
+<p>Setting ids on your templates is strongly recommended.</p>
+<p>Merging data into a Barbiche instance is done in this way:</p>
+<div class="ui code raised segment hide"><textarea class="js language-js">var frag = barbiche('my-template').merge(obj1, obj2, obj3,...);</textarea></div>
+<p>The arguments of <code>merge</code> method are used to init the merge context: when Barbiche is looking for the value of an identifier, it searches first in <code>obj1</code>, then in <code>obj2</code>,..., then in <code>window</code>. For example, you may consider that:</p>
+<ul class="ui list">
+<li><code>obj1</code> is a plain JSON object that comes from your database</li>
+<li><code>obj2</code> is an object that contains functions and data specific to <code>my-template</code></li>
+<li><code>obj3</code> is an object that contains functions and data common to all your templates</li>
+</ul>
+<p>A DocumentFragment is returned that can be inserted in the main document:</p>
+<div class="ui code raised segment hide"><textarea class="js language-js">document.body.appendChild(frag);</textarea></div>
+<p>When you are done with your merge operations, you can clean the <code>barbiche</code> store:</p>
+<div class="ui code raised segment hide"><textarea class="js language-js">barbiche.clean('my-template');
+//or
+barbiche.clean(); // clear all registered templates</textarea></div>
+<h3 id="settings">Settings</h3>
+<p>Barbiche instance constructor accepts an optional settings object which defaults to:</p>
+<div class="ui code raised segment hide"><textarea class="js language-js">Barbiche({
+    delimiters: ['{', '}'],
+    prefix: 'bb-',
+    document: document,
+    destructive: true
+});</textarea></div>
+<ul class="ui list">
+<li><code>delimiters</code> is an array containing two distinct one character strings that will be used as delimiters for text and HTML insertion.</li>
+<li><code>prefix</code> is the word used to prefix Barbiche attributes. Internally, Barbiche uses the following attributes: <code>bb-if</code>, <code>bb-alias</code>, <code>bb-text</code>, <code>bb-html</code>, <code>bb-repeat</code>, <code>bb-import</code>, <code>bb-attr</code>, <code>bb-class</code> and <code>bb-global</code>. If you need to use one of these attributes, you can set Barbiche prefix according to your needs.</li>
+<li><code>document</code> is the HTML document where Barbiche will search for templates.</li>
+<li><code>destructive</code> is a boolean that allows Barbiche to modify the HTML of the registered templates. (If false, Barbiche will use deep clones of the templates leaving your HTML untouched.)</li>
+</ul>
+<h4 class="ui horizontal header divider"></h4><h2 id="templatedescription">Template description</h2>
+<h3 id="template"><code>&lt;template&gt;</code></h3>
+<p>Barbiche heavily relies on the great properties of the <code>&lt;template&gt;</code> element. An essential point of Barbiche is that you can wrap any html fragment of the template in a <code>&lt;template&gt;</code> element without changing the merge result. Sooner or later, you will want to set a Barbiche attribute between an element and its parent: just wrap the element in a <code>&lt;template&gt;</code> tag and set the attribute on this new tag.</p>
+<h3 id="decorations">Decorations</h3>
+<p>Barbiche templates are decorated with special attributes which are evaluated in this order:</p>
+<ol class="ui list">
+<li><code>bb-if="expression"</code></li>
+<li><code>bb-alias="expression"</code></li>
+<li><code>bb-repeat="expression (++|--)?"</code></li>
+<li><code>bb-import="expression"</code></li>
+<li><code>bb-attr="expression"</code></li>
+<li><code>bb-class="expression"</code></li>
+</ol>
+<p>and use <code>{{expression}}</code> and <code>{{{expression}}}</code> for merging text and HTML, respectively.</p>
+<h4 id="expressions">Expressions</h4>
+<p>Barbiche expressions support a subset of JavaScript:</p>
+<ul class="ui list">
+<li>boolean expressions: <code>true</code>, <code>false</code>, <code>==</code>, <code>!=</code>, <code>&lt;=</code>,<code>&gt;=</code>, <code>&lt;</code> ,<code>&gt;</code> and <code>!</code></li>
+<li>arrays</li>
+<li>function calls</li>
+<li>property accessors: <code>object.property</code> and <code>object[computed property]</code></li>
+<li>numbers</li>
+<li>strings</li>
+<li><code>+</code> operator</li>
+</ul>
+<p>and a special constructor: <code>expression: expression</code> that we call a Barbiche object.</p>
+<h4 id="text">Text</h4>
+<p>Inserting text is done via <code>{{content}}</code> where <code>content</code> resolves to a string or a Barbiche object.</p>
+<ul class="ui list">
+<li>if <code>content</code> resolves to a string, a text node containing <code>content</code> value is inserted</li>
+<li>if <code>content</code> resolves to a Barbiche object <code>boolean: string</code>, if <code>boolean</code> is true, a text node containing <code>string</code> value is inserted</li>
+</ul>
+<p>Some examples:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;div&gt;
+{{"You see me"}}
+{{(2 == 1 + 1): "You see me too"}}
+{{(1 == 4): "You won't see me"}}
+{{Math.random() &gt; 0.5: "Well, maybe..."}}
+&lt;/div&gt;</textarea></div>
+<h4 id="html">HTML</h4>
+<p>Inserting HTML is done via <code>{{{content}}}</code> where <code>content</code> resolves to a string or a Barbiche object.</p>
+<ul class="ui list">
+<li>if <code>content</code> resolves to a string, its content is inserted as HTML</li>
+<li>if <code>content</code> resolves to a Barbiche object <code>boolean: string</code>, if <code>boolean</code> is true, <code>string</code> value is inserted as HTML</li>
+</ul>
+<h4 id="conditions">Conditions</h4>
+<p>A <code>bb-if</code> attribute resolves to a boolean value. If this value is false, the current node (and its subtree) is removed.</p>
+<p>Some examples of <code>bb-if</code> attributes:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;div bb-if="pet.species != 'cat'"&gt;...&lt;/div&gt;
+&lt;span bb-if="my_crazy_test(obj.items[2], obj.other.another)"&gt;...&lt;/span&gt;</textarea></div>
+<h4 id="aliases">Aliases</h4>
+<p>A <code>bb-alias</code> attribute resolves to a Barbiche object or an array of Barbiche objects. For each object <code>value: name</code>, <code>name</code> is bound to <code>value</code> during the processing of the current subtree.</p>
+<p>Some examples of <code>bb-alias</code> attributes:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;div bb-alias="[JSON.stringify(obj): 'str1', obj.prop: 'str2']"&gt;...&lt;/div&gt;
+&lt;div bb-alias="logo.resources.link[0]: 'link'"&gt;...&lt;/div&gt;</textarea></div>
+<p>In the first line, the value of <code>JSON.stringify(obj)</code> is bound to <code>str1</code> identifier and the value of <code>obj.prop</code> to <code>str2</code>.</p>
+<h4 id="loops">Loops</h4>
+<p>A <code>bb-repeat</code> attribute contains an expression and ends with an optional <code>--</code> or <code>++</code> keyword. The expression resolves to a Barbiche expression or an array of Barbiche expressions which defines a set of <em>nested</em> loops. For each Barbiche expression <code>array: 'string'</code>, a loop is executed on <code>array</code>, binding each array item to <code>'string'</code> and item index to <code>'_string_'</code>. A <code>++</code> ending keyword will insert merged items in natural order; <code>--</code> will insert merged items in reverse order; no ending keyword is the same as <code>++</code>.</p>
+<p>Some usage examples can be found <a href="#loops-examples">below</a>.</p>
+<h4 id="imports">Imports</h4>
+<p>A <code>bb-import</code> attributes resolves to a string <code>id</code>. The template with id <code>id</code> is then merged using current context and the current node is replaced with the merge result. The <code>bb-import</code> attribute is reserved to <code>&lt;template&gt;</code> elements.</p>
+<p>Some usage examples can be found <a href="#subtemplates-examples">below</a>.</p>
+<h4 id="attributes">Attributes</h4>
+<p>A <code>bb-attr</code> attribute resolves to a Barbiche expression or an array of Barbiche expressions. For each expression <code>value: name</code>, <code>name</code> resolves to a string value. If <code>value</code> is not <code>undefined</code> or <code>null</code>, attribute <code>name</code> is set on the current node with value <code>value</code>.</p>
+<h4 id="classes">Classes</h4>
+<p>A <code>bb-class</code> attribute resolves to a string, a Barbiche expression or an array containing strings and Barbiche expressions. For each item:</p>
+<ul class="ui list">
+<li>if item resolves to a string <code>name</code>, class <code>name</code> is added to the current node</li>
+<li>if item resolves to a Barbiche expression <code>boolean: name</code>, <code>boolean</code> is resolved to a boolean value and <code>name</code> to a string. If <code>boolean</code> is true, class <code>name</code> is added to the current node.</li>
+</ul>
+<h3 id="loopsexamples">Loops examples</h3>
+<p>A simple example:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="loop"&gt;
+    &lt;div&gt;
+        &lt;span bb-repeat="items: 'item'"&gt;{{item.name}} ({{_item_}})&lt;/span&gt;
+    &lt;/div&gt;
+&lt;/template&gt;</textarea></div>
+<div class="ui code raised segment hide"><textarea class="js language-js">barbiche('loop').merge({
+    items: [
+        {species: "hen", name: "Elsa", show: true},
+        {species: "cat", name: "Jacynthe", show: false},
+        {species: null, name: "Zaza", show: true}
+    ]
+});</textarea></div>
+<p>will produce:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">}
+&lt;div&gt;
+    &lt;span&gt;Elsa (0)&lt;/span&gt;
+    &lt;span&gt;Jacynthe (1)&lt;/span&gt;
+    &lt;span&gt;Zaza (2)&lt;/span&gt;
+&lt;/div&gt;</textarea></div>
+<p>A descending loop:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="loop"&gt;
+    &lt;div&gt;
+        &lt;span bb-repeat="items: 'item' --"&gt;{{item.name}} ({{_item_}})&lt;/span&gt;
+    &lt;/div&gt;
+&lt;/template&gt;</textarea></div>
+<div class="ui code raised segment hide"><textarea class="js language-js">barbiche('loop').merge({
+    items: [
+        {species: "hen", name: "Elsa", show: true},
+        {species: "cat", name: "Jacynthe", show: false},
+        {species: null, name: "Zaza", show: true}
+    ]
+});</textarea></div>
+<p>will produce:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">}
+&lt;div&gt;
+    &lt;span&gt;Zaza (2)&lt;/span&gt;
+    &lt;span&gt;Jacynthe (1)&lt;/span&gt;
+    &lt;span&gt;Elsa (0)&lt;/span&gt;
+&lt;/div&gt;</textarea></div>
+<p>Filling a table is easy:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="table"&gt;
+    &lt;table&gt;
+        &lt;tbody&gt;
+            &lt;tr bb-repeat="rows: 'row'"&gt;
+                &lt;td bb-repeat="row: 'cell'"&gt;{{cell}}&lt;/td&gt;
+            &lt;/tr&gt;
+        &lt;/tbody&gt;
+    &lt;/table&gt;
+&lt;/template&gt;</textarea></div>
+<div class="ui code raised segment hide"><textarea class="js language-js">barbiche('table').merge({
+    rows: [
+        ["A1", "B1", "C1"],
+        ["A2", "B2", "C2"]
+    ]
+});</textarea></div>
+<p>will produce:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;table&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td&gt;A1&lt;/td&gt;
+            &lt;td&gt;B1&lt;/td&gt;
+            &lt;td&gt;C1&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;A2&lt;/td&gt;
+            &lt;td&gt;B2&lt;/td&gt;
+            &lt;td&gt;C2&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;</textarea></div>
+<p>and a one instruction nested loop:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="nested"&gt;
+    &lt;div&gt;
+        &lt;span bb-repeat="[arr1: 'item1', arr2: 'item2']"&gt;{{item1}}{{item2}}&lt;/span&gt;
+    &lt;/div&gt;
+&lt;/template&gt;</textarea></div>
+<div class="ui code raised segment hide"><textarea class="js language-js">barbiche('nested').merge({
+    arr1: ["A", "B"],
+    arr2: [1, 2, 3]
+});</textarea></div>
+<p>will produce:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;div&gt;
+    &lt;span&gt;A1&lt;/span&gt;
+    &lt;span&gt;A2&lt;/span&gt;
+    &lt;span&gt;A3&lt;/span&gt;
+    &lt;span&gt;B1&lt;/span&gt;
+    &lt;span&gt;B2&lt;/span&gt;
+    &lt;span&gt;B3&lt;/span&gt;
+&lt;/div&gt;</textarea></div>
+<h3 id="subtemplatesexamples">Subtemplates examples</h3>
+<p>A simple example:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="simple-subtemplate"&gt;
+    &lt;div&gt;
+        &lt;template bb-import="'sub'"&gt;&lt;/template&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+&lt;template id="sub"&gt;
+    &lt;span&gt;I am a subtemplate!&lt;/span&gt;
+&lt;/template&gt;</textarea></div>
+<div class="ui code raised segment hide"><textarea class="js language-js">barbiche('simple-subtemplate').merge();</textarea></div>
+<p>will produce:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;div&gt;
+    &lt;span&gt;I am a subtemplate!&lt;/span&gt;
+&lt;/div&gt;</textarea></div>
+<p>Subtemplate import is dynamic:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="dynamic-subtemplate"&gt;
+    &lt;div&gt;
+        &lt;template bb-repeat="items: 'item'" bb-import="item"&gt;&lt;/template&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+&lt;template id="sub1"&gt;
+    &lt;span&gt;I am subtemplate1!&lt;/span&gt;
+&lt;/template&gt;
+&lt;template id="sub2"&gt;
+    &lt;span&gt;I am subtemplate2!&lt;/span&gt;
+&lt;/template&gt;</textarea></div>
+<div class="ui code raised segment hide"><textarea class="js language-js">barbiche('dynamic-subtemplate').merge({
+    items: ['sub2', 'sub1']
+})</textarea></div>
+<p>produces:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;div&gt;
+    &lt;span&gt;I am subtemplate2!&lt;/span&gt;
+    &lt;span&gt;I am subtemplate1!&lt;/span&gt;
+&lt;/div&gt;</textarea></div>
+<p>Recursion is also supported:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="recursive"&gt;
+    &lt;template bb-if="children.length" bb-import="'recursive-sub'"&gt;&lt;/template&gt;
+&lt;/template&gt;
+&lt;template id="recursive-sub"&gt;
+    &lt;ul&gt;
+        &lt;li bb-repeat="children: 'child'"&gt;{{child.name}}
+            &lt;template bb-if="child.children" bb-alias="child.children: 'children'"
+                bb-import="'recursive-sub'"&gt;&lt;/template&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/template&gt;</textarea></div>
+<div class="ui code raised segment hide"><textarea class="js language-js">barbiche('recursive').merge({
+    children: [
+        {
+            name: "Solomon",
+            children: [
+                {
+                    name : "Lexie",
+                    children: [
+                        {
+                            name: "Shavon",
+                            children: [
+                                {
+                                    name : "Shirleen"
+                                }, {
+                                    name : "Kathleen"
+                                }
+                            ]
+                        },
+                        {
+                            name: "Travis"
+                        },
+                        {
+                            name: "Adele"
+                        },
+                        {
+                            name: "Barney"
+                        }
+                    ]
+                }, {
+                    name : "Allie"
+                }
+            ]
+        }, {
+            name: "Juliann",
+            children: [
+                {
+                    name : "Guy"
+                }, {
+                    name : "Yaeko"
+                }
+            ]
+        }
+    ]
+})</textarea></div>
+<p>will give you:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;ul&gt;
+    &lt;li&gt;Solomon
+        &lt;ul&gt;
+            &lt;li&gt;Lexie
+                &lt;ul&gt;
+                    &lt;li&gt;Shavon
+                        &lt;ul&gt;
+                            &lt;li&gt;Shirleen&lt;/li&gt;
+                            &lt;li&gt;Kathleen&lt;/li&gt;
+                        &lt;/ul&gt;
+                    &lt;/li&gt;
+                    &lt;li&gt;Travis&lt;/li&gt;
+                    &lt;li&gt;Adele&lt;/li&gt;
+                    &lt;li&gt;Barney&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/li&gt;
+            &lt;li&gt;Allie&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;Juliann
+        &lt;ul&gt;
+            &lt;li&gt;Guy&lt;/li&gt;
+            &lt;li&gt;Yaeko&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;</textarea></div></div>
+			</div>
 		</div>
 	</div>
 	<div id="footer" class="ui inverted vertical footer segment">
@@ -50,5 +412,44 @@
 			</div>
 		</div>
 	</div>
-</body>
-</html>
+	<script>
+		$('#toc-menu').on('click', 'a', function(e) {
+			e.preventDefault();
+			var target = this.getAttribute('href');
+			if (target) {
+				scrollTo(target);
+				window.history && window.history.replaceState(null, target.substring(1), target);
+			}
+		});
+		function scrollTo(target) {
+			document.querySelector(target).scrollIntoView();
+			window.scrollBy(0, -65);
+		}
+		$('textarea.language-js').each(function() {
+			var parent = $(this).parent().removeClass('hide');
+			CodeMirror.fromTextArea(this, {
+				mode: "javascript",
+				lineWrapping: true,
+				tabSize: 2,
+				indentWithTabs: true,
+				readOnly: true
+			});
+		});
+		$('textarea.language-html').each(function() {
+			var parent = $(this).parent().removeClass('hide');
+			CodeMirror.fromTextArea(this, {
+				mode: "htmlmixed",
+				lineWrapping: true,
+				tabSize: 2,
+				indentWithTabs: true,
+				readOnly: true
+			});
+		});
+		$(function() {
+			var hash = document.location.hash;
+			if (hash.length > 1) scrollTo(hash);
+		});
+	</script>
+
+
+</body></html>
