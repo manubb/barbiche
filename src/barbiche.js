@@ -264,6 +264,8 @@ function Barbiche(opt) {
 				value = (template.closures[bbAttrs.import])();
 				var clone = Template(value)._clone();
 				node.before(merge(clone.node.content, clone));
+			} else {
+				node.before(merge(node.content, template));
 			}
 			node.remove();
 		} else {
