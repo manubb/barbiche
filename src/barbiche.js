@@ -10,6 +10,7 @@ var BB_IF = 0, BB_ALIAS = 1, BB_TEXT = 2, BB_HTML = 3, BB_REPEAT = 4,
 		BB_IMPORT = 5, BB_ATTR = 6, BB_CLASS = 7;
 
 var globalAttr = 'global';
+var elseAttr = 'else';
 
 var TEMPLATE = 'TEMPLATE';
 
@@ -73,6 +74,7 @@ function Barbiche(opt) {
 
 	var prefixedGlobalAttr = (opt.prefix || 'bb-') + globalAttr;
 	var prefixedGlobalAttrSelector = '[' + prefixedGlobalAttr + ']';
+	var prefixedElseAttr = (opt.prefix || 'bb-') + elseAttr;
 
 	function createTemplate() {
 		return doc.createElement('template');
@@ -97,6 +99,7 @@ function Barbiche(opt) {
 						node.removeAttribute(attr);
 					}
 				});
+				if (node.hasAttribute(prefixedElseAttr)) wrapper.setAttribute(prefixedElseAttr, "");
 				node.before(wrapper);
 				wrapper.content.appendChild(node);
 				node = wrapper;
@@ -123,6 +126,7 @@ function Barbiche(opt) {
 		if (attrFound) node.setAttribute(prefixedGlobalAttr, JSON.stringify(bbAttrs));
 		if (node.nodeName == TEMPLATE) {
 			compile(node.content, template);
+			if (node.hasAttribute(prefixedElseAttr)) attrFound = true;
 			if (!attrFound) node.replaceWith(node.content);
 		} else {
 			Array.from(node.childNodes).forEach(function(child) {
@@ -206,7 +210,14 @@ function Barbiche(opt) {
 		var value;
 		if (bbAttrs.if) {
 			value = (template.closures[bbAttrs.if])();
-			if (!value) return node.remove();
+			var elseFound = node.nextElementSibling && node.nextElementSibling.hasAttribute(prefixedElseAttr);
+			if (elseFound) {
+				if (value) node.nextElementSibling.remove();
+				else {
+					node.nextElementSibling.removeAttribute(prefixedElseAttr);
+					return node.remove();
+				}
+			} else if (!value) return node.remove();
 		}
 		if (bbAttrs.alias) {
 			value = (template.closures[bbAttrs.alias])();
