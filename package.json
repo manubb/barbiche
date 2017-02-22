@@ -3,7 +3,7 @@
   "version": "0.7.0",
   "description": "Logic-full template engine for DOM & JavaScript",
   "author": "Manuel Baclet <manuel@eda.sarl>",
-  "homepage": "https://github.com/manubb/barbiche",
+  "homepage": "https://manubb.github.io/barbiche",
   "repository": {
     "type": "git",
     "url": "https://github.com/manubb/barbiche.git"
