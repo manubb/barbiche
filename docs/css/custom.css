@@ -64,8 +64,12 @@ html, body {
 	padding: 5em 0em;
 }
 
-.ui.vertical.stripe h3 {
+.ui.vertical.stripe h2 {
 	font-size: 2em;
+}
+
+.ui.vertical.stripe h3 {
+	font-size: 1.5em;
 }
 
 .ui.vertical.stripe h4 {
@@ -87,6 +91,10 @@ html, body {
 }
 ul.ui.list, ol.ui.list {
 	margin-left: 2.5rem;
+}
+
+.ui.large.text.container {
+	max-width: 950px!important;
 }
 
 @media only screen and (max-width: 1750px) {

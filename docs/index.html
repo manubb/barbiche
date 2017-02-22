@@ -1,12 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<!DOCTYPE html><html><head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 	<title>Barbiche - home</title>
 	<link rel="stylesheet" type="text/css" href="css/semantic.min.css">
-	<link rel="stylesheet" type="text/css" href="css/custom.css">
+	<link rel="stylesheet" type="text/css" href="css/codemirror.css">
+	<link rel="stylesheet" href="css/custom.css">
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/editor.min.js"></script>
 </head>
 <body>
 	<div class="page-wrap">
@@ -47,14 +48,57 @@
 				</div>
 			</div>
 			<div class="ui vertical stripe segment">
-				<div class="ui text container">
-					<h3 class="ui header">Overview</h3>
-					<p>Barbiche is a logic-full template engine for browser environment. It has been designed to give you full-control over the data you want to merge into an HTML fragment. It is currently a work in progress.</p>
-					<h4 class="ui horizontal header divider"></h4>
-					<h3 class="ui header">Installation</h3>
-					<p>Barbiche is available as a <a href="https://www.npmjs.com/">npm</a> package:</p>
-					<code>npm install barbiche</code>
-				</div>
+				<div id="target" class="ui large text container"><h4 class="ui horizontal header divider"></h4><h2 id="overview">Overview</h2>
+<p>Barbiche is a logic-full template engine for browser environment. It has been designed to give you complete control over the data you want to merge into an HTML fragment. Current version is considered as a release candidate. Once minified and gzipped, Barbiche size is less than 11KB.</p>
+<h4 class="ui horizontal header divider"></h4><h2 id="sample">Sample</h2>
+<p>We ask Barbiche to merge some data into an HTML template:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="test"&gt;
+    &lt;div bb-alias="items[1].name: 'name'" bb-class="customClass"&gt;
+        &lt;div&gt;{{name}}&lt;/div&gt;
+        &lt;ul bb-attr="my_replace(attrValue): 'attr-name'"&gt;
+            &lt;template bb-repeat="items: 'item'"&gt;
+                &lt;li bb-if="item.show" bb-class="[item.species || 'unknown', (_item_ == 0): 'first']"&gt;
+                    {{item.name}} (index: {{_item_}})
+                &lt;/li&gt;
+            &lt;/template&gt;
+        &lt;/ul&gt;
+        &lt;span&gt;{{item.join(', ').toUpperCase()}}&lt;/span&gt;
+        {{{some_html}}}
+    &lt;/div&gt;
+&lt;/template&gt;</textarea></div>
+<div class="ui code raised segment hide"><textarea class="js language-js">var barbiche = Barbiche();
+var frag = barbiche('test').merge({
+    customClass: "my-class",
+    "items": [
+        {species: "hen", name: "Elsa", show: true},
+        {species: "cat", name: "Jacynthe", show: false},
+        {species: null, name: "Zaza", show: true}
+    ],
+    item: ["hen", "cat", "dog", "spider"],
+    some_html: "&lt;div&gt;&lt;p&gt;This is...&lt;/p&gt;&lt;p&gt;...some HTML.&lt;/p&gt;&lt;/div&gt;",
+    my_replace: function(str) {return str.replace(/o/g, "O");},
+    attrValue: "lunchroom"
+});</textarea></div>
+<p>The returned document fragment can then be inserted anywhere you want. It will contains:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;div class="my-class"&gt;
+    &lt;div&gt;Jacynthe&lt;/div&gt;
+    &lt;ul attr-name="lunchrOOm"&gt;
+        &lt;li class="hen first"&gt;Elsa (index: 0)&lt;/li&gt;
+        &lt;li class="unknown"&gt;Zaza (index: 2)&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;span&gt;HEN, CAT, DOG, SPIDER&lt;/span&gt;
+    &lt;div&gt;&lt;p&gt;This is...&lt;/p&gt;&lt;p&gt;...some HTML.&lt;/p&gt;&lt;/div&gt;
+&lt;/div&gt;</textarea></div>
+<h4 class="ui horizontal header divider"></h4><h2 id="browsersupport">Browser support</h2>
+<p>Barbiche requires support of <code>&lt;template&gt;</code> element, <code>Array.from</code> method and some DOM convenience methods (<code>ChildNode</code> and <code>element.classList</code> API). Properly polyfilled, Barbiche can be used with:</p>
+<ul class="ui list">
+<li>Chrome &gt;= 15 (no test with previous releases)</li>
+<li>Firefox &gt;= 20</li>
+<li>Internet Explorer &gt;=9</li>
+<li>Opera &gt;=11.6</li>
+<li>Safari &gt;=5.1</li>
+</ul>
+<p>Polyfills, once minified and gzipped, weight an additionnal 5KB.</p></div>
 			</div>
 		</div>
 	</div>
@@ -68,5 +112,28 @@
 			</div>
 		</div>
 	</div>
-</body>
-</html>
+	<script>
+		$('textarea.language-js').each(function() {
+			var parent = $(this).parent().removeClass('hide');
+			CodeMirror.fromTextArea(this, {
+				mode: "javascript",
+				lineWrapping: true,
+				tabSize: 2,
+				indentWithTabs: true,
+				readOnly: true
+			});
+		});
+		$('textarea.language-html').each(function() {
+			var parent = $(this).parent().removeClass('hide');
+			CodeMirror.fromTextArea(this, {
+				mode: "htmlmixed",
+				lineWrapping: true,
+				tabSize: 2,
+				indentWithTabs: true,
+				readOnly: true
+			});
+		});
+	</script>
+
+
+</body></html>
