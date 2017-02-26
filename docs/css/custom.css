@@ -36,12 +36,12 @@ html, body {
 }
 
 .masthead.segment {
-	height: 500px;
+	height: 525px;
 	padding: 1em 0em;
 }
 
 .masthead h1.ui.header {
-	margin-top: 1em;
+	margin-top: 0.3em;
 	margin-bottom: 0em;
 	font-size: 6em;
 	font-weight: normal;
@@ -53,7 +53,7 @@ html, body {
 }
 
 .masthead .primary.button{
-	margin-top: 10px;
+	margin-top: 20px;
 }
 
 .margin-top-30 {
@@ -134,4 +134,15 @@ ul.ui.list, ol.ui.list {
     margin-left: 3em;
     padding-top: 0.75em;
     width: 319px;
+}
+
+.logo.large {
+	height: 128px;
+	width: 128px;
+	margin-bottom: 20px;
+}
+
+.logo.small {
+	height: 32px;
+	width: 32px;
 }
