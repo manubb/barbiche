@@ -144,7 +144,7 @@
 					templateCodeMirror.refresh();
 				});
 				result.classList.add('hide');
-				var button = document.querySelector('button[name="' + name + '"');
+				var button = document.querySelector('button[name="' + name + '"]');
 				Array.from(button.parentNode.children).forEach(function(elt) {
 					if (elt.nodeName == 'BUTTON') elt.classList.remove('active');
 				});
