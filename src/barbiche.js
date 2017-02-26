@@ -71,20 +71,20 @@ var ArrayFrom = Array.prototype.slice;
 function Barbiche(opt) {
 	opt = opt || {};
 	var doc = opt.document || document;
-
+	var prefix = opt.prefix || 'bb-';
 	var destructive = (opt.destructive !== undefined) ? !!opt.destructive : true;
 
 	var prefixedAttrs = attrs.map(function(str) {
-		return (opt.prefix || 'bb-') + str;
+		return prefix + str;
 	});
 	var prefixedAttrsObj = {};
 	prefixedAttrs.forEach(function(attr, index) {
 		prefixedAttrsObj[attr] = attrs[index];
 	});
 
-	var prefixedGlobalAttr = (opt.prefix || 'bb-') + globalAttr;
+	var prefixedGlobalAttr = prefix + globalAttr;
 	var prefixedGlobalAttrSelector = '[' + prefixedGlobalAttr + ']';
-	var prefixedElseAttr = (opt.prefix || 'bb-') + elseAttr;
+	var prefixedElseAttr = prefix + elseAttr;
 
 	function createTemplate() {
 		return doc.createElement('template');
