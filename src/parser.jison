@@ -16,9 +16,8 @@ CharacterEscapeSequence {SingleEscapeCharacter}|{NonEscapeCharacter}
 EscapeSequence {CharacterEscapeSequence}|{OctalEscapeSequence}|{HexEscapeSequence}|{UnicodeEscapeSequence}
 DoubleStringCharacter ([^\"\\\n\r]+)|(\\{EscapeSequence})|{LineContinuation}
 SingleStringCharacter ([^\'\\\n\r]+)|(\\{EscapeSequence})|{LineContinuation}
-BackTickStringCharacter ([^`\\\n\r]+)|\\`|(\\{EscapeSequence})|{LineContinuation}
 StringLiteral (\"{DoubleStringCharacter}*\")|(\'{SingleStringCharacter}*\')
-BackTickIdentifier (`{BackTickStringCharacter}*`)
+
 %%
 
 \s+                   /* skip whitespace */
@@ -45,7 +44,6 @@ BackTickIdentifier (`{BackTickStringCharacter}*`)
 "]"                   return ']'
 ":"                   return ':'
 {StringLiteral}       yytext = yytext.substr(1, yyleng - 2); return 'STRING'
-{BackTickIdentifier}  yytext = quoteUnescape(yytext.substr(1, yyleng - 2).replace(/\\`/g, '`')); console.log(yytext); return 'VAR'
 {Identifier}          return 'VAR'
 <<EOF>>               return 'EOF'
 .                     return 'INVALID'

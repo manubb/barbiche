@@ -2845,11 +2845,6 @@ case 23 :
 /*! Rule::       {StringLiteral} */ 
  yy_.yytext = yy_.yytext.substr(1, yy_.yyleng - 2); return 23 
 break;
-case 24 : 
-/*! Conditions:: INITIAL */ 
-/*! Rule::       {BackTickIdentifier} */ 
- yy_.yytext = quoteUnescape(yy_.yytext.substr(1, yy_.yyleng - 2).replace(/\\`/g, '`')); console.log(yy_.yytext); return 26 
-break;
 default:
   return this.simpleCaseActionClusters[$avoiding_name_collisions];
 }
@@ -2924,13 +2919,13 @@ simpleCaseActionClusters: {
    22 : 6,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       {Identifier} */ 
-   25 : 26,
+   24 : 26,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       $ */ 
-   26 : 1,
+   25 : 1,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       . */ 
-   27 : 'INVALID'
+   26 : 'INVALID'
 },
 rules: [
 /^(?:\s+)/,
@@ -2957,7 +2952,6 @@ rules: [
 /^(?:\])/,
 /^(?::)/,
 /^(?:(("(?:([^\n\r"\\]+)|(\\(?:(?:(?:["'\\bfnrtv])|(?:[^\d"'\\bfnrt-vx]))|(?:(?:[1-7][0-7]{0,2}|[0-7]{2,3}))|(?:[x]{HexDigit}{2})|(?:[u]{HexDigit}{4})))|(?:\\(\r\n|\r|\n)))*")|('(?:([^\n\r'\\]+)|(\\(?:(?:(?:["'\\bfnrtv])|(?:[^\d"'\\bfnrt-vx]))|(?:(?:[1-7][0-7]{0,2}|[0-7]{2,3}))|(?:[x]{HexDigit}{2})|(?:[u]{HexDigit}{4})))|(?:\\(\r\n|\r|\n)))*')))/,
-/^(?:((`(?:([^\n\r\\`]+)|\\`|(\\(?:(?:(?:["'\\bfnrtv])|(?:[^\d"'\\bfnrt-vx]))|(?:(?:[1-7][0-7]{0,2}|[0-7]{2,3}))|(?:[x]{HexDigit}{2})|(?:[u]{HexDigit}{4})))|(?:\\(\r\n|\r|\n)))*`)))/,
 /^(?:((?:[$A-Z_a-z])(?:(?:[$A-Z_a-z])|\d)*))/,
 /^(?:$)/,
 /^(?:.)/
@@ -2991,8 +2985,7 @@ conditions: {
       23,
       24,
       25,
-      26,
-      27
+      26
     ],
     inclusive: true
   }
