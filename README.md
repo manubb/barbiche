@@ -36,7 +36,7 @@ var frag = barbiche('test').merge({
 	attrValue: "lunchroom"
 });
 ```
-The returned document fragment can then be inserted anywhere you want. It will contain:
+The returned document fragment can then be inserted anywhere you want. It contains:
 
 ```html
 <div class="my-class">
