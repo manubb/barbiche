@@ -48,7 +48,7 @@ The returned document fragment can then be inserted anywhere you want. It will c
 
 ## Browser support
 
-Barbiche requires support of `<template>` element, `Array.from` method and some DOM convenience methods (`ChildNode` and `element.classList` API). Properly polyfilled, Barbiche can be used with:
+Barbiche requires support of `<template>` element and some DOM convenience methods (`ChildNode` and `element.classList` API). Properly polyfilled, Barbiche can be used with:
 
 * Chrome >= 15 (no test with previous releases)
 * Firefox >= 20
