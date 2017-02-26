@@ -3087,25 +3087,27 @@ function ParseError(res) {
 	this.name = "ParseError";
 }
 
+var ArrayFrom = Array.prototype.slice;
+
 /* Barbiche instance builder */
 
 function Barbiche(opt) {
 	opt = opt || {};
 	var doc = opt.document || document;
-
+	var prefix = opt.prefix || 'bb-';
 	var destructive = (opt.destructive !== undefined) ? !!opt.destructive : true;
 
 	var prefixedAttrs = attrs.map(function(str) {
-		return (opt.prefix || 'bb-') + str;
+		return prefix + str;
 	});
 	var prefixedAttrsObj = {};
 	prefixedAttrs.forEach(function(attr, index) {
 		prefixedAttrsObj[attr] = attrs[index];
 	});
 
-	var prefixedGlobalAttr = (opt.prefix || 'bb-') + globalAttr;
+	var prefixedGlobalAttr = prefix + globalAttr;
 	var prefixedGlobalAttrSelector = '[' + prefixedGlobalAttr + ']';
-	var prefixedElseAttr = (opt.prefix || 'bb-') + elseAttr;
+	var prefixedElseAttr = prefix + elseAttr;
 
 	function createTemplate() {
 		return doc.createElement('template');
@@ -3160,7 +3162,7 @@ function Barbiche(opt) {
 			if (node.hasAttribute(prefixedElseAttr)) attrFound = true;
 			if (!attrFound) node.replaceWith(node.content);
 		} else {
-			Array.from(node.childNodes).forEach(function(child) {
+			ArrayFrom.call(node.childNodes).forEach(function(child) {
 				compile(child, template);
 			});
 		}
@@ -3210,11 +3212,13 @@ function Barbiche(opt) {
 				} else if (res[2]) {
 					t = createTemplate();
 					t.setAttribute(prefixedAttrs[BB_TEXT], unescapeDelimiters(res[2]));
-					node.before(t);compile(t, template);
+					node.before(t);
+					compile(t, template);
 				} else if (res[1]) {
 					t = createTemplate();
 					t.setAttribute(prefixedAttrs[BB_HTML], unescapeDelimiters(res[1]));
-					node.before(t); compile(t, template);
+					node.before(t);
+					compile(t, template);
 				} else throw new ParseError(res);
 			}
 			node.remove();
@@ -3224,7 +3228,7 @@ function Barbiche(opt) {
 	compile_works[Node.COMMENT_NODE] = function(node, template) {};
 
 	compile_works[Node.DOCUMENT_FRAGMENT_NODE] = function(node, template) {
-		Array.from(node.childNodes).forEach(function(child) {compile(child, template);});
+		ArrayFrom.call(node.childNodes).forEach(function(child) {compile(child, template);});
 	};
 
 	function compile(node, template) {
@@ -3414,8 +3418,7 @@ function Barbiche(opt) {
 	Template.prototype._addClosure = (function() {
 		var counter = 0;
 		return function(fun) {
-			counter++;
-			var str = 'fun' + counter;
+			var str = 'fun' + (++counter);
 			this.closures[str] = fun;
 			return str;
 		};
