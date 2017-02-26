@@ -189,11 +189,13 @@ function Barbiche(opt) {
 				} else if (res[2]) {
 					t = createTemplate();
 					t.setAttribute(prefixedAttrs[BB_TEXT], unescapeDelimiters(res[2]));
-					node.before(t);compile(t, template);
+					node.before(t);
+					compile(t, template);
 				} else if (res[1]) {
 					t = createTemplate();
 					t.setAttribute(prefixedAttrs[BB_HTML], unescapeDelimiters(res[1]));
-					node.before(t); compile(t, template);
+					node.before(t);
+					compile(t, template);
 				} else throw new ParseError(res);
 			}
 			node.remove();
