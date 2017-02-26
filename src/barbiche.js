@@ -393,8 +393,7 @@ function Barbiche(opt) {
 	Template.prototype._addClosure = (function() {
 		var counter = 0;
 		return function(fun) {
-			counter++;
-			var str = 'fun' + counter;
+			var str = 'fun' + (++counter);
 			this.closures[str] = fun;
 			return str;
 		};
