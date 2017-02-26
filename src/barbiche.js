@@ -64,6 +64,8 @@ function ParseError(res) {
 	this.name = "ParseError";
 }
 
+var ArrayFrom = Array.prototype.slice;
+
 /* Barbiche instance builder */
 
 function Barbiche(opt) {
@@ -137,7 +139,7 @@ function Barbiche(opt) {
 			if (node.hasAttribute(prefixedElseAttr)) attrFound = true;
 			if (!attrFound) node.replaceWith(node.content);
 		} else {
-			Array.from(node.childNodes).forEach(function(child) {
+			ArrayFrom.call(node.childNodes).forEach(function(child) {
 				compile(child, template);
 			});
 		}
@@ -201,7 +203,7 @@ function Barbiche(opt) {
 	compile_works[Node.COMMENT_NODE] = function(node, template) {};
 
 	compile_works[Node.DOCUMENT_FRAGMENT_NODE] = function(node, template) {
-		Array.from(node.childNodes).forEach(function(child) {compile(child, template);});
+		ArrayFrom.call(node.childNodes).forEach(function(child) {compile(child, template);});
 	};
 
 	function compile(node, template) {
