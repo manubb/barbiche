@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<title>Barbiche - home</title>
+	<link rel="stylesheet" type="text/css" href="css/semantic.min.css">
+	<link rel="stylesheet" type="text/css" href="css/codemirror.css">
+	<link rel="stylesheet" href="css/custom.css">
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/editor.min.js"></script>
+</head>
+<body>
+	<div class="page-wrap">
+		<div id="header" class="ui fixed inverted massive menu">
+			<div class="ui container">
+				<a href="index.html" class="header item active">
+					Barbiche
+				</a>
+				<a href="demo.html" class="item">Try it</a>
+				<a href="documentation.html" class="item">Documentation</a>
+				<a href="https://github.com/manubb/barbiche" class="item">Github repository</a>
+				<a href="https://github.com/edasarl" class="item floated right">
+					<div style="display:block;position:relative;width:74px;height:20px;background-color:#fff;margin-right:10px;">
+						<div style="width:4px;height:4px;top:16px;left:0px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:10px;height:4px;top:4px;left:4px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:10px;height:4px;top:12px;left:4px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:4px;height:20px;top:0px;left:12px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:4px;height:12px;top:4px;left:20px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:12px;height:4px;top:0px;left:24px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:8px;height:4px;top:16px;left:24px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:4px;height:16px;top:4px;left:28px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:4px;height:8px;top:4px;left:36px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:4px;height:4px;top:16px;left:36px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:38px;height:4px;top:0px;left:40px;background-color:#000;display:block;position:absolute;"></div>
+						<div style="width:30px;height:17px;top:3px;left:44px;background-color:#000;display:block;position:absolute;"></div>
+					</div>
+				</a>
+			</div>
+		</div>
+		<div class="main">
+			<div class="ui inverted vertical masthead center aligned segment">
+				<div class="ui text container">
+					<h1 class="ui inverted header">
+						Barbiche
+					</h1>
+					<h2>Template engine for DOM &amp; JavaScript</h2>
+					<a href="demo.html" class="ui huge primary button">Try it online <i class="right arrow icon"></i></a>
+				</div>
+			</div>
+			<div class="ui vertical stripe segment">
+				<div id="target" class="ui large text container"></div>
+			</div>
+		</div>
+	</div>
+	<div id="footer" class="ui inverted vertical footer segment">
+		<div class="ui center aligned container">
+			<div class="ui horizontal inverted large divided link list">
+				<a class="item" href="index.html">Barbiche home</a>
+				<a class="item" href="demo.html">Try it</a>
+				<a class="item" href="documentation.html">Documentation</a>
+				<a class="item" href="https://github.com/manubb/barbiche">Github repository</a>
+			</div>
+		</div>
+	</div>
+	<script>
+		$('textarea.language-js').each(function() {
+			var parent = $(this).parent().removeClass('hide');
+			CodeMirror.fromTextArea(this, {
+				mode: "javascript",
+				lineWrapping: true,
+				tabSize: 2,
+				indentWithTabs: true,
+				readOnly: true
+			});
+		});
+		$('textarea.language-html').each(function() {
+			var parent = $(this).parent().removeClass('hide');
+			CodeMirror.fromTextArea(this, {
+				mode: "htmlmixed",
+				lineWrapping: true,
+				tabSize: 2,
+				indentWithTabs: true,
+				readOnly: true
+			});
+		});
+	</script>
+</body>
+</html>
