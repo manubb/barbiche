@@ -146,3 +146,7 @@ ul.ui.list, ol.ui.list {
 	height: 32px;
 	width: 32px;
 }
+
+#buttons .button {
+	margin-bottom: 0.75em;
+}
