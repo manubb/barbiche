@@ -530,6 +530,7 @@ symbols_: {
   "ArrayItemList": 28,
   "EOF": 1,
   "FALSE": 25,
+  "IDENTIFIER": 26,
   "Main": 27,
   "NUMBER": 22,
   "Order": 29,
@@ -537,7 +538,6 @@ symbols_: {
   "STRING": 23,
   "SimpleExpression": 31,
   "TRUE": 24,
-  "VAR": 26,
   "[": 4,
   "]": 5,
   "error": 2,
@@ -569,7 +569,7 @@ terminals_: {
   23: "STRING",
   24: "TRUE",
   25: "FALSE",
-  26: "VAR"
+  26: "IDENTIFIER"
 },
 TERROR: 2,
 EOF: 1,
@@ -811,12 +811,14 @@ case 19:
 
 case 21:
     /*! Production::    SimpleExpression : NUMBER */
-    this.$ = Number.bind(null, yytext);
+    var number = Number(yytext); this.$ = function() {return number;};
     break;
 
 case 22:
     /*! Production::    SimpleExpression : STRING */
-    this.$ = quoteUnescape.bind(null, yytext);
+case 34:
+    /*! Production::    PropertyName : IDENTIFIER */
+    this.$ = function() {return yytext;};
     break;
 
 case 23:
@@ -850,13 +852,8 @@ case 28:
     break;
 
 case 29:
-    /*! Production::    SimpleExpression : VAR */
+    /*! Production::    SimpleExpression : IDENTIFIER */
     this.$ = yy.context.resolve.bind(yy.context, yytext);
-    break;
-
-case 34:
-    /*! Production::    PropertyName : VAR */
-    this.$ = String.bind(null, yytext);
     break;
 
 }
@@ -1807,11 +1804,19 @@ var table = {
 	"\"": "\"",
 	"t": "\t",
 	"r": "\r",
-	"\\": "\\"
+	"\\": "\\",
+	"`": "`"
 };
-
-function quoteUnescape(str) {
-	return str.replace(/(\\(\\|'|"|r|n|t))/g, function() {return table[arguments[2]];});
+var stringUnescapeRegExp = /\\(?:(\\|'|"|r|n|t|`)|u(.{4})|x(.{2}))/g;
+function charCodeToChar(str) {
+	return String.fromCharCode(parseInt(str, 16));
+}
+function stringUnescapeReplace() {
+	if (arguments[1]) return table[arguments[1]];
+	else return charCodeToChar(arguments[2] || arguments[3]);
+}
+function stringUnescape(str) {
+	return str.replace(stringUnescapeRegExp, stringUnescapeReplace);
 }
 
 function OR(a, b) {
@@ -2843,7 +2848,17 @@ break;
 case 23 : 
 /*! Conditions:: INITIAL */ 
 /*! Rule::       {StringLiteral} */ 
- yy_.yytext = yy_.yytext.substr(1, yy_.yyleng - 2); return 23 
+ yy_.yytext = stringUnescape(yy_.yytext.substr(1, yy_.yyleng - 2)); return 23 
+break;
+case 24 : 
+/*! Conditions:: INITIAL */ 
+/*! Rule::       {BackTickIdentifier} */ 
+ yy_.yytext = stringUnescape(yy_.yytext.substr(1, yy_.yyleng - 2)); return 26 
+break;
+case 25 : 
+/*! Conditions:: INITIAL */ 
+/*! Rule::       {Identifier} */ 
+ yy_.yytext = stringUnescape(yy_.yytext); return 26 
 break;
 default:
   return this.simpleCaseActionClusters[$avoiding_name_collisions];
@@ -2918,14 +2933,11 @@ simpleCaseActionClusters: {
   /*! Rule::       : */ 
    22 : 6,
   /*! Conditions:: INITIAL */ 
-  /*! Rule::       {Identifier} */ 
-   24 : 26,
-  /*! Conditions:: INITIAL */ 
   /*! Rule::       $ */ 
-   25 : 1,
+   26 : 1,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       . */ 
-   26 : 'INVALID'
+   27 : 'INVALID'
 },
 rules: [
 /^(?:\s+)/,
@@ -2951,8 +2963,9 @@ rules: [
 /^(?:\[)/,
 /^(?:\])/,
 /^(?::)/,
-/^(?:(("(?:([^\n\r"\\]+)|(\\(?:(?:(?:["'\\bfnrtv])|(?:[^\d"'\\bfnrt-vx]))|(?:(?:[1-7][0-7]{0,2}|[0-7]{2,3}))|(?:[x]{HexDigit}{2})|(?:[u]{HexDigit}{4})))|(?:\\(\r\n|\r|\n)))*")|('(?:([^\n\r'\\]+)|(\\(?:(?:(?:["'\\bfnrtv])|(?:[^\d"'\\bfnrt-vx]))|(?:(?:[1-7][0-7]{0,2}|[0-7]{2,3}))|(?:[x]{HexDigit}{2})|(?:[u]{HexDigit}{4})))|(?:\\(\r\n|\r|\n)))*')))/,
-/^(?:((?:[$A-Z_a-z])(?:(?:[$A-Z_a-z])|\d)*))/,
+/^(?:(("(?:([^\n\r"\\]+)|(\\(?:(?:(?:["'\\bfnrtv])|(?:[^\d"'\\bfnrt-vx]))|(?:[x](?:[\dA-Fa-f]){2})|(?:[u](?:[\dA-Fa-f]){4}))))*")|('(?:([^\n\r'\\]+)|(\\(?:(?:(?:["'\\bfnrtv])|(?:[^\d"'\\bfnrt-vx]))|(?:[x](?:[\dA-Fa-f]){2})|(?:[u](?:[\dA-Fa-f]){4}))))*')))/,
+/^(?:((`(?:([^\n\r\\`]+)|(\\(?:(?:(?:["'\\bfnrtv])|(?:[^\d"'\\bfnrt-vx]))|(?:[x](?:[\dA-Fa-f]){2})|(?:[u](?:[\dA-Fa-f]){4}))))*`)))/,
+/^(?:((?:[$A-Z_a-z]|(\\(?:(?:(?:["'\\bfnrtv])|(?:[^\d"'\\bfnrt-vx]))|(?:[x](?:[\dA-Fa-f]){2})|(?:[u](?:[\dA-Fa-f]){4}))))(?:(?:[$A-Z_a-z]|(\\(?:(?:(?:["'\\bfnrtv])|(?:[^\d"'\\bfnrt-vx]))|(?:[x](?:[\dA-Fa-f]){2})|(?:[u](?:[\dA-Fa-f]){4}))))|\d)*))/,
 /^(?:$)/,
 /^(?:.)/
 ],
@@ -2985,7 +2998,8 @@ conditions: {
       23,
       24,
       25,
-      26
+      26,
+      27
     ],
     inclusive: true
   }
@@ -3022,7 +3036,7 @@ if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
 
 },{}],2:[function(require,module,exports){
 // Barbiche
-// version: 0.7.1
+// version: 0.8.0
 // author: Manuel Baclet <manuel@eda.sarl>
 // license: MIT
 
@@ -3175,11 +3189,20 @@ function Barbiche(opt) {
 			return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 		}
 
+		var textHTMLTable = {
+			'\\': '\\\\'
+		};
+		textHTMLTable[delimiters[0]] = delimiters[0];
+		textHTMLTable[delimiters[1]] = delimiters[1];
+
 		var UnescapeDelimitersRegExp = new RegExp('\\\\(' +
 			['\\\\', regExpEscape(delimiters[0]), regExpEscape(delimiters[1])].join('|') +
 		')', 'g');
-		function unescapeDelimiters(str) {
+		function unescapePlainText(str) {
 			return str.replace(UnescapeDelimitersRegExp, function() {return arguments[1];});
+		}
+		function unescapeTextHTML(str) {
+			return str.replace(UnescapeDelimitersRegExp, function() {return textHTMLTable[arguments[1]];});
 		}
 
 		var regExpTemplate = [
@@ -3207,16 +3230,16 @@ function Barbiche(opt) {
 			var t;
 			while((res = textNodeRegExp.exec(node.nodeValue))) {
 				if (res[3]) {
-					t = doc.createTextNode(unescapeDelimiters(res[3]));
+					t = doc.createTextNode(unescapePlainText(res[3]));
 					node.before(t);
 				} else if (res[2]) {
 					t = createTemplate();
-					t.setAttribute(prefixedAttrs[BB_TEXT], unescapeDelimiters(res[2]));
+					t.setAttribute(prefixedAttrs[BB_TEXT], unescapeTextHTML(res[2]));
 					node.before(t);
 					compile(t, template);
 				} else if (res[1]) {
 					t = createTemplate();
-					t.setAttribute(prefixedAttrs[BB_HTML], unescapeDelimiters(res[1]));
+					t.setAttribute(prefixedAttrs[BB_HTML], unescapeTextHTML(res[1]));
 					node.before(t);
 					compile(t, template);
 				} else throw new ParseError(res);

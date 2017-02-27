@@ -1,6 +1,6 @@
 {
   "name": "barbiche",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Logic-full template engine for DOM & JavaScript",
   "author": "Manuel Baclet <manuel@eda.sarl>",
   "homepage": "https://manubb.github.io/barbiche",
