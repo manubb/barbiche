@@ -56,4 +56,4 @@ Barbiche requires support of `<template>` element and some DOM convenience metho
 * Opera >=11.6
 * Safari >=5.1
 
-Polyfills, once minified and gzipped, weight an additionnal 5KB.
+Polyfills, once minified and gzipped, weight an additionnal 6KB.
