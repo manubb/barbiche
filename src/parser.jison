@@ -3,50 +3,51 @@
 /* lexical grammar */
 %lex
 
-IdentifierStart [$_a-zA-Z]
+HexDigit [0-9a-fA-F]
+IdentifierStart [$_a-zA-Z]|(\\{EscapeSequence})
 IdentifierPart {IdentifierStart}|[0-9]
 Identifier {IdentifierStart}{IdentifierPart}*
-LineContinuation \\(\r\n|\r|\n)
-OctalEscapeSequence (?:[1-7][0-7]{0,2}|[0-7]{2,3})
 HexEscapeSequence [x]{HexDigit}{2}
 UnicodeEscapeSequence [u]{HexDigit}{4}
 SingleEscapeCharacter [\'\"\\bfnrtv]
 NonEscapeCharacter [^\'\"\\bfnrtv0-9xu]
 CharacterEscapeSequence {SingleEscapeCharacter}|{NonEscapeCharacter}
-EscapeSequence {CharacterEscapeSequence}|{OctalEscapeSequence}|{HexEscapeSequence}|{UnicodeEscapeSequence}
-DoubleStringCharacter ([^\"\\\n\r]+)|(\\{EscapeSequence})|{LineContinuation}
-SingleStringCharacter ([^\'\\\n\r]+)|(\\{EscapeSequence})|{LineContinuation}
+EscapeSequence {CharacterEscapeSequence}|{HexEscapeSequence}|{UnicodeEscapeSequence}
+DoubleStringCharacter ([^\"\\\n\r]+)|(\\{EscapeSequence})
+SingleStringCharacter ([^\'\\\n\r]+)|(\\{EscapeSequence})
+BackTickStringCharacter ([^`\\\n\r]+)|(\\{EscapeSequence})
 StringLiteral (\"{DoubleStringCharacter}*\")|(\'{SingleStringCharacter}*\')
-
+BackTickIdentifier (`{BackTickStringCharacter}*`)
 %%
 
-\s+                   /* skip whitespace */
+\s+                         /* skip whitespace */
 ("-")?[0-9]+("."[0-9]+)?\b  return 'NUMBER'
-"||"                  return '||'
-"&&"                  return '&&'
-"=="                  return '=='
-"!="                  return '!='
-"<="                  return '<='
-">="                  return '>='
-"<"                   return '<'
-">"                   return '>'
-"++"                  return '++';
-"--"                  return '--';
-"+"                   return '+'
-"!"                   return '!'
-"("                   return '('
-")"                   return ')'
-"true"                return 'TRUE'
-"false"               return 'FALSE'
-","                   return ','
-"."                   return '.'
-"["                   return '['
-"]"                   return ']'
-":"                   return ':'
-{StringLiteral}       yytext = yytext.substr(1, yyleng - 2); return 'STRING'
-{Identifier}          return 'VAR'
-<<EOF>>               return 'EOF'
-.                     return 'INVALID'
+"||"                        return '||'
+"&&"                        return '&&'
+"=="                        return '=='
+"!="                        return '!='
+"<="                        return '<='
+">="                        return '>='
+"<"                         return '<'
+">"                         return '>'
+"++"                        return '++';
+"--"                        return '--';
+"+"                         return '+'
+"!"                         return '!'
+"("                         return '('
+")"                         return ')'
+"true"                      return 'TRUE'
+"false"                     return 'FALSE'
+","                         return ','
+"."                         return '.'
+"["                         return '['
+"]"                         return ']'
+":"                         return ':'
+{StringLiteral}             yytext = stringUnescape(yytext.substr(1, yyleng - 2)); return 'STRING'
+{BackTickIdentifier}        yytext = stringUnescape(yytext.substr(1, yyleng - 2)); return 'IDENTIFIER'
+{Identifier}                yytext = stringUnescape(yytext); return 'IDENTIFIER'
+<<EOF>>                     return 'EOF'
+.                           return 'INVALID'
 
 /lex
 
@@ -122,9 +123,9 @@ SimpleExpression
 	| '(' SimpleExpression ')' %prec GROUP
 		{$$ = $2;}
 	| NUMBER
-		{$$ = Number.bind(null, yytext);}
+		{var number = Number(yytext); $$ = function() {return number;};}
 	| STRING
-		{$$ = quoteUnescape.bind(null, yytext);}
+		{$$ = function() {return yytext;};}
 	| TRUE
 		{$$ = TRUE;}
 	| FALSE
@@ -137,7 +138,7 @@ SimpleExpression
 		{$$ = getProperty.bind(null, $1, $3);}
 	| Array
 		{$$ = $1;}
-	| VAR
+	| IDENTIFIER
 		{$$ = yy.context.resolve.bind(yy.context, yytext);}
 	;
 
@@ -156,8 +157,8 @@ ArgumentList
 	;
 
 PropertyName
-	: VAR
-		{$$ = String.bind(null, yytext);}
+	: IDENTIFIER
+		{$$ = function() {return yytext;};}
 	;
 
 %%
@@ -167,11 +168,19 @@ var table = {
 	"\"": "\"",
 	"t": "\t",
 	"r": "\r",
-	"\\": "\\"
+	"\\": "\\",
+	"`": "`"
 };
-
-function quoteUnescape(str) {
-	return str.replace(/(\\(\\|'|"|r|n|t))/g, function() {return table[arguments[2]];});
+var stringUnescapeRegExp = /\\(?:(\\|'|"|r|n|t|`)|u(.{4})|x(.{2}))/g;
+function charCodeToChar(str) {
+	return String.fromCharCode(parseInt(str, 16));
+}
+function stringUnescapeReplace() {
+	if (arguments[1]) return table[arguments[1]];
+	else return charCodeToChar(arguments[2] || arguments[3]);
+}
+function stringUnescape(str) {
+	return str.replace(stringUnescapeRegExp, stringUnescapeReplace);
 }
 
 function OR(a, b) {

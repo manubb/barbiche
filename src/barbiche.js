@@ -152,11 +152,20 @@ function Barbiche(opt) {
 			return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 		}
 
+		var textHTMLTable = {
+			'\\': '\\\\'
+		};
+		textHTMLTable[delimiters[0]] = delimiters[0];
+		textHTMLTable[delimiters[1]] = delimiters[1];
+
 		var UnescapeDelimitersRegExp = new RegExp('\\\\(' +
 			['\\\\', regExpEscape(delimiters[0]), regExpEscape(delimiters[1])].join('|') +
 		')', 'g');
-		function unescapeDelimiters(str) {
+		function unescapePlainText(str) {
 			return str.replace(UnescapeDelimitersRegExp, function() {return arguments[1];});
+		}
+		function unescapeTextHTML(str) {
+			return str.replace(UnescapeDelimitersRegExp, function() {return textHTMLTable[arguments[1]];});
 		}
 
 		var regExpTemplate = [
@@ -184,16 +193,16 @@ function Barbiche(opt) {
 			var t;
 			while((res = textNodeRegExp.exec(node.nodeValue))) {
 				if (res[3]) {
-					t = doc.createTextNode(unescapeDelimiters(res[3]));
+					t = doc.createTextNode(unescapePlainText(res[3]));
 					node.before(t);
 				} else if (res[2]) {
 					t = createTemplate();
-					t.setAttribute(prefixedAttrs[BB_TEXT], unescapeDelimiters(res[2]));
+					t.setAttribute(prefixedAttrs[BB_TEXT], unescapeTextHTML(res[2]));
 					node.before(t);
 					compile(t, template);
 				} else if (res[1]) {
 					t = createTemplate();
-					t.setAttribute(prefixedAttrs[BB_HTML], unescapeDelimiters(res[1]));
+					t.setAttribute(prefixedAttrs[BB_HTML], unescapeTextHTML(res[1]));
 					node.before(t);
 					compile(t, template);
 				} else throw new ParseError(res);
