@@ -9,7 +9,7 @@ First, we create a Barbiche instance:
 ```js
 var barbiche = Barbiche();
 ```
-Now, `barbiche` is a constructor that expects the id string of a `<template>` element or a `<template>` element:
+Now, `barbiche` is a factory function that expects the id string of a `<template>` element or a `<template>` element:
 ```js
 barbiche('my-template');
 // or
@@ -38,14 +38,26 @@ A DocumentFragment is returned that can be inserted in the main document:
 document.body.appendChild(frag);
 ```
 
-
-
 When you are done with your merge operations, you can clean the `barbiche` store:
 ```js
 barbiche.clean('my-template');
 //or
 barbiche.clean(); // clear all registered templates
 
+```
+### Barbiche objects
+Barbiche instances expose a factory function for BBObj class:
+```js
+var bbObj = barbiche.bbObj;
+var bbObjInstance = bbObj(value, name);
+```
+Barbiche objects can be used to create a template from a string with an optional id:
+```js
+var id = 'my-template';
+var str = '<div><span>{{text}}</span></div>';
+barbiche(bbObj(str, id));
+//or
+barbiche(bbObj(str));
 ```
 
 ### Settings
@@ -60,8 +72,19 @@ Barbiche({
 });
 ```
 
-* `delimiters` is an array containing two distinct one character strings that will be used as delimiters for text and HTML insertion.
-* `prefix` is the word used to prefix Barbiche attributes. Internally, Barbiche uses the following attributes: `bb-if`, `bb-alias`, `bb-text`, `bb-html`, `bb-repeat`, `bb-import`, `bb-attr`, `bb-class` and `bb-global`. If you need to use one of these attributes, you can set Barbiche prefix according to your needs.
+* `delimiters` is an array containing two distinct one character strings that will be used as delimiters for text and HTML insertion. Note that backslash character (\) is used for escaping delimiters and cannot be used as a delimiter.
+* `prefix` is the word used to prefix Barbiche attributes. Internally, Barbiche uses the following attributes:
+  -`bb-if`
+  -`bb-else`
+  -`bb-alias`
+  -`bb-text`
+  -`bb-html`
+  -`bb-repeat`
+  -`bb-import`
+  -`bb-attr`
+  -`bb-class`
+  -`bb-global`
+  If you need to use one of these attributes, you can set Barbiche prefix according to your needs.
 * `document` is the HTML document where Barbiche will search for templates.
 * `destructive` is a boolean that allows Barbiche to modify the HTML of the registered templates. (If false, Barbiche will use deep clones of the templates leaving your HTML untouched.)
 
@@ -74,7 +97,7 @@ Barbiche heavily relies on the great properties of the `<template>` element. An 
 
 Barbiche templates are decorated with special attributes which are evaluated in this order:
 
-1. `bb-if="expression"`
+1. `bb-if="expression"` (and `bb-else`)
 2. `bb-alias="expression"`
 3. `bb-repeat="expression (++|--)?"`
 4. `bb-import="expression"`
@@ -88,6 +111,7 @@ and use `{{expression}}` and `{{{expression}}}` for merging text and HTML, respe
 Barbiche expressions support a subset of JavaScript:
 
 * boolean expressions: `true`, `false`, `==`, `!=`, `<=`,`>=`, `<` ,`>` and `!`
+* identifiers
 * arrays
 * function calls
 * property accessors: `object.property` and `object[computed property]`
@@ -95,13 +119,13 @@ Barbiche expressions support a subset of JavaScript:
 * strings
 * `+` operator
 
-and a special constructor: `expression: expression` that we call a Barbiche object.
+and a special constructor: `expression: expression` for building Barbiche object.
 
 #### Text
-Inserting text is done via `{{content}}` where `content` resolves to a string or a Barbiche object.
+Inserting text is done with `{{expression}}`.
 
-* if `content` resolves to a string, a text node containing `content` value is inserted
-* if `content` resolves to a Barbiche object `boolean: string`, if `boolean` is true, a text node containing `string` value is inserted
+* if `expression` is a Barbiche object `boolean: content`, if `boolean` is true and if `content` is not `null` or `undefined`, a text node containing `content.toString()` is inserted
+* else, if `expression` is not `null` or `undefined`, a text node containing `expression.toString()` is inserted
 
 Some examples:
 ```html
@@ -113,13 +137,15 @@ Some examples:
 </div>
 ```
 #### HTML
-Inserting HTML is done via `{{{content}}}` where `content` resolves to a string or a Barbiche object.
+Inserting HTML is done with `{{{expression}}}`.
 
-* if `content` resolves to a string, its content is inserted as HTML
-* if `content` resolves to a Barbiche object `boolean: string`, if `boolean` is true, `string` value is inserted as HTML
+* if `expression` is a Barbiche object `boolean: content`, if `boolean` is true and if `content` is not `null` or `undefined`, `content.toString()` is inserted as HTML
+* else, if `expression` is not `null` or `undefined`, `expression.toString()` is inserted as HTML
 
 #### Conditions
-A `bb-if` attribute resolves to a boolean value. If this value is false, the current node (and its subtree) is removed.
+if an element is decorated with a `bb-if="expression"` attribute, its next sibling element (if it exists) may be decorated with an (empty) `bb-else` attribute. According to the truth value of `expression`, the element or its next sibling element is removed.
+
+Note that no curly braces expression can be set between two consecutive sibling elements decorated with `bb-if` and `bb-else`.
 
 Some examples of `bb-if` attributes:
 ```html
@@ -127,7 +153,7 @@ Some examples of `bb-if` attributes:
 <span bb-if="my_crazy_test(obj.items[2], obj.other.another)">...</span>
 ```
 #### Aliases
-A `bb-alias` attribute resolves to a Barbiche object or an array of Barbiche objects. For each object `value: name`, `name` is bound to `value` during the processing of the current subtree.
+A `bb-alias` contains a Barbiche object or an array of Barbiche objects. For each object `value: name`, `name` is bound to `value` during the processing of the current subtree.
 
 Some examples of `bb-alias` attributes:
 ```html
@@ -137,22 +163,22 @@ Some examples of `bb-alias` attributes:
 In the first line, the value of `JSON.stringify(obj)` is bound to `str1` identifier and the value of `obj.prop` to `str2`.
 
 #### Loops
-A `bb-repeat` attribute contains an expression and ends with an optional `--` or `++` keyword. The expression resolves to a Barbiche expression or an array of Barbiche expressions which defines a set of *nested* loops. For each Barbiche expression `array: 'string'`, a loop is executed on `array`, binding each array item to `'string'` and item index to `'_string_'`. A `++` ending keyword will insert merged items in natural order; `--` will insert merged items in reverse order; no ending keyword is the same as `++`.
+A `bb-repeat` attribute contains an expression and ends with an optional `--` or `++` keyword. The expression denotes a Barbiche object or an array of Barbiche objects which defines a set of *nested* loops. For each Barbiche object `array: 'string'`, a loop is executed on `array`, binding each array item to `'string'` and item index to `'_string_'`. A `++` ending keyword will insert merged items in natural order; `--` will insert merged items in reverse order; no ending keyword is the same as `++`.
 
 Some usage examples can be found [below](#loopsexamples).
 
 ####Imports
-A `bb-import` attributes resolves to a string `id`. The template with id `id` is then merged using current context and the current node is replaced with the merge result. The `bb-import` attribute is reserved to `<template>` elements.
+The `bb-import` attribute is reserved to `<template>` elements. The value of a `bb-import` can be a template node, a template id or a Barbiche object. It is applied to the barbiche instance function. The returned template is then merged using current context and the current node is replaced with the merge result.
 
 Some usage examples can be found [below](#subtemplatesexamples).
 
 #### Attributes
-A `bb-attr` attribute resolves to a Barbiche expression or an array of Barbiche expressions. For each expression `value: name`, `name` resolves to a string value. If `value` is not `undefined` or `null`, attribute `name` is set on the current node with value `value`.
+A `bb-attr` attribute contains a Barbiche object or an array of Barbiche objects. For each object `value: name`, if `value` is not `undefined` or `null` and if `name.toString()` is not empty, attribute `name.toString()` is set on the current node with value `value`.
 
 #### Classes
-A `bb-class` attribute resolves to a string, a Barbiche expression or an array containing strings and Barbiche expressions. For each item:
-* if item resolves to a string `name`, class `name` is added to the current node
-* if item resolves to a Barbiche expression `boolean: name`, `boolean` is resolved to a boolean value and `name` to a string. If `boolean` is true, class `name` is added to the current node.
+A `bb-class` attribute contains an expression or an array of expressions. For each expression:
+* if expression is a Barbiche object `boolean: name`, if `boolean` is true and if `name` is not `null` or `undefined` and if `name.toString()` is not empty, class `name.toString()` is added to the current element,
+* else if `expression` is not `null` or `undefined` and if `expression.toString()` is not empty, class `expression.toString()` is added to the current element.
 
 ### Loops examples
 A simple example:
