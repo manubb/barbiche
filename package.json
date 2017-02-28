@@ -11,9 +11,9 @@
   "keywords": [
     "DOM",
     "HTML",
-    "template",
-    "templates",
-    "templating"
+    "JavaScript",
+    "template engine",
+    "template"
   ],
   "main": "barbiche.js",
   "scripts": {
