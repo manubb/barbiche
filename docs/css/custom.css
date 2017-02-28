@@ -1,9 +1,14 @@
 html, body {
 	height: 100%;
 }
+body {
+	background-color: #1b1c1d;
+}
+
 .page-wrap {
 	min-height: 100%;
 	margin-bottom: -230px;
+	background-color: #fff;
 }
 .page-wrap:after {
 	content: "";
@@ -13,8 +18,8 @@ html, body {
 	height: 160px;
 }
 .hide {display: none;}
+
 .main {
-	/*margin-top: 60px;*/
 	padding-top: 60px;
 	padding-bottom: 40px;
 }
@@ -36,8 +41,9 @@ html, body {
 }
 
 .masthead.segment {
-	height: 525px;
-	padding: 1em 0em;
+	height: 585px;
+	padding: 74px 0;
+	margin-top: -60px !important;
 }
 
 .masthead h1.ui.header {
@@ -61,7 +67,7 @@ html, body {
 }
 
 .ui.vertical.stripe {
-	padding: 5em 0em;
+	padding: 2.5em 0em;
 }
 
 .ui.vertical.stripe h2 {
