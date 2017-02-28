@@ -87,7 +87,7 @@ function Barbiche(opt) {
 	var prefixedElseAttr = prefix + elseAttr;
 
 	function createTemplate() {
-		return doc.createElement('template');
+		return doc.createElement(TEMPLATE);
 	}
 
 	var store = {};
