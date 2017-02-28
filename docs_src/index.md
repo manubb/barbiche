@@ -50,7 +50,7 @@ The returned document fragment can then be inserted anywhere you want. It contai
 
 Barbiche requires support of `<template>` element and some DOM convenience methods (`ChildNode` and `element.classList` API). Properly polyfilled, Barbiche can be used with:
 
-* Chrome >= 15 (no test with previous releases)
+* Chrome >= 15 (at least)
 * Firefox >= 20
 * Internet Explorer >=9
 * Opera >=11.6

@@ -190,10 +190,10 @@ barbiche.clean(); // clear all registered templates</textarea></div>
 <p>In the first line, the value of <code>JSON.stringify(obj)</code> is bound to <code>str1</code> identifier and the value of <code>obj.prop</code> to <code>str2</code>.</p>
 <h4 id="loops">Loops</h4>
 <p>A <code>bb-repeat</code> attribute contains an expression and ends with an optional <code>--</code> or <code>++</code> keyword. The expression resolves to a Barbiche expression or an array of Barbiche expressions which defines a set of <em>nested</em> loops. For each Barbiche expression <code>array: 'string'</code>, a loop is executed on <code>array</code>, binding each array item to <code>'string'</code> and item index to <code>'_string_'</code>. A <code>++</code> ending keyword will insert merged items in natural order; <code>--</code> will insert merged items in reverse order; no ending keyword is the same as <code>++</code>.</p>
-<p>Some usage examples can be found <a href="#loops-examples">below</a>.</p>
+<p>Some usage examples can be found <a href="#loopsexamples">below</a>.</p>
 <h4 id="imports">Imports</h4>
 <p>A <code>bb-import</code> attributes resolves to a string <code>id</code>. The template with id <code>id</code> is then merged using current context and the current node is replaced with the merge result. The <code>bb-import</code> attribute is reserved to <code>&lt;template&gt;</code> elements.</p>
-<p>Some usage examples can be found <a href="#subtemplates-examples">below</a>.</p>
+<p>Some usage examples can be found <a href="#subtemplatesexamples">below</a>.</p>
 <h4 id="attributes">Attributes</h4>
 <p>A <code>bb-attr</code> attribute resolves to a Barbiche expression or an array of Barbiche expressions. For each expression <code>value: name</code>, <code>name</code> resolves to a string value. If <code>value</code> is not <code>undefined</code> or <code>null</code>, attribute <code>name</code> is set on the current node with value <code>value</code>.</p>
 <h4 id="classes">Classes</h4>

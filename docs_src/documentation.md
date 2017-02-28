@@ -139,12 +139,12 @@ In the first line, the value of `JSON.stringify(obj)` is bound to `str1` identif
 #### Loops
 A `bb-repeat` attribute contains an expression and ends with an optional `--` or `++` keyword. The expression resolves to a Barbiche expression or an array of Barbiche expressions which defines a set of *nested* loops. For each Barbiche expression `array: 'string'`, a loop is executed on `array`, binding each array item to `'string'` and item index to `'_string_'`. A `++` ending keyword will insert merged items in natural order; `--` will insert merged items in reverse order; no ending keyword is the same as `++`.
 
-Some usage examples can be found [below](#loops-examples).
+Some usage examples can be found [below](#loopsexamples).
 
 ####Imports
 A `bb-import` attributes resolves to a string `id`. The template with id `id` is then merged using current context and the current node is replaced with the merge result. The `bb-import` attribute is reserved to `<template>` elements.
 
-Some usage examples can be found [below](#subtemplates-examples).
+Some usage examples can be found [below](#subtemplatesexamples).
 
 #### Attributes
 A `bb-attr` attribute resolves to a Barbiche expression or an array of Barbiche expressions. For each expression `value: name`, `name` resolves to a string value. If `value` is not `undefined` or `null`, attribute `name` is set on the current node with value `value`.
