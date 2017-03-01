@@ -3071,7 +3071,7 @@ var context = {
 		this.stack.push(obj);
 	},
 	pop: function() {
-		return this.stack.pop();
+		this.stack.pop();
 	}
 };
 
@@ -3124,7 +3124,7 @@ function Barbiche(opt) {
 	var prefixedElseAttr = prefix + elseAttr;
 
 	function createTemplate() {
-		return doc.createElement('template');
+		return doc.createElement(TEMPLATE);
 	}
 
 	var store = {};
