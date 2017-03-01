@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 var showdown  = require('showdown'),
     converter = new showdown.Converter();
-
+converter.setFlavor('github');
 var jsdom = require("jsdom");
 var serializeDocument = require("jsdom").serializeDocument;
 var fs = require("fs");
