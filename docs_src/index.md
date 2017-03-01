@@ -48,12 +48,15 @@ The returned document fragment can then be inserted anywhere you want. It contai
 
 ## Browser support
 
-Barbiche requires support of `<template>` element and some DOM convenience methods (`ChildNode` and `element.classList` API). Properly polyfilled, Barbiche can be used with:
+Barbiche requires support of `<template>` element and some DOM convenience methods (`ChildNode` and `element.classList` API). Here is the support table including polyfills:
 
-* Chrome >= 15 (at least)
-* Firefox >= 20
-* Internet Explorer >=9
-* Opera >=11.6
-* Safari >=5.1
+| 						  | `<template>`		| `classList` | `ChildNode`  | **polyfills** |
+| --------------|-----------------|-------------|--------------|---------------|
+|Chrome					| 		&ge;26			|&ge;28				|  &ge;54      |  **&ge;15** (at least)   |
+|Firefox				|&ge;22						|&ge;26				|	 &ge;49			 |  **&ge;20**   |
+|IE/Edge   			|&ge;13						|&ge;12				|no support    |**&ge;9**      |
+|Opera					|&ge;15						|&ge;15				|&ge;41				 |**&ge;11.6**	 |
+|Safari					|&ge;7.1					|&ge;7 				|&ge;10				 |**&ge;5.1**    |
+
 
 Polyfills, once minified and gzipped, weight an additionnal 6KB.

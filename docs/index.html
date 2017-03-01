@@ -102,14 +102,55 @@ var frag = barbiche('test').merge({
     &lt;div&gt;&lt;p&gt;This is...&lt;/p&gt;&lt;p&gt;...some HTML.&lt;/p&gt;&lt;/div&gt;
 &lt;/div&gt;</textarea></div>
 <h4 class="ui horizontal header divider"></h4><h2 id="browser-support">Browser support</h2>
-<p>Barbiche requires support of <code>&lt;template&gt;</code> element and some DOM convenience methods (<code>ChildNode</code> and <code>element.classList</code> API). Properly polyfilled, Barbiche can be used with:</p>
-<ul class="ui list">
-<li>Chrome &gt;= 15 (at least)</li>
-<li>Firefox &gt;= 20</li>
-<li>Internet Explorer &gt;=9</li>
-<li>Opera &gt;=11.6</li>
-<li>Safari &gt;=5.1</li>
-</ul>
+<p>Barbiche requires support of <code>&lt;template&gt;</code> element and some DOM convenience methods (<code>ChildNode</code> and <code>element.classList</code> API). Here is the support table including polyfills:</p>
+<table class="ui celled table">
+<thead>
+<tr>
+<th></th>
+<th><code>&lt;template&gt;</code></th>
+<th><code>classList</code></th>
+<th><code>ChildNode</code></th>
+<th><strong>polyfills</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chrome</td>
+<td>≥26</td>
+<td>≥28</td>
+<td>≥54</td>
+<td><strong>≥15</strong> (at least)</td>
+</tr>
+<tr>
+<td>Firefox</td>
+<td>≥22</td>
+<td>≥26</td>
+<td>≥49</td>
+<td><strong>≥20</strong></td>
+</tr>
+<tr>
+<td>IE/Edge</td>
+<td>≥13</td>
+<td>≥12</td>
+<td>no support</td>
+<td><strong>≥9</strong></td>
+</tr>
+<tr>
+<td>Opera</td>
+<td>≥15</td>
+<td>≥15</td>
+<td>≥41</td>
+<td><strong>≥11.6</strong></td>
+</tr>
+<tr>
+<td>Safari</td>
+<td>≥7.1</td>
+<td>≥7</td>
+<td>≥10</td>
+<td><strong>≥5.1</strong></td>
+</tr>
+</tbody>
+</table>
 <p>Polyfills, once minified and gzipped, weight an additionnal 6KB.</p></div>
 			</div>
 		</div>

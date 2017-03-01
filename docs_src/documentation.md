@@ -1,7 +1,16 @@
-## Installation
+## Setup
+
+### Installation
+
 Barbiche is available as a [npm](https://www.npmjs.com/) package:
 
 `npm install barbiche`
+
+### Polyfills
+
+For decent browser support, using some polyfills is required. Good results can be obtained with:
+* [DOM4](https://github.com/WebReflection/dom4) (available as npm package dom4)
+* [template](https://github.com/webcomponents/template) (no npm package, using commit #47b57a is currently recommended)
 
 ## Barbiche API
 ### Common usage

@@ -79,6 +79,7 @@ jsdom.env({
 				$(this).text().replace(/\n$/, "") + '</textarea></div>';
 			$this.parent().replaceWith(update);
 		});
+		$('table').addClass('ui celled table');
 		fs.writeFileSync("../docs/index.html", serializeDocument(window.document));
   }
 });

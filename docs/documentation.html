@@ -66,10 +66,12 @@
 						<h4 class="ui header">Table of content</h4>
 						<div id="toc-menu" class="ui vertical following fluid text menu">
 		<div class="item">
-			<a class="title" href="#installation">
-				<b>Installation</b>
+			<a class="title" href="#setup">
+				<b>Setup</b>
 			</a>
-			
+			<div class="content menu">
+				<a class="item" href="#installation">Installation</a><a class="item" href="#polyfills">Polyfills</a>
+			</div>
 		</div><div class="item">
 			<a class="title" href="#barbiche-api">
 				<b>Barbiche API</b>
@@ -88,9 +90,16 @@
 	</div>
 					</div>
 				</div>
-				<div id="target" class="ui text"><h4 class="ui horizontal header divider"></h4><h2 id="installation">Installation</h2>
+				<div id="target" class="ui text"><h4 class="ui horizontal header divider"></h4><h2 id="setup">Setup</h2>
+<h3 id="installation">Installation</h3>
 <p>Barbiche is available as a <a href="https://www.npmjs.com/">npm</a> package:</p>
 <p><code>npm install barbiche</code></p>
+<h3 id="polyfills">Polyfills</h3>
+<p>For decent browser support, using some polyfills is required. Good results can be obtained with:</p>
+<ul class="ui list">
+<li><a href="https://github.com/WebReflection/dom4">DOM4</a> (available as npm package dom4)</li>
+<li><a href="https://github.com/webcomponents/template">template</a> (no npm package, using commit #47b57a is currently recommended)</li>
+</ul>
 <h4 class="ui horizontal header divider"></h4><h2 id="barbiche-api">Barbiche API</h2>
 <h3 id="common-usage">Common usage</h3>
 <p>First, we create a Barbiche instance:</p>
