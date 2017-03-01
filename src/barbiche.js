@@ -34,7 +34,7 @@ var context = {
 		this.stack.push(obj);
 	},
 	pop: function() {
-		return this.stack.pop();
+		this.stack.pop();
 	}
 };
 
