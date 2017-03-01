@@ -20,7 +20,6 @@ body {
 .hide {display: none;}
 
 .main {
-	padding-top: 60px;
 	padding-bottom: 40px;
 }
 .CodeMirror {
@@ -28,7 +27,8 @@ body {
 }
 
 #header {
-	height: 60px;
+	margin-bottom: 0;
+	border-radius: 0;
 }
 
 #footer{
@@ -36,19 +36,17 @@ body {
 	padding: 5em 0em;
 }
 
+#toc > div {
+	position: fixed;
+}
+
 .masthead h1.ui.header {
 	margin-top: 3em;
 }
 
-.masthead.segment {
-	height: 585px;
-	padding: 74px 0;
-	margin-top: -60px !important;
-}
-
 .masthead h1.ui.header {
 	margin-top: 0.3em;
-	margin-bottom: 0em;
+	margin-bottom: 0.3em;
 	font-size: 6em;
 	font-weight: normal;
 }
@@ -60,14 +58,11 @@ body {
 
 .masthead .primary.button{
 	margin-top: 20px;
+	margin-bottom: 20px;
 }
 
 .margin-top-30 {
 	margin-top: 30px;
-}
-
-.ui.vertical.stripe {
-	padding: 2.5em 0em;
 }
 
 .ui.vertical.stripe h2 {
@@ -118,7 +113,7 @@ ul.ui.list, ol.ui.list {
 		width: 260px;
 	}
 	.main.container {
-    margin-right: 318px !important;
+		margin-right: 318px !important;
 	}
 }
 
@@ -130,16 +125,22 @@ ul.ui.list, ol.ui.list {
 @media only screen and (max-width: 992px) {
 	#toc.right.rail {display: none;}
 	.main.container {
-    margin-left: 1em !important;
-    margin-right: 1em !important;
-    max-width: none !important;
+		margin-left: 1em !important;
+		margin-right: 1em !important;
+		max-width: none !important;
+	}
+}
+
+@media only screen and (max-width: 500px) {
+	.masthead h1.ui.header {
+		font-size: 4em;
 	}
 }
 
 .main.container .right.rail {
-    margin-left: 3em;
-    padding-top: 0.75em;
-    width: 319px;
+		margin-left: 3em;
+		padding-top: 0.75em;
+		width: 319px;
 }
 
 .logo.large {
