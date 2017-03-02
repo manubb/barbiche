@@ -7,7 +7,6 @@
 	<link rel="stylesheet" type="text/css" href="css/semantic.min.css">
 	<link rel="stylesheet" type="text/css" href="css/codemirror.css">
 	<link rel="stylesheet" href="css/custom.css">
-	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/editor.min.js"></script>
 	<script>
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -166,9 +165,9 @@ var frag = barbiche('test').merge({
 		</div>
 	</div>
 	<script>
-		$('textarea.language-js').each(function() {
-			var parent = $(this).parent().removeClass('hide');
-			CodeMirror.fromTextArea(this, {
+		Array.prototype.slice.call(document.querySelectorAll('textarea.language-js')).forEach(function(js) {
+			var parent = js.parentNode.classList.remove('hide');
+			CodeMirror.fromTextArea(js, {
 				mode: "javascript",
 				lineWrapping: true,
 				tabSize: 2,
@@ -176,9 +175,9 @@ var frag = barbiche('test').merge({
 				readOnly: true
 			});
 		});
-		$('textarea.language-html').each(function() {
-			var parent = $(this).parent().removeClass('hide');
-			CodeMirror.fromTextArea(this, {
+		Array.prototype.slice.call(document.querySelectorAll('textarea.language-html')).forEach(function(html) {
+			var parent = html.parentMode.classList.remove('hide');
+			CodeMirror.fromTextArea(html, {
 				mode: "htmlmixed",
 				lineWrapping: true,
 				tabSize: 2,

@@ -7,7 +7,6 @@
 	<link rel="stylesheet" type="text/css" href="css/semantic.min.css">
 	<link rel="stylesheet" type="text/css" href="css/codemirror.css">
 	<link rel="stylesheet" href="css/custom.css">
-	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/editor.min.js"></script>
 	<script>
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -265,41 +264,47 @@ Backticks inside a backticked identifier have to be escaped: <code>\`</code>.</p
 		</div>
 	</div>
 	<script>
-		$('#toc-menu').on('click', 'a', function(e) {
-			e.preventDefault();
-			var target = this.getAttribute('href');
-			if (target) {
-				scrollTo(target);
-				window.history && window.history.replaceState(null, target.substring(1), target);
-			}
-		});
 		function scrollTo(target) {
 			document.querySelector(target).scrollIntoView();
 			window.scrollBy(0, -65);
 		}
-		$('textarea.language-js').each(function() {
-			var parent = $(this).parent().removeClass('hide');
-			CodeMirror.fromTextArea(this, {
-				mode: "javascript",
-				lineWrapping: true,
-				tabSize: 2,
-				indentWithTabs: true,
-				readOnly: true
-			});
-		});
-		$('textarea.language-html').each(function() {
-			var parent = $(this).parent().removeClass('hide');
-			CodeMirror.fromTextArea(this, {
-				mode: "htmlmixed",
-				lineWrapping: true,
-				tabSize: 2,
-				indentWithTabs: true,
-				readOnly: true
-			});
-		});
-		$(function() {
+		document.addEventListener('DOMContentLoaded', function() {
 			var hash = document.location.hash;
 			if (hash.length > 1) scrollTo(hash);
+
+			document.querySelector('#toc-menu').addEventListener('click', function(e) {
+				e.preventDefault();
+				var target = e.target;
+				while(target !== this && target.nodeName != 'A') {target = target.parentNode;}
+				if (target !== this) {
+					var href = target.getAttribute('href');
+					if (href) {
+						scrollTo(href);
+						window.history && window.history.replaceState(null, href.substring(1), href);
+					}
+				}
+			});
+
+			Array.prototype.slice.call(document.querySelectorAll('textarea.language-js')).forEach(function(js) {
+				var parent = js.parentNode.classList.remove('hide');
+				CodeMirror.fromTextArea(js, {
+					mode: "javascript",
+					lineWrapping: true,
+					tabSize: 2,
+					indentWithTabs: true,
+					readOnly: true
+				});
+			});
+			Array.prototype.slice.call(document.querySelectorAll('textarea.language-html')).forEach(function(html) {
+				var parent = html.parentNode.classList.remove('hide');
+				CodeMirror.fromTextArea(html, {
+					mode: "htmlmixed",
+					lineWrapping: true,
+					tabSize: 2,
+					indentWithTabs: true,
+					readOnly: true
+				});
+			});
 		});
 	</script>
 
