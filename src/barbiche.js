@@ -224,115 +224,119 @@ function Barbiche(opt) {
 	/* Merge helpers */
 
 	var works = {};
-	works[Node.ELEMENT_NODE] = function(node, template) {
-		var nodeContext = {};
-		var nodeContextPushed = false;
-		var bbAttrs = JSON.parse(node.getAttribute(prefixedGlobalAttr));
-		node.removeAttribute(prefixedGlobalAttr);
-		var value;
-		if (bbAttrs.if) {
-			value = (template.closures[bbAttrs.if])();
-			var elseFound = node.nextElementSibling && node.nextElementSibling.hasAttribute(prefixedElseAttr);
-			if (elseFound) {
-				if (value) node.nextElementSibling.remove();
-				else {
-					node.nextElementSibling.removeAttribute(prefixedElseAttr);
-					return node.remove();
-				}
-			} else if (!value) return node.remove();
-		}
-		if (bbAttrs.alias) {
-			value = (template.closures[bbAttrs.alias])();
-			if (!Array.isArray(value)) value = [value];
-			value.forEach(function(item) {
-				nodeContext[item.name] = item.value;
-			});
-			context.push(nodeContext);
-			nodeContextPushed = true;
-		}
-		if (bbAttrs.text) {
-			value = (template.closures[bbAttrs.text])();
-			if (value != null) {
-				node.replaceWith(value.toString());
-			} else node.remove();
-		} else if (bbAttrs.html) {
-			value = (template.closures[bbAttrs.html])();
-			if (value != null) {
-				(function(t) {
-					t.innerHTML = value.toString();
-					node.replaceWith(t.content);
-				})(createTemplate());
-			} else node.remove();
-		} else if (node.nodeName == TEMPLATE) {
-			if (bbAttrs.repeat) {
-				if (!nodeContextPushed) {
-					context.push(nodeContext);
-					nodeContextPushed = true;
-				}
-				value = (template.closures[bbAttrs.repeat])();
-				var order = value._order || 'before';
-				if (!Array.isArray(value)) value = [value];
-
-				var reduceInit = (function(str) {
-					var closure = template.closures[str];
-					if (closure) return function() {
-						var clone = Template(closure())._clone();
-						node[order](merge(clone.node.content, clone));
-					}; else return function() {
-						node[order](merge(node.cloneNode(true).content, template));
-					};
-				})(bbAttrs.import);
-
-				//iterate on cartesian product of arrays:
-				(value.reduceRight(function(accu, task) {
-					var alias = task.name;
-					var value = task.value;
-					return function() {
-						value.forEach(function(item, index) {
-							nodeContext[alias] = value[index];
-							nodeContext['_' + alias + '_'] = index;
-							accu();
-						});
-					};
-				}, reduceInit))();
-			} else if (bbAttrs.import) {
-				value = (template.closures[bbAttrs.import])();
-				var clone = Template(value)._clone();
-				node.before(merge(clone.node.content, clone));
-			} else {
-				node.before(merge(node.content, template));
-			}
-			node.remove();
-		} else {
-			if (bbAttrs.attr) {
-				value = (template.closures[bbAttrs.attr])();
-				if (!Array.isArray(value)) value = [value];
-				value.forEach(function(item) {
-					var value = item.value;
-					var name = item.name && item.name.toString();
-					if (name && value != null) node.setAttribute(name, value);
-				});
-			}
-			if (bbAttrs.class) {
-				value = (template.closures[bbAttrs.class])();
-				if (!Array.isArray(value)) value = [value];
-				value.forEach(function(item) {
-					if (item != null) {
-						var value = item.toString();
-						if (value) node.classList.add(value);
-					}
-				});
-			}
-			var child;
-			while((child = node.querySelector(prefixedGlobalAttrSelector))) {merge(child, template);}
-		}
-		if (nodeContextPushed) context.pop();
-	};
-
-	works[Node.DOCUMENT_FRAGMENT_NODE] = function(node, template) {
+	works[Node.ELEMENT_NODE] = (function() {
 		var child;
-		while((child = node.querySelector(prefixedGlobalAttrSelector))) {merge(child, template);}
-	};
+		return function(node, template) {
+			var nodeContext;
+			var bbAttrs = JSON.parse(node.getAttribute(prefixedGlobalAttr));
+			node.removeAttribute(prefixedGlobalAttr);
+			var value;
+			if (bbAttrs.if) {
+				value = (template.closures[bbAttrs.if])();
+				var elseFound = node.nextElementSibling && node.nextElementSibling.hasAttribute(prefixedElseAttr);
+				if (elseFound) {
+					if (value) node.nextElementSibling.remove();
+					else {
+						node.nextElementSibling.removeAttribute(prefixedElseAttr);
+						return node.remove();
+					}
+				} else if (!value) return node.remove();
+			}
+			if (bbAttrs.alias) {
+				value = (template.closures[bbAttrs.alias])();
+				if (!Array.isArray(value)) value = [value];
+				nodeContext = {};
+				context.push(nodeContext);
+				value.forEach(function(item) {
+					nodeContext[item.name] = item.value;
+				});
+			}
+			if (bbAttrs.text) {
+				value = (template.closures[bbAttrs.text])();
+				if (value != null) {
+					node.replaceWith(value.toString());
+				} else node.remove();
+			} else if (bbAttrs.html) {
+				value = (template.closures[bbAttrs.html])();
+				if (value != null) {
+					(function(t) {
+						t.innerHTML = value.toString();
+						node.replaceWith(t.content);
+					})(createTemplate());
+				} else node.remove();
+			} else if (node.nodeName == TEMPLATE) {
+				if (bbAttrs.repeat) {
+					if (!nodeContext) {
+						nodeContext = {};
+						context.push(nodeContext);
+					}
+					value = (template.closures[bbAttrs.repeat])();
+					var order = value._order || 'before';
+					if (!Array.isArray(value)) value = [value];
+
+					var reduceInit = (function(str) {
+						var closure = template.closures[str];
+						if (closure) return function() {
+							var clone = Template(closure())._clone();
+							node[order](merge(clone.node.content, clone));
+						}; else return function() {
+							node[order](merge(node.cloneNode(true).content, template));
+						};
+					})(bbAttrs.import);
+
+					//iterate on cartesian product of arrays:
+					(value.reduceRight(function(accu, task) {
+						var alias = task.name;
+						var value = task.value;
+						return function() {
+							value.forEach(function(item, index) {
+								nodeContext[alias] = value[index];
+								nodeContext['_' + alias + '_'] = index;
+								accu();
+							});
+						};
+					}, reduceInit))();
+				} else if (bbAttrs.import) {
+					value = (template.closures[bbAttrs.import])();
+					var clone = Template(value)._clone();
+					node.before(merge(clone.node.content, clone));
+				} else {
+					node.before(merge(node.content, template));
+				}
+				node.remove();
+			} else {
+				if (bbAttrs.attr) {
+					value = (template.closures[bbAttrs.attr])();
+					if (!Array.isArray(value)) value = [value];
+					value.forEach(function(item) {
+						var value = item.value;
+						var name = item.name && item.name.toString();
+						if (name && value != null) node.setAttribute(name, value);
+					});
+				}
+				if (bbAttrs.class) {
+					value = (template.closures[bbAttrs.class])();
+					if (!Array.isArray(value)) value = [value];
+					value.forEach(function(item) {
+						if (item != null) {
+							var value = item.toString();
+							if (value) node.classList.add(value);
+						}
+					});
+				}
+				while((child = node.querySelector(prefixedGlobalAttrSelector))) {merge(child, template);}
+			}
+			if (nodeContext) context.pop();
+		};
+	})();
+
+
+	works[Node.DOCUMENT_FRAGMENT_NODE] = (function() {
+		var child;
+		return function(node, template) {
+			while((child = node.querySelector(prefixedGlobalAttrSelector))) {merge(child, template);}
+		};
+	})();
 
 	function merge(node, template) {
 		(works[node.nodeType])(node, template);
