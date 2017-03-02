@@ -22,40 +22,45 @@ jsdom.env({
 	src: [jquery, polyfill, barbiche],
 	done: function (err, window) {
 		var $ = window.$;
+		var document = window.document;
 		var Barbiche = window.Barbiche;
-		$('#target').append(converter.makeHtml(documentationContent));
+		var target = document.querySelector('#target');
+		target.innerHTML = converter.makeHtml(documentationContent);
 		var barbiche = Barbiche();
-		$('#target').find('ul, ol').addClass('ui list');
+		Array.prototype.slice.call(target.querySelectorAll('ul, ol')).forEach(function(list) {
+			list.classList.add('ui', 'list');
+		});
 		var obj = {
 			h2: []
 		};
 		var h3;
-		$('#target').find('h2[id], h3[id]').each(function() {
-			if (this.nodeName == 'H2') {
+		Array.prototype.slice.call(target.querySelectorAll('h2[id], h3[id]')).forEach(function(h) {
+			if (h.nodeName == 'H2') {
 				var header = window.document.createElement('h4');
 				header.classList.add('ui', 'horizontal', 'header', 'divider');
-				this.before(header);
+				h.before(header);
 				h3 = [];
 				obj.h2.push({
-					id: this.getAttribute('id'),
-					text: $(this).text(),
+					id: h.getAttribute('id'),
+					text: $(h).text(),
 					h3: h3
 				});
 			} else {
 				h3.push({
-					id: this.getAttribute('id'),
-					text: $(this).text()
+					id: h.getAttribute('id'),
+					text: $(h).text()
 				})
 			}
 		});
-		$('#toc-menu').append(barbiche('toc-template').merge(obj));
-		$('#target').find('pre code').each(function() {
-			var $this = $(this);
-			var classes = $(this).attr('class');
-			var update = '<div class="ui code raised segment hide"><textarea class="' + classes + '">' +
-				$(this).text().replace(/\n$/, "") + '</textarea></div>';
-			$this.parent().replaceWith(update);
+		Array.prototype.slice.call(target.querySelectorAll('pre code')).forEach(function(code) {
+			var classes = code.getAttribute('class');
+			var div = document.createElement('div');
+			div.classList.add('ui', 'code', 'raised', 'segment', 'hide');
+			div.innerHTML = '<textarea class="' + classes + '">' +
+				code.textContent.replace(/\n$/, "") + '</textarea>';
+			code.parentNode.replaceWith(div);
 		});
+		document.querySelector('#toc-menu').appendChild(barbiche('toc-template').merge(obj));
 		fs.writeFileSync("../docs/documentation.html", serializeDocument(window.document));
   }
 });
