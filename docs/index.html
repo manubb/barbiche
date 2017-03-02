@@ -176,7 +176,7 @@ var frag = barbiche('test').merge({
 			});
 		});
 		Array.prototype.slice.call(document.querySelectorAll('textarea.language-html')).forEach(function(html) {
-			var parent = html.parentMode.classList.remove('hide');
+			var parent = html.parentNode.classList.remove('hide');
 			CodeMirror.fromTextArea(html, {
 				mode: "htmlmixed",
 				lineWrapping: true,

@@ -12,7 +12,7 @@ var indexContent = fs.readFileSync("../docs_src/index.md", "utf-8");
 var indexHeader = fs.readFileSync("../docs_src/index_header.md", "utf-8");
 var ReadMeHeader = fs.readFileSync("../docs_src/README_header.md", "utf-8");
 var indexTemplate = fs.readFileSync("../docs_src/index.html", "utf-8");
-var polyfill = fs.readFileSync("../polyfills/dom4.js", "utf-8");
+var polyfill = fs.readFileSync("../polyfills.min.js", "utf-8");
 var barbiche = fs.readFileSync("../barbiche.min.js", "utf-8");
 var examples = require("../docs_src/examples.json");
 
@@ -40,13 +40,13 @@ jsdom.env({
 				h3 = [];
 				obj.h2.push({
 					id: h.getAttribute('id'),
-					text: $(h).text(),
+					text: h.textContent,
 					h3: h3
 				});
 			} else {
 				h3.push({
 					id: h.getAttribute('id'),
-					text: $(h).text()
+					text: h.textContent
 				})
 			}
 		});
@@ -68,7 +68,7 @@ jsdom.env({
 	done: function (err, window) {
 		var document = window.document;
 		var target = document.querySelector('#target');
-		target.innerHTML = converter.makeHtml(indexContent);
+		target.innerHTML = converter.makeHtml(indexHeader + indexContent);
 		Array.prototype.slice.call(target.querySelectorAll('ul, ol')).forEach(function(list) {
 			list.classList.add('ui', 'list');
 		});
