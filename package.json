@@ -29,7 +29,6 @@
     "codemirror": "^5.23.0",
     "dom4": "^1.8.3",
     "jison-gho": "^0.4.18-172",
-    "jquery": "^3.1.1",
     "js-beautify": "^1.6.9",
     "jsdom": "^9.11.0",
     "jshint": "^2.9.4",
