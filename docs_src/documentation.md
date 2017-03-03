@@ -12,6 +12,8 @@ For decent browser support, using some polyfills is required. Good results can b
 * [DOM4](https://github.com/WebReflection/dom4) (available as npm package dom4)
 * [template](https://github.com/webcomponents/template) (no npm package, using commit #47b57a is currently recommended)
 
+Those polyfills are included in Barbiche package in `polyfills.min.js`.
+
 ## Barbiche API
 ### Common usage
 First, we create a Barbiche instance:
