@@ -3270,8 +3270,7 @@ function Barbiche(opt) {
 			var value;
 			if (bbAttrs.if) {
 				value = (template.closures[bbAttrs.if])();
-				var elseFound = node.nextElementSibling && node.nextElementSibling.hasAttribute(prefixedElseAttr);
-				if (elseFound) {
+				if (node.nextElementSibling && node.nextElementSibling.hasAttribute(prefixedElseAttr)) {
 					if (value) node.nextElementSibling.remove();
 					else {
 						node.nextElementSibling.removeAttribute(prefixedElseAttr);
