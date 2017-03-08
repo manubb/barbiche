@@ -132,7 +132,23 @@ Inserting text is done with `{{expression}}`.
 * if `expression` is a Barbiche object `boolean: content`, if `boolean` is true and if `content` is not `null` or `undefined`, a text node containing `content.toString()` is inserted
 * else, if `expression` is not `null` or `undefined`, a text node containing `expression.toString()` is inserted
 
-Some examples can be found [here](demo.html#Text/HTML).
+A simple example:
+```html
+<template id="text">
+	<div>{{text}}</div>
+</template>
+```
+```js
+barbiche('text').merge({
+	text: "This is some text."
+});
+```
+will produce:
+```html
+<div>This is some text.</div>
+```
+
+Other examples can be found [here](demo.html#Text/HTML).
 
 ### HTML
 Inserting HTML is done with `{{{expression}}}`.
@@ -140,19 +156,72 @@ Inserting HTML is done with `{{{expression}}}`.
 * if `expression` is a Barbiche object `boolean: content`, if `boolean` is true and if `content` is not `null` or `undefined`, `content.toString()` is inserted as HTML
 * else, if `expression` is not `null` or `undefined`, `expression.toString()` is inserted as HTML
 
-Some examples can be found [here](demo.html#Text/HTML).
+A simple example:
+```html
+<template id="html">
+	<div>{{{html}}}</div>
+</template>
+```
+```js
+barbiche('html').merge({
+	html: "<p>This is some<strong>html</strong>.</p>"
+});
+```
+will produce:
+```html
+<div><p>This is some<strong>html</strong>.</p></div>
+```
+
+Other examples can be found [here](demo.html#Text/HTML).
 
 ### Conditions
 if an element is decorated with a `bb-if="expression"` attribute, its next sibling element (if it exists) may be decorated with an (empty) `bb-else` attribute. According to the truth value of `expression`, the element or its next sibling element is removed.
 
 Note that no curly braces expression can be set between two consecutive sibling elements decorated with `bb-if` and `bb-else`.
 
-Some examples can be found [here](demo.html#Conditions).
+A simple example:
+```html
+<template id="condition">
+	<div bb-if="bool1">TRUE</div>
+	<div bb-else>FALSE</div>
+	<div bb-if="bool2">TRUE</div>
+	<div bb-else>FALSE</div>
+</template>
+```
+```js
+barbiche('condition').merge({
+	bool1: true,
+	bool2: false
+});
+```
+will produce:
+```html
+<div>TRUE</div>
+<div>FALSE</div>
+```
+
+Other examples can be found [here](demo.html#Conditions).
 
 ### Aliases
 A `bb-alias` contains a Barbiche object or an array of Barbiche objects. For each object `value: name`, `name` is bound to `value` during the processing of the current subtree.
 
-Some examples can be found [here](demo.html#Aliases).
+A simple example:
+```html
+<template id="alias">
+	<div bb-alias="value: 'alias'">{{alias}}</div>
+</template>
+```
+```js
+barbiche('alias').merge({
+	value: 5
+});
+```
+will produce:
+```html
+<div>5</div>
+```
+
+Other examples can be found [here](demo.html#Aliases).
 
 ### Loops
 A `bb-repeat` attribute contains an expression and ends with an optional `--` or `++` keyword. The expression denotes a Barbiche object or an array of Barbiche objects which defines a set of *nested* loops. For each Barbiche object `array: 'string'`, a loop is executed on `array`, binding each array item to `'string'` and item index to `'_string_'`. A `++` ending keyword will insert merged items in natural order; `--` will insert merged items in reverse order; no ending keyword is the same as `++`.
@@ -214,11 +283,43 @@ Other examples can be found [here](demo.html#Imports).
 ### Attributes
 A `bb-attr` attribute contains a Barbiche object or an array of Barbiche objects. For each object `value: name`, if `value` is not `undefined` or `null` and if `name.toString()` is not empty, attribute `name.toString()` is set on the current node with value `value`.
 
-Some examples can be found [here](demo.html#Attributes).
+A simple example:
+```html
+<template id="attribute">
+	<div bb-attr="value: 'my-attr'"></div>
+</template>
+```
+```js
+barbiche('attribute').merge({
+	value: 'my-value'
+});
+```
+will produce:
+```html
+<div my-attr="my-value"></div>
+```
+
+Other examples can be found [here](demo.html#Attributes).
 
 ### Classes
 A `bb-class` attribute contains an expression or an array of expressions. For each expression:
 * if expression is a Barbiche object `boolean: name`, if `boolean` is true and if `name` is not `null` or `undefined` and if `name.toString()` is not empty, class `name.toString()` is added to the current element,
 * else if `expression` is not `null` or `undefined` and if `expression.toString()` is not empty, class `expression.toString()` is added to the current element.
 
-Some examples can be found [here](demo.html#Classes).
+A simple example:
+```html
+<template id="class">
+	<div class="item" bb-class="myClass"></div>
+</template>
+```
+```js
+barbiche('class').merge({
+	myClass: 'my-class'
+});
+```
+will produce:
+```html
+<div class="item my-class"></div>
+```
+
+Other examples can be found [here](demo.html#Classes).

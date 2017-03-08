@@ -186,21 +186,62 @@ Backticks inside a backticked identifier have to be escaped: <code>\`</code>.</p
 <li>if <code>expression</code> is a Barbiche object <code>boolean: content</code>, if <code>boolean</code> is true and if <code>content</code> is not <code>null</code> or <code>undefined</code>, a text node containing <code>content.toString()</code> is inserted</li>
 <li>else, if <code>expression</code> is not <code>null</code> or <code>undefined</code>, a text node containing <code>expression.toString()</code> is inserted</li>
 </ul>
-<p>Some examples can be found <a href="demo.html#Text/HTML">here</a>.</p>
+<p>A simple example:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="text"&gt;
+    &lt;div&gt;{{text}}&lt;/div&gt;
+&lt;/template&gt;</textarea></div>
+<div class="ui code raised segment hide"><textarea class="js language-js">barbiche('text').merge({
+    text: "This is some text."
+});</textarea></div>
+<p>will produce:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;div&gt;This is some text.&lt;/div&gt;</textarea></div>
+<p>Other examples can be found <a href="demo.html#Text/HTML">here</a>.</p>
 <h3 id="html">HTML</h3>
 <p>Inserting HTML is done with <code>{{{expression}}}</code>.</p>
 <ul class="ui list">
 <li>if <code>expression</code> is a Barbiche object <code>boolean: content</code>, if <code>boolean</code> is true and if <code>content</code> is not <code>null</code> or <code>undefined</code>, <code>content.toString()</code> is inserted as HTML</li>
 <li>else, if <code>expression</code> is not <code>null</code> or <code>undefined</code>, <code>expression.toString()</code> is inserted as HTML</li>
 </ul>
-<p>Some examples can be found <a href="demo.html#Text/HTML">here</a>.</p>
+<p>A simple example:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="html"&gt;
+    &lt;div&gt;{{{html}}}&lt;/div&gt;
+&lt;/template&gt;</textarea></div>
+<div class="ui code raised segment hide"><textarea class="js language-js">barbiche('html').merge({
+    html: "&lt;p&gt;This is some&lt;strong&gt;html&lt;/strong&gt;.&lt;/p&gt;"
+});</textarea></div>
+<p>will produce:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;div&gt;&lt;p&gt;This is some&lt;strong&gt;html&lt;/strong&gt;.&lt;/p&gt;&lt;/div&gt;</textarea></div>
+<p>Other examples can be found <a href="demo.html#Text/HTML">here</a>.</p>
 <h3 id="conditions">Conditions</h3>
 <p>if an element is decorated with a <code>bb-if="expression"</code> attribute, its next sibling element (if it exists) may be decorated with an (empty) <code>bb-else</code> attribute. According to the truth value of <code>expression</code>, the element or its next sibling element is removed.</p>
 <p>Note that no curly braces expression can be set between two consecutive sibling elements decorated with <code>bb-if</code> and <code>bb-else</code>.</p>
-<p>Some examples can be found <a href="demo.html#Conditions">here</a>.</p>
+<p>A simple example:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="condition"&gt;
+    &lt;div bb-if="bool1"&gt;TRUE&lt;/div&gt;
+    &lt;div bb-else&gt;FALSE&lt;/div&gt;
+    &lt;div bb-if="bool2"&gt;TRUE&lt;/div&gt;
+    &lt;div bb-else&gt;FALSE&lt;/div&gt;
+&lt;/template&gt;</textarea></div>
+<div class="ui code raised segment hide"><textarea class="js language-js">barbiche('condition').merge({
+    bool1: true,
+    bool2: false
+});</textarea></div>
+<p>will produce:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;div&gt;TRUE&lt;/div&gt;
+&lt;div&gt;FALSE&lt;/div&gt;</textarea></div>
+<p>Other examples can be found <a href="demo.html#Conditions">here</a>.</p>
 <h3 id="aliases">Aliases</h3>
 <p>A <code>bb-alias</code> contains a Barbiche object or an array of Barbiche objects. For each object <code>value: name</code>, <code>name</code> is bound to <code>value</code> during the processing of the current subtree.</p>
-<p>Some examples can be found <a href="demo.html#Aliases">here</a>.</p>
+<p>A simple example:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="alias"&gt;
+    &lt;div bb-alias="value: 'alias'"&gt;{{alias}}&lt;/div&gt;
+&lt;/template&gt;</textarea></div>
+<div class="ui code raised segment hide"><textarea class="js language-js">barbiche('alias').merge({
+    value: 5
+});</textarea></div>
+<p>will produce:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;div&gt;5&lt;/div&gt;</textarea></div>
+<p>Other examples can be found <a href="demo.html#Aliases">here</a>.</p>
 <h3 id="loops">Loops</h3>
 <p>A <code>bb-repeat</code> attribute contains an expression and ends with an optional <code>--</code> or <code>++</code> keyword. The expression denotes a Barbiche object or an array of Barbiche objects which defines a set of <em>nested</em> loops. For each Barbiche object <code>array: 'string'</code>, a loop is executed on <code>array</code>, binding each array item to <code>'string'</code> and item index to <code>'_string_'</code>. A <code>++</code> ending keyword will insert merged items in natural order; <code>--</code> will insert merged items in reverse order; no ending keyword is the same as <code>++</code>.</p>
 <p>A simple example:</p>
@@ -242,14 +283,32 @@ Backticks inside a backticked identifier have to be escaped: <code>\`</code>.</p
 <p>Other examples can be found <a href="demo.html#Imports">here</a>.</p>
 <h3 id="attributes">Attributes</h3>
 <p>A <code>bb-attr</code> attribute contains a Barbiche object or an array of Barbiche objects. For each object <code>value: name</code>, if <code>value</code> is not <code>undefined</code> or <code>null</code> and if <code>name.toString()</code> is not empty, attribute <code>name.toString()</code> is set on the current node with value <code>value</code>.</p>
-<p>Some examples can be found <a href="demo.html#Attributes">here</a>.</p>
+<p>A simple example:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="attribute"&gt;
+    &lt;div bb-attr="value: 'my-attr'"&gt;&lt;/div&gt;
+&lt;/template&gt;</textarea></div>
+<div class="ui code raised segment hide"><textarea class="js language-js">barbiche('attribute').merge({
+    value: 'my-value'
+});</textarea></div>
+<p>will produce:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;div my-attr="my-value"&gt;&lt;/div&gt;</textarea></div>
+<p>Other examples can be found <a href="demo.html#Attributes">here</a>.</p>
 <h3 id="classes">Classes</h3>
 <p>A <code>bb-class</code> attribute contains an expression or an array of expressions. For each expression:</p>
 <ul class="ui list">
 <li>if expression is a Barbiche object <code>boolean: name</code>, if <code>boolean</code> is true and if <code>name</code> is not <code>null</code> or <code>undefined</code> and if <code>name.toString()</code> is not empty, class <code>name.toString()</code> is added to the current element,</li>
 <li>else if <code>expression</code> is not <code>null</code> or <code>undefined</code> and if <code>expression.toString()</code> is not empty, class <code>expression.toString()</code> is added to the current element.</li>
 </ul>
-<p>Some examples can be found <a href="demo.html#Classes">here</a>.</p></div>
+<p>A simple example:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="class"&gt;
+    &lt;div class="item" bb-class="myClass"&gt;&lt;/div&gt;
+&lt;/template&gt;</textarea></div>
+<div class="ui code raised segment hide"><textarea class="js language-js">barbiche('class').merge({
+    myClass: 'my-class'
+});</textarea></div>
+<p>will produce:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;div class="item my-class"&gt;&lt;/div&gt;</textarea></div>
+<p>Other examples can be found <a href="demo.html#Classes">here</a>.</p></div>
 			</div>
 		</div>
 	</div>

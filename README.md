@@ -4,6 +4,17 @@ Barbiche is a logic-full template engine for browser environment. It has been de
 
 Documentation and interactive examples can be found [here](https://manubb.github.io/barbiche).
 
+## Features
+
+Barbiche supports:
+* text and HTML insertion
+* conditions (`if` and optional `else`)
+* aliases
+* loops
+* flexible subtemplate imports
+* attribute setting
+* class setting
+
 ## Sample
 
 We ask Barbiche to merge some data into an HTML template:

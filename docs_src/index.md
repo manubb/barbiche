@@ -1,3 +1,14 @@
+## Features
+
+Barbiche supports:
+* text and HTML insertion
+* conditions (`if` and optional `else`)
+* aliases
+* loops
+* flexible subtemplate imports
+* attribute setting
+* class setting
+
 ## Sample
 
 We ask Barbiche to merge some data into an HTML template:
