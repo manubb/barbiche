@@ -140,7 +140,7 @@
 
 				});
 			});
-			describe('{{bool: expression}}', function() {
+			describe('{{{bool: expression}}}', function() {
 				it('should insert html if expression is not null or undefined and bool is true', function() {
 					var t = barbiche(barbiche.bbObj('<h1 id="target">{{{bool: path.to.value}}}</h1>'));
 					t.merge({
@@ -279,7 +279,7 @@
 		});
 		describe('Classes', function() {
 			describe('bb-class="exp"', function() {
-				it('should had class exp to current node', function() {
+				it('should add class exp to current node', function() {
 					var t = barbiche(barbiche.bbObj('<div id="t1" bb-class="class"></div>'));
 					var clone = t.merge({
 						class: "my-class"
@@ -301,7 +301,7 @@
 				});
 			});
 			describe('bb-class="bool: exp"', function() {
-				it('should had class exp to current node depending on bool value', function() {
+				it('should add class exp to current node depending on bool value', function() {
 					var t = barbiche(barbiche.bbObj('<div id="t1" bb-class="bool: class"></div>'));
 					var clone = t.merge({
 						bool: true,
