@@ -261,6 +261,20 @@
 					});
 				});
 			});
+			describe('bb-repeat="exp: \'str\' --"', function() {
+				it('should repeat for each item in array exp binding item to \'str\' and index to \'_str_\` in reverse order', function() {
+					var t = barbiche(barbiche.bbObj('<div id="t1"><span bb-repeat="array: \'var\' --" bb-attr="[var: \'val\', _var_: \'index\']"></span></div>'));
+					var array = ["a", "b", "c", "d"];
+					var length = array.length;
+					var clone = t.merge({
+						array: array
+					});
+					Array.prototype.slice.call(clone.querySelector('#t1').children).forEach(function(node, index) {
+						node.getAttribute('val').should.equal(array[length - 1 - index]);
+						node.getAttribute('index').should.equal((length - 1 - index).toString());
+					});
+				});
+			});
 			describe('bb-repeat="[exp: \'str\',...]"', function() {
 				it('should execute nested loops for each item in array exp binding item to \'str\' and index to \'_str_\` in current subtree', function() {
 					var t = barbiche(barbiche.bbObj('<div id="t1"><span bb-repeat="[array1: \'var1\', array2: \'var2\']" bb-attr="[var1: \'val1\', var2: \'val2\']"></span></div>'));
