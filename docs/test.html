@@ -206,6 +206,18 @@
 					}).querySelector('#target') === null).should.be.true();
 				});
 			});
+			describe('bb-if="expression"... bb-else', function() {
+				it('should keep the node xor the next sibling element depending on expression truth value ', function() {
+					var t = barbiche(barbiche.bbObj('<div id="target"><span bb-if="bool"></span><div bb-else></div></div>'));
+					(t.merge({
+						bool: true,
+					}).querySelector('#target')).innerHTML.should.equal('<span></span>');
+
+					(t.merge({
+						bool: false,
+					}).querySelector('#target')).innerHTML.should.equal('<div></div>');
+				});
+			});
 		});
 		describe('Aliases', function() {
 			describe('bb-alias="exp: \'str\'"', function() {
