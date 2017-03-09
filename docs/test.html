@@ -243,7 +243,7 @@
 					var clone = t.merge({
 						array: array
 					});
-					Array.from(clone.querySelector('#t1').children).forEach(function(node, index) {
+					Array.prototype.slice.call(clone.querySelector('#t1').children).forEach(function(node, index) {
 						node.getAttribute('val').should.equal(array[index]);
 						node.getAttribute('index').should.equal(index.toString());
 					});
@@ -258,7 +258,7 @@
 						array1: array1,
 						array2: array2
 					});
-					Array.from(clone.querySelector('#t1').children).forEach(function(node, index) {
+					Array.prototype.slice.call(clone.querySelector('#t1').children).forEach(function(node, index) {
 						var i = Math.floor(index / array2.length);
 						var j = index % array2.length;
 						node.getAttribute('val1').should.equal(array1[i]);
