@@ -9,6 +9,8 @@ Barbiche supports:
 * attribute setting
 * class setting
 
+Barbiche test suite can be run in [your browser](https://manubb.github.io/barbiche/test.html).
+
 ## Sample
 
 We ask Barbiche to merge some data into an HTML template:
