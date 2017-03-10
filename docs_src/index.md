@@ -9,7 +9,7 @@ Barbiche supports:
 * attribute setting
 * class setting
 
-Barbiche test suite can be <a href="https://manubb.github.io/barbiche/test.html" target="_blank">run</a> in your browser.
+Barbiche test suite can be [run](https://manubb.github.io/barbiche/test.html) in your browser.
 
 ## Sample
 
