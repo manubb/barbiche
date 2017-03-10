@@ -113,7 +113,7 @@ var inst2 = barbiche('my-template');
 // inst1 === inst2</textarea></div>
 <p>Setting ids on your templates is strongly recommended.</p>
 <p>Merging data into a Barbiche instance is done in this way:</p>
-<div class="ui code raised segment hide"><textarea class="js language-js">var frag = barbiche('my-template').merge(obj1, obj2, obj3,...);</textarea></div>
+<div class="ui code raised segment hide"><textarea class="js language-js">var frag = barbiche('my-template').merge(..., obj3, obj2, obj1);</textarea></div>
 <p>The arguments of <code>merge</code> method are used to init the merge context: when Barbiche is looking for the value of an identifier, it searches first in <code>obj1</code>, then in <code>obj2</code>,..., then in <code>window</code>. For example, you may consider that:</p>
 <ul class="ui list">
 <li><code>obj1</code> is a plain JSON object that comes from your database</li>
