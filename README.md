@@ -15,7 +15,7 @@ Barbiche supports:
 * attribute setting
 * class setting
 
-Barbiche test suite can be [run](https://manubb.github.io/barbiche/test.html) in your browser.
+Barbiche has a complete test suite that can be [run](https://manubb.github.io/barbiche/test.html) in your browser.
 
 ## Sample
 
