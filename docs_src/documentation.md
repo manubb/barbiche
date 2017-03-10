@@ -36,13 +36,13 @@ Setting ids on your templates is strongly recommended.
 
 Merging data into a Barbiche instance is done in this way:
 ```js
-var frag = barbiche('my-template').merge(..., obj3, obj2, obj1);
+var frag = barbiche('my-template').merge(obj_k,..., obj_3, obj_2, obj_1);
 ```
-The arguments of `merge` method are used to init the merge context: when Barbiche is looking for the value of an identifier, it searches first in `obj1`, then in `obj2`,..., then in `window`. For example, you may consider that:
+The arguments of `merge` method are used to init the merge context: when Barbiche is looking for the value of an identifier, it searches first in `obj_1`, then in `obj_2`,..., then in `obj_k`, then in `window`. For example, you may consider that:
 
-* `obj1` is a plain JSON object that comes from your database
-* `obj2` is an object that contains functions and data specific to `my-template`
-* `obj3` is an object that contains functions and data common to all your templates
+* `obj_1` is a plain JSON object that comes from your database
+* `obj_2` is an object that contains functions and data specific to `my-template`
+* `obj_3` is an object that contains functions and data common to all your templates
 
 A DocumentFragment is returned that can be inserted in the main document:
 ```js
