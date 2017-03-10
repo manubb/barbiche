@@ -157,3 +157,9 @@ ul.ui.list, ol.ui.list {
 #buttons .button {
 	margin-bottom: 0.75em;
 }
+
+#mocha-stats {
+	position: relative;
+	top: 0;
+	right: 0;
+}
