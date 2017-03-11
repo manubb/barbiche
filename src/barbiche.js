@@ -103,13 +103,12 @@ function Barbiche(opt) {
 				var wrapper = createTemplate();
 				wrapper.setAttribute(prefixedAttrs[BB_REPEAT], node.getAttribute(prefixedAttrs[BB_REPEAT]));
 				node.removeAttribute(prefixedAttrs[BB_REPEAT]);
-				[prefixedAttrs[BB_IF], prefixedAttrs[BB_ALIAS]].forEach(function(attr) {
+				[prefixedAttrs[BB_IF], prefixedAttrs[BB_ALIAS], prefixedElseAttr].forEach(function(attr) {
 					if (node.hasAttribute(attr)) {
 						wrapper.setAttribute(attr, node.getAttribute(attr));
 						node.removeAttribute(attr);
 					}
 				});
-				if (node.hasAttribute(prefixedElseAttr)) wrapper.setAttribute(prefixedElseAttr, "");
 				node.before(wrapper);
 				wrapper.content.appendChild(node);
 				node = wrapper;
