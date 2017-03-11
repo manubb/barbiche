@@ -214,7 +214,7 @@ Backticks inside a backticked identifier have to be escaped: <code>\`</code>.</p
 <p>Other examples can be found <a href="demo.html#Text/HTML">here</a>.</p>
 <h3 id="conditions">Conditions</h3>
 <p>if an element is decorated with a <code>bb-if="expression"</code> attribute, its next sibling element (if it exists) may be decorated with an (empty) <code>bb-else</code> attribute. According to the truth value of <code>expression</code>, the element or its next sibling element is removed.</p>
-<p>Note that no curly braces expression can be set between two consecutive sibling elements decorated with <code>bb-if</code> and <code>bb-else</code>.</p>
+<p>Note that no curly braces expression can be set between two consecutive sibling elements decorated with <code>bb-if</code> and <code>bb-else</code> and that a node cannot be decorated with both <code>bb-if</code> and <code>bb-else</code> attributes.</p>
 <p>A simple example:</p>
 <div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="condition"&gt;
     &lt;div bb-if="bool1"&gt;TRUE&lt;/div&gt;

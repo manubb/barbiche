@@ -177,7 +177,7 @@ Other examples can be found [here](demo.html#Text/HTML).
 ### Conditions
 if an element is decorated with a `bb-if="expression"` attribute, its next sibling element (if it exists) may be decorated with an (empty) `bb-else` attribute. According to the truth value of `expression`, the element or its next sibling element is removed.
 
-Note that no curly braces expression can be set between two consecutive sibling elements decorated with `bb-if` and `bb-else`.
+Note that no curly braces expression can be set between two consecutive sibling elements decorated with `bb-if` and `bb-else` and that a node cannot be decorated with both `bb-if` and `bb-else` attributes.
 
 A simple example:
 ```html

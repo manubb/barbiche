@@ -264,7 +264,7 @@
 				});
 			});
 			describe('bb-if="expression"... bb-else', function() {
-				it('should keep the node xor the next sibling element depending on expression truth value ', function() {
+				it('should keep the node xor the next sibling element depending on expression truth value', function() {
 					var t = barbiche(barbiche.bbObj('<div id="target"><span bb-if="bool"></span><div bb-else></div></div>'));
 					(t.merge({
 						bool: true,
@@ -273,6 +273,27 @@
 					(t.merge({
 						bool: false,
 					}).querySelector('#target')).innerHTML.should.equal('<div></div>');
+				});
+			});
+			describe('nested conditions', function() {
+				it('should keep only the right descendant', function() {
+					var t = barbiche(barbiche.bbObj('<div id="target"><div id="div1" bb-if="bool1"></div><template bb-else><div id="div2" bb-if="bool2"></div><div id="div3" bb-else></div></template></div>'));
+					(t.merge({
+						bool1: true,
+						bool2: true
+					}).querySelector('#target')).innerHTML.should.equal('<div id="div1"></div>');
+					(t.merge({
+						bool1: true,
+						bool2: false
+					}).querySelector('#target')).innerHTML.should.equal('<div id="div1"></div>');
+					(t.merge({
+						bool1: false,
+						bool2: true
+					}).querySelector('#target')).innerHTML.should.equal('<div id="div2"></div>');
+					(t.merge({
+						bool1: false,
+						bool2: false
+					}).querySelector('#target')).innerHTML.should.equal('<div id="div3"></div>');
 				});
 			});
 		});
