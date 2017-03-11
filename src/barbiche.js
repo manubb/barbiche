@@ -225,12 +225,11 @@ function Barbiche(opt) {
 
 	var works = {};
 	works[Node.ELEMENT_NODE] = (function() {
-		var child;
+		var child, bbAttrs, value;
 		return function(node, template) {
 			var nodeContext;
-			var bbAttrs = JSON.parse(node.getAttribute(prefixedGlobalAttr));
+			bbAttrs = JSON.parse(node.getAttribute(prefixedGlobalAttr));
 			node.removeAttribute(prefixedGlobalAttr);
-			var value;
 			if (bbAttrs.if) {
 				value = (template.closures[bbAttrs.if])();
 				if (node.nextElementSibling && node.nextElementSibling.hasAttribute(prefixedElseAttr)) {
