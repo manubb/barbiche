@@ -132,10 +132,10 @@ function Barbiche(opt) {
 				if (attr in prefixedAttrsObj) setAttr(attr, node.attributes[i].value);
 			}
 		}
+		if (node.nodeName == TEMPLATE && node.hasAttribute(prefixedElseAttr)) attrFound = true;
 		if (attrFound) node.setAttribute(prefixedGlobalAttr, JSON.stringify(bbAttrs));
 		if (node.nodeName == TEMPLATE) {
 			compile(node.content, template);
-			if (node.hasAttribute(prefixedElseAttr)) attrFound = true;
 			if (!attrFound) node.replaceWith(node.content);
 		} else {
 			ArrayFrom.call(node.childNodes).forEach(function(child) {
