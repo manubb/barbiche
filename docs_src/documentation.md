@@ -38,7 +38,7 @@ Merging data into a Barbiche instance is done in this way:
 ```js
 var frag = barbiche('my-template').merge(obj_k,..., obj_3, obj_2, obj_1);
 ```
-The arguments of `merge` method are used to init the merge context: when Barbiche is looking for the value of an identifier, it searches first in `obj_1`, then in `obj_2`,..., then in `obj_k`~~, then in `window`~~. For example, you may consider that:
+The arguments of `merge` method are used to init the merge context: when Barbiche is looking for the value of an identifier, it searches first in `obj_1`, then in `obj_2`,..., then in `obj_k`. For example, you may consider that:
 
 * `obj_1` is a plain JSON object that comes from your database
 * `obj_2` is an object that contains functions and data specific to `my-template`
