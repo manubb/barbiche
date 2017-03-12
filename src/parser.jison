@@ -124,14 +124,6 @@ SimpleExpression
 		{$$ = NOT.bind(null, $2);}
 	| '(' SimpleExpression ')' %prec GROUP
 		{$$ = $2;}
-	| NUMBER
-		{var number = Number(yytext); $$ = function() {return number;};}
-	| STRING
-		{$$ = function() {return yytext;};}
-	| TRUE
-		{$$ = TRUE;}
-	| FALSE
-		{$$ = FALSE;}
 	| SimpleExpression Arguments
 		{$$ = call.bind(null, $1, $2);}
 	| SimpleExpression "[" SimpleExpression "]"
@@ -140,8 +132,16 @@ SimpleExpression
 		{$$ = getProperty.bind(null, $1, $3);}
 	| Array
 		{$$ = $1;}
+	| NUMBER
+		{var number = Number(yytext); $$ = function() {return number;};}
+	| STRING
+		{$$ = function() {return yytext;};}
 	| IDENTIFIER
 		{$$ = yy.context.resolve.bind(yy.context, yytext);}
+	| TRUE
+		{$$ = TRUE;}
+	| FALSE
+		{$$ = FALSE;}
 	| UNDEFINED
 		{$$ = UNDEFINED;}
 	| NULL
