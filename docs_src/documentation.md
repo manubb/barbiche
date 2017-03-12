@@ -258,7 +258,7 @@ will produce:
 Other examples can be found [here](demo.html#Loops).
 
 ### Imports
-The `bb-import` attribute is reserved to `<template>` elements. The value of a `bb-import` can be a template node, a template id or a Barbiche object. It is applied to the barbiche instance function. The returned template is then merged using current context and the current node is replaced with the merge result.
+The `bb-import` attribute is reserved to `<template>` elements. The value of a `bb-import` attribute can be a template node, a template id or a Barbiche object. It is applied to the barbiche instance function. The returned template is then merged using current context and the current node is replaced with the merge result.
 
 A simple example:
 ```html
