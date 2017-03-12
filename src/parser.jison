@@ -38,6 +38,8 @@ BackTickIdentifier (`{BackTickStringCharacter}*`)
 ")"                         return ')'
 "true"                      return 'TRUE'
 "false"                     return 'FALSE'
+"undefined"                 return 'UNDEFINED'
+"null"                      return 'NULL'
 ","                         return ','
 "."                         return '.'
 "["                         return '['
@@ -140,6 +142,10 @@ SimpleExpression
 		{$$ = $1;}
 	| IDENTIFIER
 		{$$ = yy.context.resolve.bind(yy.context, yytext);}
+	| UNDEFINED
+		{$$ = UNDEFINED;}
+	| NULL
+		{$$ = NULL;}
 	;
 
 Arguments
@@ -260,3 +266,5 @@ function order(a, b) {
 
 function TRUE() {return true;}
 function FALSE() {return false;}
+function NULL() {return null;}
+function UNDEFINED() {}
