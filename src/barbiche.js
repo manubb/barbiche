@@ -19,13 +19,12 @@ var TEMPLATE = 'TEMPLATE';
 var context = {
 	stack: [],
 	resolve: function(identifier) {
-		var m = this.stack.length - 1;
+		var m = this.stack.length;
 		var value;
-		while (value === undefined && m >= 0) {
+		while (value === undefined && --m >= 0) {
 			value = this.stack[m][identifier];
-			m--;
 		}
-		return (value === undefined) ? window[identifier] : value;
+		return value;
 	},
 	init: function(arr) {
 		this.stack = arr || [];
