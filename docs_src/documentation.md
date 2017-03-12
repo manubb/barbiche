@@ -38,11 +38,13 @@ Merging data into a Barbiche instance is done in this way:
 ```js
 var frag = barbiche('my-template').merge(obj_k,..., obj_3, obj_2, obj_1);
 ```
-The arguments of `merge` method are used to init the merge context: when Barbiche is looking for the value of an identifier, it searches first in `obj_1`, then in `obj_2`,..., then in `obj_k`, then in `window`. For example, you may consider that:
+The arguments of `merge` method are used to init the merge context: when Barbiche is looking for the value of an identifier, it searches first in `obj_1`, then in `obj_2`,..., then in `obj_k`~~, then in `window`~~. For example, you may consider that:
 
 * `obj_1` is a plain JSON object that comes from your database
 * `obj_2` is an object that contains functions and data specific to `my-template`
 * `obj_3` is an object that contains functions and data common to all your templates
+
+Some examples can be found [here](demo.html#Context).
 
 A DocumentFragment is returned that can be inserted in the main document:
 ```js
@@ -111,6 +113,7 @@ and use `{{expression}}` and `{{{expression}}}` for merging text and HTML, respe
 Barbiche expressions support a subset of JavaScript:
 
 * boolean expressions: `true`, `false`, `||`, `&&`, `==`, `!=`, `<=`,`>=`, `<` ,`>` and `!`
+* null and undefined keywords: `null` and `undefined`
 * identifiers `my_text`, `my_html`
 * arrays: `[]`, `[text, "string", 1.12]`
 * function calls: `my_function(obj)`, `JSON.stringify(JSON.parse(str))`

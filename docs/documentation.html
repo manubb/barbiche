@@ -114,12 +114,13 @@ var inst2 = barbiche('my-template');
 <p>Setting ids on your templates is strongly recommended.</p>
 <p>Merging data into a Barbiche instance is done in this way:</p>
 <div class="ui code raised segment hide"><textarea class="js language-js">var frag = barbiche('my-template').merge(obj_k,..., obj_3, obj_2, obj_1);</textarea></div>
-<p>The arguments of <code>merge</code> method are used to init the merge context: when Barbiche is looking for the value of an identifier, it searches first in <code>obj_1</code>, then in <code>obj_2</code>,..., then in <code>obj_k</code>, then in <code>window</code>. For example, you may consider that:</p>
+<p>The arguments of <code>merge</code> method are used to init the merge context: when Barbiche is looking for the value of an identifier, it searches first in <code>obj_1</code>, then in <code>obj_2</code>,..., then in <code>obj_k</code><del>, then in <code>window</code></del>. For example, you may consider that:</p>
 <ul class="ui list">
 <li><code>obj_1</code> is a plain JSON object that comes from your database</li>
 <li><code>obj_2</code> is an object that contains functions and data specific to <code>my-template</code></li>
 <li><code>obj_3</code> is an object that contains functions and data common to all your templates</li>
 </ul>
+<p>Some examples can be found <a href="demo.html#Context">here</a>.</p>
 <p>A DocumentFragment is returned that can be inserted in the main document:</p>
 <div class="ui code raised segment hide"><textarea class="js language-js">document.body.appendChild(frag);</textarea></div>
 <p>When you are done with your merge operations, you can clean the <code>barbiche</code> store:</p>
@@ -168,6 +169,7 @@ barbiche(bbObj(str));</textarea></div>
 <p>Barbiche expressions support a subset of JavaScript:</p>
 <ul class="ui list">
 <li>boolean expressions: <code>true</code>, <code>false</code>, <code>||</code>, <code>&amp;&amp;</code>, <code>==</code>, <code>!=</code>, <code>&lt;=</code>,<code>&gt;=</code>, <code>&lt;</code> ,<code>&gt;</code> and <code>!</code></li>
+<li>null and undefined keywords: <code>null</code> and <code>undefined</code></li>
 <li>identifiers <code>my_text</code>, <code>my_html</code></li>
 <li>arrays: <code>[]</code>, <code>[text, "string", 1.12]</code></li>
 <li>function calls: <code>my_function(obj)</code>, <code>JSON.stringify(JSON.parse(str))</code></li>
