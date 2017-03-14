@@ -186,24 +186,23 @@ function Barbiche(opt) {
 				str.replace(/a|b|c|d|e|f/g, function() {return table[arguments[0]];}) + ')';
 		}).join('|'), 'g');
 
+		var match, newNode;
 		return function(node, template) {
-			var res;
-			var t;
-			while((res = textNodeRegExp.exec(node.nodeValue))) {
-				if (res[3]) {
-					t = doc.createTextNode(unescapePlainText(res[3]));
-					node.before(t);
-				} else if (res[2]) {
-					t = createTemplate();
-					t.setAttribute(prefixedAttrs[BB_TEXT], unescapeTextHTML(res[2]));
-					node.before(t);
-					compile(t, template);
-				} else if (res[1]) {
-					t = createTemplate();
-					t.setAttribute(prefixedAttrs[BB_HTML], unescapeTextHTML(res[1]));
-					node.before(t);
-					compile(t, template);
-				} else throw new ParseError(res);
+			while((match = textNodeRegExp.exec(node.nodeValue))) {
+				if (match[3]) {
+					newNode = doc.createTextNode(unescapePlainText(match[3]));
+					node.before(newNode);
+				} else if (match[2]) {
+					newNode = createTemplate();
+					newNode.setAttribute(prefixedAttrs[BB_TEXT], unescapeTextHTML(match[2]));
+					node.before(newNode);
+					compile(newNode, template);
+				} else if (match[1]) {
+					newNode = createTemplate();
+					newNode.setAttribute(prefixedAttrs[BB_HTML], unescapeTextHTML(match[1]));
+					node.before(newNode);
+					compile(newNode, template);
+				} else throw new ParseError(match);
 			}
 			node.remove();
 		};
