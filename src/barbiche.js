@@ -59,8 +59,8 @@ Parser.parser.yy.BBObj = BBObj;
 
 function ParseError(res) {
 	this.message = 'Unexpected characters "' + res[0] + '":\n' +
-		res.input.replace(/\t|\n/g, ".") + "\n" + (new Array(res.index + 1).join('-')) + '^';
-	this.name = "ParseError";
+		res.input.replace(/\t|\n/g, '.') + '\n' + (new Array(res.index + 1).join('-')) + '^';
+	this.name = 'ParseError';
 }
 
 var ArrayFrom = Array.prototype.slice;
@@ -147,7 +147,7 @@ function Barbiche(opt) {
 		var delimiters = opt.delimiters || ['{', '}'];
 
 		function regExpEscape(str) {
-			return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+			return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 		}
 
 		var textHTMLTable = {
@@ -175,10 +175,10 @@ function Barbiche(opt) {
 		var table = {
 			a: regExpEscape(delimiters[0]),
 			b: regExpEscape(delimiters[1]),
-			c: regExpEscape("\\" + delimiters[0]),
-			d: regExpEscape("\\" + delimiters[1]),
+			c: regExpEscape('\\' + delimiters[0]),
+			d: regExpEscape('\\' + delimiters[1]),
 			e: '[^' + regExpEscape(delimiters[0]) + regExpEscape(delimiters[1]) + ']',
-			f: regExpEscape("\\\\")
+			f: regExpEscape('\\\\')
 		};
 
 		var textNodeRegExp = new RegExp(regExpTemplate.map(function(str) {
