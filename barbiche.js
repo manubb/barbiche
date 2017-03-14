@@ -3121,8 +3121,8 @@ Parser.parser.yy.BBObj = BBObj;
 
 function ParseError(res) {
 	this.message = 'Unexpected characters "' + res[0] + '":\n' +
-		res.input.replace(/\t|\n/g, ".") + "\n" + (new Array(res.index + 1).join('-')) + '^';
-	this.name = "ParseError";
+		res.input.replace(/\t|\n/g, '.') + '\n' + (new Array(res.index + 1).join('-')) + '^';
+	this.name = 'ParseError';
 }
 
 var ArrayFrom = Array.prototype.slice;
@@ -3209,7 +3209,7 @@ function Barbiche(opt) {
 		var delimiters = opt.delimiters || ['{', '}'];
 
 		function regExpEscape(str) {
-			return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+			return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 		}
 
 		var textHTMLTable = {
@@ -3237,10 +3237,10 @@ function Barbiche(opt) {
 		var table = {
 			a: regExpEscape(delimiters[0]),
 			b: regExpEscape(delimiters[1]),
-			c: regExpEscape("\\" + delimiters[0]),
-			d: regExpEscape("\\" + delimiters[1]),
+			c: regExpEscape('\\' + delimiters[0]),
+			d: regExpEscape('\\' + delimiters[1]),
 			e: '[^' + regExpEscape(delimiters[0]) + regExpEscape(delimiters[1]) + ']',
-			f: regExpEscape("\\\\")
+			f: regExpEscape('\\\\')
 		};
 
 		var textNodeRegExp = new RegExp(regExpTemplate.map(function(str) {
@@ -3248,24 +3248,23 @@ function Barbiche(opt) {
 				str.replace(/a|b|c|d|e|f/g, function() {return table[arguments[0]];}) + ')';
 		}).join('|'), 'g');
 
+		var match, newNode;
 		return function(node, template) {
-			var res;
-			var t;
-			while((res = textNodeRegExp.exec(node.nodeValue))) {
-				if (res[3]) {
-					t = doc.createTextNode(unescapePlainText(res[3]));
-					node.before(t);
-				} else if (res[2]) {
-					t = createTemplate();
-					t.setAttribute(prefixedAttrs[BB_TEXT], unescapeTextHTML(res[2]));
-					node.before(t);
-					compile(t, template);
-				} else if (res[1]) {
-					t = createTemplate();
-					t.setAttribute(prefixedAttrs[BB_HTML], unescapeTextHTML(res[1]));
-					node.before(t);
-					compile(t, template);
-				} else throw new ParseError(res);
+			while((match = textNodeRegExp.exec(node.nodeValue))) {
+				if (match[3]) {
+					newNode = doc.createTextNode(unescapePlainText(match[3]));
+					node.before(newNode);
+				} else if (match[2]) {
+					newNode = createTemplate();
+					newNode.setAttribute(prefixedAttrs[BB_TEXT], unescapeTextHTML(match[2]));
+					node.before(newNode);
+					compile(newNode, template);
+				} else if (match[1]) {
+					newNode = createTemplate();
+					newNode.setAttribute(prefixedAttrs[BB_HTML], unescapeTextHTML(match[1]));
+					node.before(newNode);
+					compile(newNode, template);
+				} else throw new ParseError(match);
 			}
 			node.remove();
 		};
