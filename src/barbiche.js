@@ -169,7 +169,8 @@ function Barbiche(opt) {
 		var regExpTemplate = [
 			'aaa((?:a|f|c|d|e|b(?:a|f|c|d|e|b(?:a|f|c|d|e)))*)bbb',
 			'aa((?:a|f|c|d|e|b(?:a|f|c|d|e))*)bb',
-			'((?:b|f|c|d|e|a(?:b|f|c|d|e))(?:b|f|c|d|e|a(?:b|f|c|d|e))*(?:a(?!a)|b|f|c|d|e||a(?:b|f|c|d|e))|(?:a(?!a)))',
+			'((?:b|f|c|d|e|a(?:b|f|c|d|e))(?:b|f|c|d|e|a(?:b|f|c|d|e))*(?:a(?!a)|b|f|c|d|e||a(?:b|f|c|d|e))' +
+			'|(?:a(?!a)))',
 			'(.+)'
 		];
 		var table = {
