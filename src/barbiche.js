@@ -203,7 +203,10 @@ function Barbiche(opt) {
 					newNode.setAttribute(prefixedAttrs[BB_HTML], unescapeTextHTML(match[1]));
 					node.before(newNode);
 					compile(newNode, template);
-				} else throw new ParseError(match);
+				} else {
+					textNodeRegExp.lastIndex = 0;
+					throw new ParseError(match);
+				}
 			}
 			node.remove();
 		};
