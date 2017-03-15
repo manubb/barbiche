@@ -6,8 +6,8 @@
 'use strict';
 
 var attrs = ['if', 'alias', 'text', 'html', 'repeat', 'import', 'attr', 'class'];
-var BB_IF = 0, BB_ALIAS = 1, BB_TEXT = 2, BB_HTML = 3, BB_REPEAT = 4,
-		BB_IMPORT = 5, BB_ATTR = 6, BB_CLASS = 7;
+var BB_IF = 0, BB_ALIAS = 1, BB_TEXT = 2, BB_HTML = 3,
+    BB_REPEAT = 4, BB_IMPORT = 5, BB_ATTR = 6, BB_CLASS = 7;
 
 var globalAttr = 'global';
 var elseAttr = 'else';
