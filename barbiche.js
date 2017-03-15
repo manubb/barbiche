@@ -3068,8 +3068,8 @@ if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
 'use strict';
 
 var attrs = ['if', 'alias', 'text', 'html', 'repeat', 'import', 'attr', 'class'];
-var BB_IF = 0, BB_ALIAS = 1, BB_TEXT = 2, BB_HTML = 3, BB_REPEAT = 4,
-		BB_IMPORT = 5, BB_ATTR = 6, BB_CLASS = 7;
+var BB_IF = 0, BB_ALIAS = 1, BB_TEXT = 2, BB_HTML = 3,
+    BB_REPEAT = 4, BB_IMPORT = 5, BB_ATTR = 6, BB_CLASS = 7;
 
 var globalAttr = 'global';
 var elseAttr = 'else';
@@ -3231,7 +3231,8 @@ function Barbiche(opt) {
 		var regExpTemplate = [
 			'aaa((?:a|f|c|d|e|b(?:a|f|c|d|e|b(?:a|f|c|d|e)))*)bbb',
 			'aa((?:a|f|c|d|e|b(?:a|f|c|d|e))*)bb',
-			'((?:b|f|c|d|e|a(?:b|f|c|d|e))(?:b|f|c|d|e|a(?:b|f|c|d|e))*(?:a(?!a)|b|f|c|d|e||a(?:b|f|c|d|e))|(?:a(?!a)))',
+			'((?:b|f|c|d|e|a(?:b|f|c|d|e))(?:b|f|c|d|e|a(?:b|f|c|d|e))*(?:a(?!a)|b|f|c|d|e||a(?:b|f|c|d|e))' +
+			'|(?:a(?!a)))',
 			'(.+)'
 		];
 		var table = {
@@ -3264,7 +3265,10 @@ function Barbiche(opt) {
 					newNode.setAttribute(prefixedAttrs[BB_HTML], unescapeTextHTML(match[1]));
 					node.before(newNode);
 					compile(newNode, template);
-				} else throw new ParseError(match);
+				} else {
+					textNodeRegExp.lastIndex = 0;
+					throw new ParseError(match);
+				}
 			}
 			node.remove();
 		};
