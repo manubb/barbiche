@@ -329,7 +329,6 @@ function Barbiche(opt) {
 		};
 	})();
 
-
 	works[Node.DOCUMENT_FRAGMENT_NODE] = (function() {
 		var child;
 		return function(node, template) {
@@ -429,4 +428,5 @@ function Barbiche(opt) {
 
 	return Template;
 }
+
 module.exports = Barbiche;
