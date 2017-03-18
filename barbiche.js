@@ -1811,6 +1811,7 @@ parse: function parse(input) {
 parser.originalParseError = parser.parseError;
 parser.originalQuoteName = parser.quoteName;
 
+/* Helpers */
 var table = {
 	"n": "\n",
 	"'": "'",
@@ -3076,7 +3077,7 @@ var elseAttr = 'else';
 
 var TEMPLATE = 'TEMPLATE';
 
-/* shared context */
+/* Shared context */
 
 var context = {
 	stack: [],
@@ -3111,7 +3112,7 @@ BBObj.prototype.toString = function() {
 	else return '';
 };
 
-/* shared Parser*/
+/* Shared Parser*/
 
 var Parser = require('../parser.js');
 Parser.parser.yy.context = context;
@@ -3391,7 +3392,6 @@ function Barbiche(opt) {
 		};
 	})();
 
-
 	works[Node.DOCUMENT_FRAGMENT_NODE] = (function() {
 		var child;
 		return function(node, template) {
@@ -3491,6 +3491,7 @@ function Barbiche(opt) {
 
 	return Template;
 }
+
 module.exports = Barbiche;
 
 },{"../parser.js":1}]},{},[2])(2)
