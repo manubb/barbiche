@@ -1,6 +1,6 @@
-/* description: Barbiche parser. */
+/* Barbiche parser */
 
-/* lexical grammar */
+/* Lexical grammar */
 %lex
 
 HexDigit [0-9a-fA-F]
@@ -53,7 +53,7 @@ BackTickIdentifier (`{BackTickStringCharacter}*`)
 
 /lex
 
-/* operator associations and precedence */
+/* Operator associations and precedences */
 
 %left ','
 %left ':'
@@ -69,7 +69,7 @@ BackTickIdentifier (`{BackTickStringCharacter}*`)
 
 %start Main
 
-%% /* language grammar */
+%% /* Language grammar */
 
 Main
 	: SimpleExpression EOF
@@ -167,7 +167,7 @@ PropertyName
 		{$$ = function() {return yytext;};}
 	;
 
-%%
+%% /* Helpers */
 var table = {
 	"n": "\n",
 	"'": "'",

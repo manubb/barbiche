@@ -14,7 +14,7 @@ var elseAttr = 'else';
 
 var TEMPLATE = 'TEMPLATE';
 
-/* shared context */
+/* Shared context */
 
 var context = {
 	stack: [],
@@ -49,7 +49,7 @@ BBObj.prototype.toString = function() {
 	else return '';
 };
 
-/* shared Parser*/
+/* Shared Parser*/
 
 var Parser = require('../parser.js');
 Parser.parser.yy.context = context;
