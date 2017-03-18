@@ -44,7 +44,7 @@ The arguments of `merge` method are used to init the merge context: when Barbich
 * `obj_2` is an object that contains functions and data specific to `my-template`
 * `obj_3` is an object that contains functions and data common to all your templates
 
-Some examples can be found [here](demo.html#Context).
+Some examples can be found [here](https://manubb.github.io/barbiche/demo.html#Context).
 
 A DocumentFragment is returned that can be inserted in the main document:
 ```js
@@ -85,7 +85,7 @@ Barbiche({
 });
 ```
 
-* `delimiters` is an array containing two distinct one character strings that will be used as delimiters for text and HTML insertion. Note that backslash character (`\`) is used for escaping delimiters and cannot be used as a delimiter. Some examples can be found [here](demo.html#Delimiters).
+* `delimiters` is an array containing two distinct one character strings that will be used as delimiters for text and HTML insertion. Note that backslash character (`\`) is used for escaping delimiters and cannot be used as a delimiter. Some examples can be found [here](https://manubb.github.io/barbiche/demo.html#Delimiters).
 * `prefix` is the word used to prefix Barbiche attributes. Internally, Barbiche uses the following attributes: `bb-[if|else|alias|text|html|repeat|import|attr|class|global]`. If you need to use one of these attributes, you can set Barbiche prefix according to your needs.
 * `document` is the HTML document where Barbiche will search for templates.
 * `destructive` is a boolean that allows Barbiche to modify the HTML of the registered templates. (If false, Barbiche will use deep clones of the templates leaving your HTML untouched.)
@@ -127,7 +127,7 @@ and a special constructor: `expression: expression` for building Barbiche object
 For convenience, any string can be used as an identifier by using backtick delimiters: `` `this-is not-a-valid-JS-identifier` ``.
 Backticks inside a backticked identifier have to be escaped: `` \` ``.
 
-Strings and identifiers support usual escape sequences `(\n|\t|\r|\\|\'|\")`, hexadecimal and unicode escape sequences. Examples can be found [here](demo.html#Identifiers).
+Strings and identifiers support usual escape sequences `(\n|\t|\r|\\|\'|\")`, hexadecimal and unicode escape sequences. Examples can be found [here](https://manubb.github.io/barbiche/demo.html#Identifiers).
 
 ### Text
 Inserting text is done with `{{expression}}`.
@@ -151,7 +151,7 @@ will produce:
 <div>This is some text.</div>
 ```
 
-Other examples can be found [here](demo.html#Text/HTML).
+Other examples can be found [here](https://manubb.github.io/barbiche/demo.html#Text/HTML).
 
 ### HTML
 Inserting HTML is done with `{{{expression}}}`.
@@ -175,7 +175,7 @@ will produce:
 <div><p>This is some<strong>html</strong>.</p></div>
 ```
 
-Other examples can be found [here](demo.html#Text/HTML).
+Other examples can be found [here](https://manubb.github.io/barbiche/demo.html#Text/HTML).
 
 ### Conditions
 if an element is decorated with a `bb-if="expression"` attribute, its next sibling element (if it exists) may be decorated with an (empty) `bb-else` attribute. According to the truth value of `expression`, the element or its next sibling element is removed.
@@ -203,7 +203,7 @@ will produce:
 <div>FALSE</div>
 ```
 
-Other examples can be found [here](demo.html#Conditions).
+Other examples can be found [here](https://manubb.github.io/barbiche/demo.html#Conditions).
 
 ### Aliases
 A `bb-alias` contains a Barbiche object or an array of Barbiche objects. For each object `value: name`, `name` is bound to `value` during the processing of the current subtree.
@@ -224,7 +224,7 @@ will produce:
 <div>5</div>
 ```
 
-Other examples can be found [here](demo.html#Aliases).
+Other examples can be found [here](https://manubb.github.io/barbiche/demo.html#Aliases).
 
 ### Loops
 A `bb-repeat` attribute contains an expression and ends with an optional `--` or `++` keyword. The expression denotes a Barbiche object or an array of Barbiche objects which defines a set of *nested* loops. For each Barbiche object `array: 'string'`, a loop is executed on `array`, binding each array item to `'string'` and item index to `'_string_'`. A `++` ending keyword will insert merged items in natural order; `--` will insert merged items in reverse order; no ending keyword is the same as `++`.
@@ -255,7 +255,7 @@ will produce:
 </div>
 ```
 
-Other examples can be found [here](demo.html#Loops).
+Other examples can be found [here](https://manubb.github.io/barbiche/demo.html#Loops).
 
 ### Imports
 The `bb-import` attribute is reserved to `<template>` elements. The value of a `bb-import` attribute can be a template node, a template id or a Barbiche object. It is applied to the barbiche instance function. The returned template is then merged using current context and the current node is replaced with the merge result.
@@ -281,7 +281,7 @@ will produce:
 </div>
 ```
 
-Other examples can be found [here](demo.html#Imports).
+Other examples can be found [here](https://manubb.github.io/barbiche/demo.html#Imports).
 
 ### Attributes
 A `bb-attr` attribute contains a Barbiche object or an array of Barbiche objects. For each object `value: name`, if `value` is not `undefined` or `null` and if `name.toString()` is not empty, attribute `name.toString()` is set on the current node with value `value`.
@@ -302,7 +302,7 @@ will produce:
 <div my-attr="my-value"></div>
 ```
 
-Other examples can be found [here](demo.html#Attributes).
+Other examples can be found [here](https://manubb.github.io/barbiche/demo.html#Attributes).
 
 ### Classes
 A `bb-class` attribute contains an expression or an array of expressions. For each expression:
@@ -325,4 +325,4 @@ will produce:
 <div class="item my-class"></div>
 ```
 
-Other examples can be found [here](demo.html#Classes).
+Other examples can be found [here](https://manubb.github.io/barbiche/demo.html#Classes).
