@@ -3062,7 +3062,7 @@ if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
 
 },{}],2:[function(require,module,exports){
 // Barbiche
-// version: 2.0.2
+// version: 2.0.3
 // author: Manuel Baclet <manuel@eda.sarl>
 // license: MIT
 
