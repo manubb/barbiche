@@ -282,9 +282,9 @@ function Barbiche(opt) {
 						var closure = template.closures[str];
 						if (closure) return function() {
 							var clone = Template(closure())._clone();
-							node[order](merge(clone.node.content, clone));
+							node[order](works[DOCUMENT_FRAGMENT_NODE](clone.node.content, clone));
 						}; else return function() {
-							node[order](merge(node.cloneNode(true).content, template));
+							node[order](works[DOCUMENT_FRAGMENT_NODE](node.cloneNode(true).content, template));
 						};
 					})(bbAttrs.import);
 
@@ -303,9 +303,9 @@ function Barbiche(opt) {
 				} else if (bbAttrs.import) {
 					value = (template.closures[bbAttrs.import])();
 					var clone = Template(value)._clone();
-					node.before(merge(clone.node.content, clone));
+					node.before(works[DOCUMENT_FRAGMENT_NODE](clone.node.content, clone));
 				} else {
-					node.before(merge(node.content, template));
+					node.before(works[DOCUMENT_FRAGMENT_NODE](node.content, template));
 				}
 				node.remove();
 			} else {
@@ -328,7 +328,7 @@ function Barbiche(opt) {
 						}
 					});
 				}
-				while((child = node.querySelector(prefixedGlobalAttrSelector))) {merge(child, template);}
+				while((child = node.querySelector(prefixedGlobalAttrSelector))) {works[ELEMENT_NODE](child, template);}
 			}
 			if (nodeContext) context.pop();
 		};
@@ -337,14 +337,10 @@ function Barbiche(opt) {
 	works[DOCUMENT_FRAGMENT_NODE] = (function() {
 		var child;
 		return function(node, template) {
-			while((child = node.querySelector(prefixedGlobalAttrSelector))) {merge(child, template);}
+			while((child = node.querySelector(prefixedGlobalAttrSelector))) {works[ELEMENT_NODE](child, template);}
+			return node;
 		};
 	})();
-
-	function merge(node, template) {
-		(works[node.nodeType])(node, template);
-		return node;
-	}
 
 	/* Template class */
 
@@ -401,7 +397,7 @@ function Barbiche(opt) {
 			args[i] = arguments[i];
 		}
 		context.init(args);
-		merge(clone.node.content, clone);
+		works[DOCUMENT_FRAGMENT_NODE](clone.node.content, clone);
 		context.init();
 		return clone.node.content;
 	};
