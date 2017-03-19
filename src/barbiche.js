@@ -284,8 +284,9 @@ function Barbiche(opt) {
 							var clone = Template(closure())._clone();
 							node[order](works[DOCUMENT_FRAGMENT_NODE](clone.node.content, clone));
 						}; else return function() {
-							node[order](works[DOCUMENT_FRAGMENT_NODE](node.cloneNode(true).content,
-								template));
+							node[order](works[DOCUMENT_FRAGMENT_NODE](
+								node.cloneNode(true).content, template
+							));
 						};
 					})(bbAttrs.import);
 
