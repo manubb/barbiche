@@ -289,7 +289,7 @@ function Barbiche(opt) {
 						var value = task.value;
 						return function() {
 							value.forEach(function(item, index) {
-								nodeContext[alias] = value[index];
+								nodeContext[alias] = item;
 								nodeContext['_' + alias + '_'] = index;
 								accu();
 							});
