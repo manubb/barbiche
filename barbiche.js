@@ -3082,6 +3082,8 @@ var TEMPLATE = 'TEMPLATE';
 var ELEMENT_NODE = Node.ELEMENT_NODE, TEXT_NODE = Node.TEXT_NODE,
     COMMENT_NODE = Node.COMMENT_NODE, DOCUMENT_FRAGMENT_NODE = Node.DOCUMENT_FRAGMENT_NODE;
 
+var ArrayFrom = Array.prototype.slice;
+
 /* Shared context */
 
 var context = {
@@ -3130,8 +3132,6 @@ function ParseError(res) {
 		res.input.replace(/\t|\n/g, '.') + '\n' + (new Array(res.index + 1).join('-')) + '^';
 	this.name = 'ParseError';
 }
-
-var ArrayFrom = Array.prototype.slice;
 
 /* Barbiche instance builder */
 
