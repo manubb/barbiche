@@ -327,12 +327,8 @@ Backticks inside a backticked identifier have to be escaped: <code>\`</code>.</p
 	<script>
 		function scrollTo(target) {
 			document.querySelector(target).scrollIntoView();
-			window.scrollBy(0, -65);
 		}
 		document.addEventListener('DOMContentLoaded', function() {
-			var hash = document.location.hash;
-			if (hash.length > 1) scrollTo(hash);
-
 			document.querySelector('#toc-menu').addEventListener('click', function(e) {
 				e.preventDefault();
 				var target = e.target;
