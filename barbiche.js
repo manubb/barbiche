@@ -3068,6 +3068,8 @@ if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
 
 'use strict';
 
+/* Constants */
+
 var attrs = ['if', 'alias', 'text', 'html', 'repeat', 'import', 'attr', 'class'];
 var BB_IF = 0, BB_ALIAS = 1, BB_TEXT = 2, BB_HTML = 3,
     BB_REPEAT = 4, BB_IMPORT = 5, BB_ATTR = 6, BB_CLASS = 7;
@@ -3076,6 +3078,9 @@ var globalAttr = 'global';
 var elseAttr = 'else';
 
 var TEMPLATE = 'TEMPLATE';
+
+var ELEMENT_NODE = Node.ELEMENT_NODE, TEXT_NODE = Node.TEXT_NODE,
+    COMMENT_NODE = Node.COMMENT_NODE, DOCUMENT_FRAGMENT_NODE = Node.DOCUMENT_FRAGMENT_NODE;
 
 /* Shared context */
 
@@ -3157,7 +3162,7 @@ function Barbiche(opt) {
 	/* Compilation helpers */
 
 	var compile_works = {};
-	compile_works[Node.ELEMENT_NODE] = function(node, template) {
+	compile_works[ELEMENT_NODE] = function(node, template) {
 		if (node.hasAttribute(prefixedAttrs[BB_REPEAT]) && node.nodeName != TEMPLATE) {
 			if (node.hasAttribute(prefixedAttrs[BB_TEXT]) || node.hasAttribute(prefixedAttrs[BB_HTML]))
 				node.removeAttribute(prefixedAttrs[BB_REPEAT]);
@@ -3206,7 +3211,7 @@ function Barbiche(opt) {
 		}
 	};
 
-	compile_works[Node.TEXT_NODE] = (function() {
+	compile_works[TEXT_NODE] = (function() {
 		var delimiters = opt.delimiters || ['{', '}'];
 
 		function regExpEscape(str) {
@@ -3275,9 +3280,9 @@ function Barbiche(opt) {
 		};
 	})();
 
-	compile_works[Node.COMMENT_NODE] = function(node, template) {};
+	compile_works[COMMENT_NODE] = function(node, template) {};
 
-	compile_works[Node.DOCUMENT_FRAGMENT_NODE] = function(node, template) {
+	compile_works[DOCUMENT_FRAGMENT_NODE] = function(node, template) {
 		ArrayFrom.call(node.childNodes).forEach(function(child) {compile(child, template);});
 	};
 
@@ -3288,7 +3293,7 @@ function Barbiche(opt) {
 	/* Merge helpers */
 
 	var works = {};
-	works[Node.ELEMENT_NODE] = (function() {
+	works[ELEMENT_NODE] = (function() {
 		var child, bbAttrs, value;
 		return function(node, template) {
 			var nodeContext;
@@ -3352,7 +3357,7 @@ function Barbiche(opt) {
 						var value = task.value;
 						return function() {
 							value.forEach(function(item, index) {
-								nodeContext[alias] = value[index];
+								nodeContext[alias] = item;
 								nodeContext['_' + alias + '_'] = index;
 								accu();
 							});
@@ -3392,7 +3397,7 @@ function Barbiche(opt) {
 		};
 	})();
 
-	works[Node.DOCUMENT_FRAGMENT_NODE] = (function() {
+	works[DOCUMENT_FRAGMENT_NODE] = (function() {
 		var child;
 		return function(node, template) {
 			while((child = node.querySelector(prefixedGlobalAttrSelector))) {merge(child, template);}
