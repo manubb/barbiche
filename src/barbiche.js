@@ -368,7 +368,7 @@ function Barbiche(opt) {
 		if (!(this instanceof Template)) {
 			return new Template(node);
 		}
-		if (node instanceof HTMLElement && node.nodeName == TEMPLATE) {
+		if (node instanceof HTMLTemplateElement) {
 			if (node.id) store[node.id] = this;
 			this.node = destructive ? node : node.cloneNode(true);
 			this.ready = false;
