@@ -3062,7 +3062,7 @@ if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
 
 },{}],2:[function(require,module,exports){
 // Barbiche
-// version: 2.0.5
+// version: 2.0.6
 // author: Manuel Baclet <manuel@eda.sarl>
 // license: MIT
 
@@ -3357,6 +3357,7 @@ function Barbiche(opt) {
 					(value.reduceRight(function(accu, task) {
 						var alias = task.name;
 						var value = task.value;
+						if (value == null) value = [];
 						return function() {
 							value.forEach(function(item, index) {
 								nodeContext[alias] = item;
@@ -3430,13 +3431,15 @@ function Barbiche(opt) {
 		if (!(this instanceof Template)) {
 			return new Template(node);
 		}
-		if (node) {
+		if (node instanceof HTMLElement && node.nodeName == TEMPLATE) {
 			if (node.id) store[node.id] = this;
 			this.node = destructive ? node : node.cloneNode(true);
 			this.ready = false;
-			this.closures = {};
+		} else {
+			this.node = createTemplate();
+			this.ready = true;
 		}
-		return this;
+		this.closures = {};
 	}
 
 	/* Statics */
@@ -3485,11 +3488,11 @@ function Barbiche(opt) {
 
 	Template.prototype._clone = function() {
 		if (!this.ready) this._compile();
-		var t = new Template();
-		t.node = this.node.cloneNode(true);
-		t.closures = this.closures;
-		t.ready = true;
-		return t;
+		return Object.create(Template.prototype, {
+			node: {value: this.node.cloneNode(true)},
+			closures: {value: this.closures},
+			ready: {value: true}
+		});
 	};
 
 	return Template;
