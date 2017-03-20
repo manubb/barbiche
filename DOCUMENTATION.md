@@ -26,6 +26,8 @@ barbiche('my-template');
 // or
 barbiche(document.querySelector('#my-template'));
 ```
+If no template is found, an unamed empty `<template>` element is used so that subsequent operations fail silently.
+
 If the template has an id attribute, Barbiche internally stores the template for later reuse:
 ```js
 var inst1 = barbiche('my-template');
@@ -228,6 +230,8 @@ Other examples can be found [here](https://manubb.github.io/barbiche/demo.html#A
 
 ### Loops
 A `bb-repeat` attribute contains an expression and ends with an optional `--` or `++` keyword. The expression denotes a Barbiche object or an array of Barbiche objects which defines a set of *nested* loops. For each Barbiche object `array: 'string'`, a loop is executed on `array`, binding each array item to `'string'` and item index to `'_string_'`. A `++` ending keyword will insert merged items in natural order; `--` will insert merged items in reverse order; no ending keyword is the same as `++`.
+
+For convenience, an `undefined` or `null` value for `array` is interpreted as an empty array: `[]`.
 
 A simple example:
 ```html

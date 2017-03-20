@@ -107,6 +107,7 @@
 <div class="ui code raised segment hide"><textarea class="js language-js">barbiche('my-template');
 // or
 barbiche(document.querySelector('#my-template'));</textarea></div>
+<p>If no template is found, an unamed empty <code>&lt;template&gt;</code> element is used so that subsequent operations fail silently.</p>
 <p>If the template has an id attribute, Barbiche internally stores the template for later reuse:</p>
 <div class="ui code raised segment hide"><textarea class="js language-js">var inst1 = barbiche('my-template');
 var inst2 = barbiche('my-template');
@@ -246,6 +247,7 @@ Backticks inside a backticked identifier have to be escaped: <code>\`</code>.</p
 <p>Other examples can be found <a href="https://manubb.github.io/barbiche/demo.html#Aliases">here</a>.</p>
 <h3 id="loops">Loops</h3>
 <p>A <code>bb-repeat</code> attribute contains an expression and ends with an optional <code>--</code> or <code>++</code> keyword. The expression denotes a Barbiche object or an array of Barbiche objects which defines a set of <em>nested</em> loops. For each Barbiche object <code>array: 'string'</code>, a loop is executed on <code>array</code>, binding each array item to <code>'string'</code> and item index to <code>'_string_'</code>. A <code>++</code> ending keyword will insert merged items in natural order; <code>--</code> will insert merged items in reverse order; no ending keyword is the same as <code>++</code>.</p>
+<p>For convenience, an <code>undefined</code> or <code>null</code> value for <code>array</code> is interpreted as an empty array: <code>[]</code>.</p>
 <p>A simple example:</p>
 <div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="loop"&gt;
     &lt;div&gt;
