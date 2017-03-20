@@ -368,18 +368,15 @@ function Barbiche(opt) {
 		if (!(this instanceof Template)) {
 			return new Template(node);
 		}
-		if (node) {
+		if (node instanceof HTMLElement && node.nodeName == TEMPLATE) {
 			if (node.id) store[node.id] = this;
 			this.node = destructive ? node : node.cloneNode(true);
 			this.ready = false;
 		} else {
-			if (node !== undefined) {
-				this.node = createTemplate();
-			}
+			this.node = createTemplate();
 			this.ready = true;
 		}
 		this.closures = {};
-		return this;
 	}
 
 	/* Statics */
@@ -428,10 +425,11 @@ function Barbiche(opt) {
 
 	Template.prototype._clone = function() {
 		if (!this.ready) this._compile();
-		var t = new Template();
-		t.node = this.node.cloneNode(true);
-		t.closures = this.closures;
-		return t;
+		return Object.create(Template.prototype, {
+			node: {value: this.node.cloneNode(true)},
+			closures: {value: this.closures},
+			ready: {value: true}
+		});
 	};
 
 	return Template;
