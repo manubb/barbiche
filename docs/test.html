@@ -353,6 +353,20 @@
 					});
 				});
 			});
+			describe('bb-repeat="null: \'str\'"', function() {
+				it('should interpret null as empty array', function() {
+					var t = barbiche(barbiche.bbObj('<div id="t1"><span bb-repeat="null: \'var\'"></span></div>'));
+					var clone = t.merge();
+					clone.querySelector('#t1').innerHTML.should.equal('');
+				});
+			});
+			describe('bb-repeat="undefined: \'str\'"', function() {
+				it('should interpret undefined as empty array', function() {
+					var t = barbiche(barbiche.bbObj('<div id="t1"><span bb-repeat="undefined: \'var\'"></span></div>'));
+					var clone = t.merge();
+					clone.querySelector('#t1').innerHTML.should.equal('');
+				});
+			});
 			describe('bb-repeat="[exp: \'str\',...]"', function() {
 				it('should execute nested loops for each item in array exp binding item to \'str\' and index to \'_str_\` in current subtree', function() {
 					var t = barbiche(barbiche.bbObj('<div id="t1"><span bb-repeat="[array1: \'var1\', array2: \'var2\']" bb-attr="[var1: \'val1\', var2: \'val2\']"></span></div>'));
