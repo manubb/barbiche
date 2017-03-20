@@ -294,6 +294,7 @@ function Barbiche(opt) {
 					(value.reduceRight(function(accu, task) {
 						var alias = task.name;
 						var value = task.value;
+						if (value == null) value = [];
 						return function() {
 							value.forEach(function(item, index) {
 								nodeContext[alias] = item;
