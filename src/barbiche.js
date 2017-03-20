@@ -371,8 +371,13 @@ function Barbiche(opt) {
 			if (node.id) store[node.id] = this;
 			this.node = destructive ? node : node.cloneNode(true);
 			this.ready = false;
-			this.closures = {};
+		} else {
+			if (node !== undefined) {
+				this.node = createTemplate();
+			}
+			this.ready = true;
 		}
+		this.closures = {};
 		return this;
 	}
 
@@ -425,7 +430,6 @@ function Barbiche(opt) {
 		var t = new Template();
 		t.node = this.node.cloneNode(true);
 		t.closures = this.closures;
-		t.ready = true;
 		return t;
 	};
 
