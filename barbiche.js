@@ -3431,6 +3431,7 @@ function Barbiche(opt) {
 		if (!(this instanceof Template)) {
 			return new Template(node);
 		}
+		// <template> polyfill does not like: (node instanceof HTMLTemplateElement)
 		if (node instanceof HTMLElement && node.nodeName == TEMPLATE) {
 			if (node.id) store[node.id] = this;
 			this.node = destructive ? node : node.cloneNode(true);
