@@ -3327,7 +3327,7 @@ function Barbiche(opt) {
 				value = (template.closures[bbAttrs.html])();
 				if (value != null) {
 					(function(t) {
-						t.innerHTML = value.toString();
+						t.innerHTML = value;
 						node.replaceWith(t.content);
 					})(createTemplate());
 				} else node.remove();
