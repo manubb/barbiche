@@ -24,7 +24,7 @@ var ArrayFrom = Array.prototype.slice;
 /* Shared context */
 
 var context = {
-	stack: [],
+	stack: null,
 	resolve: function(identifier) {
 		var m = this.stack.length;
 		var value;
@@ -33,8 +33,11 @@ var context = {
 		}
 		return value;
 	},
-	init: function(arr) {
-		this.stack = arr || [];
+	get: function() {
+		return this.stack;
+	},
+	set: function(arr) {
+		this.stack = arr;
 	},
 	push: function(obj) {
 		this.stack.push(obj);
@@ -406,9 +409,10 @@ function Barbiche(opt) {
 		for(var i = 0; i < args.length; ++i) {
 			args[i] = arguments[i];
 		}
-		context.init(args);
+		var savedContext = context.get();
+		context.set(args);
 		works[DOCUMENT_FRAGMENT_NODE](clone.node.content, clone);
-		context.init();
+		context.set(savedContext);
 		return clone.node.content;
 	};
 
