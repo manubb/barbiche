@@ -24,7 +24,7 @@ jsdom.env({
 		var Barbiche = window.Barbiche;
 		var target = document.querySelector('#target');
 		target.innerHTML = converter.makeHtml(documentationContent);
-		var barbiche = Barbiche();
+		var barbiche = Barbiche({destructive: false});
 		Array.prototype.slice.call(target.querySelectorAll('ul, ol')).forEach(function(list) {
 			list.classList.add('ui', 'list');
 		});

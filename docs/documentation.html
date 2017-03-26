@@ -21,14 +21,14 @@
 </head>
 <body>
 	<template id="toc-template">
-		<template bb-global="{&quot;repeat&quot;:&quot;fun1&quot;}"><div class="item">
-			<a class="title" bb-global="{&quot;attr&quot;:&quot;fun2&quot;}">
-				<b><template bb-global="{&quot;text&quot;:&quot;fun3&quot;}"></template></b>
+		<div bb-repeat="h2: 'section'" class="item">
+			<a class="title" bb-attr="'#' + section.id: 'href'">
+				<b>{{section.text}}</b>
 			</a>
-			<div class="content menu" bb-global="{&quot;if&quot;:&quot;fun4&quot;}">
-				<template bb-global="{&quot;repeat&quot;:&quot;fun5&quot;}"><a class="item" bb-global="{&quot;attr&quot;:&quot;fun6&quot;}"><template bb-global="{&quot;text&quot;:&quot;fun7&quot;}"></template></a></template>
+			<div bb-if="section.h3.length" class="content menu">
+				<a bb-repeat="section.h3: 'subsection'" class="item" bb-attr=" '#' + subsection.id: 'href'">{{subsection.text}}</a>
 			</div>
-		</div></template>
+		</div>
 	</template>
 	<div class="page-wrap">
 		<div class="ui stackable inverted massive menu">
