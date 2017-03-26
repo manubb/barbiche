@@ -175,9 +175,10 @@ var table = {
 	"t": "\t",
 	"r": "\r",
 	"\\": "\\",
-	"`": "`"
+	"`": "`",
+	"b": "\b"
 };
-var stringUnescapeRegExp = /\\(?:(\\|'|"|r|n|t|`)|u(.{4})|x(.{2}))/g;
+var stringUnescapeRegExp = /\\(?:(\\|'|"|r|n|t|b|`)|u(.{4})|x(.{2}))/g;
 function charCodeToChar(str) {
 	return String.fromCharCode(parseInt(str, 16));
 }
