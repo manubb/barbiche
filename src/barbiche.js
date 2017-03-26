@@ -263,10 +263,12 @@ function Barbiche(opt) {
 			} else if (bbAttrs.html) {
 				value = (template.closures[bbAttrs.html])();
 				if (value != null) {
-					(function(t) {
-						t.innerHTML = value;
-						node.replaceWith(t.content);
-					})(createTemplate());
+					if (value instanceof Node) {
+						node.replaceWith(value);
+					} else (function(t) {
+							t.innerHTML = value;
+							node.replaceWith(t.content);
+						})(createTemplate());
 				} else node.remove();
 			} else if (node.nodeName == TEMPLATE) {
 				if (bbAttrs.repeat) {
