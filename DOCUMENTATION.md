@@ -234,6 +234,8 @@ A `bb-repeat` attribute contains an expression and ends with an optional `--` or
 
 For convenience, an `undefined` or `null` value for `array` is interpreted as an empty array: `[]`.
 
+Any object with a `forEach` method (e.g. Maps or Sets) can be used in loops.
+
 A simple example:
 ```html
 <template id="loop">
