@@ -185,6 +185,13 @@
 					t.merge({
 						path: {
 							to: {
+								value: document.createElement('span')
+							}
+						}
+					}).querySelector('#target').innerHTML.should.equal("<span></span>");
+					t.merge({
+						path: {
+							to: {
 								value: null
 							}
 						}

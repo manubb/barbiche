@@ -106,17 +106,8 @@
 			tabSize: 2,
 			indentWithTabs: true
 		});
-		var t;
+		var t = document.createElement('template');
 		var pristineBarbiche = Barbiche;
-		window.Barbiche = function() {
-			var barbiche = pristineBarbiche.apply(null, arguments);
-			var pristineMerge = barbiche.prototype.merge;
-			barbiche.prototype.merge = function() {
-				var frag = pristineMerge.apply(this, arguments);
-				t.content.appendChild(frag);
-			};
-			return barbiche;
-		}
 		function showResult(str) {
 			resultCodeMirror.setValue(str);
 			setTimeout(function() {
@@ -125,13 +116,13 @@
 		}
 		document.querySelector('#process').addEventListener('click', function() {
 			result.classList.remove('hide');
-			t = document.createElement('template');
 			temp.innerHTML = templateCodeMirror.getValue();
 			window.HTMLTemplateElement.bootstrap && window.HTMLTemplateElement.bootstrap(temp);
 			var content = dataCodeMirror.getValue();
 			try {
-				(new Function(content))();
+				(new Function('target', content))(t.content);
 				showResult(html_beautify(t.innerHTML, {'preserve_newlines': false}));
+				t.innerHTML = '';
 			} catch(e) {showResult(e.name + ": " + e.message);}
 		});
 		function setExample(name) {

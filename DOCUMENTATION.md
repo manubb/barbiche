@@ -158,7 +158,8 @@ Other examples can be found [here](https://manubb.github.io/barbiche/demo.html#T
 ### HTML
 Inserting HTML is done with `{{{expression}}}`.
 
-* if `expression` is a Barbiche object `boolean: content`, if `boolean` is true and if `content` is not `null` or `undefined`, `content.toString()` is inserted as HTML
+* if `expression` is an instance of `Node`,  it is inserted
+* else if `expression` is a Barbiche object `boolean: content`, if `boolean` is true and if `content` is not `null` or `undefined`, `content.toString()` is inserted as HTML
 * else, if `expression` is not `null` or `undefined`, `expression.toString()` is inserted as HTML
 
 A simple example:

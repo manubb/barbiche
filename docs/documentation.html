@@ -20,16 +20,7 @@
 	<link rel="icon" type="image/png" href="favicon.png">
 </head>
 <body>
-	<template id="toc-template">
-		<div bb-repeat="h2: 'section'" class="item">
-			<a class="title" bb-attr="'#' + section.id: 'href'">
-				<b>{{section.text}}</b>
-			</a>
-			<div bb-if="section.h3.length" class="content menu">
-				<a bb-repeat="section.h3: 'subsection'" class="item" bb-attr=" '#' + subsection.id: 'href'">{{subsection.text}}</a>
-			</div>
-		</div>
-	</template>
+	
 	<div class="page-wrap">
 		<div class="ui stackable inverted massive menu">
 			<div class="ui container">
@@ -202,7 +193,8 @@ Backticks inside a backticked identifier have to be escaped: <code>\`</code>.</p
 <h3 id="html">HTML</h3>
 <p>Inserting HTML is done with <code>{{{expression}}}</code>.</p>
 <ul class="ui list">
-<li>if <code>expression</code> is a Barbiche object <code>boolean: content</code>, if <code>boolean</code> is true and if <code>content</code> is not <code>null</code> or <code>undefined</code>, <code>content.toString()</code> is inserted as HTML</li>
+<li>if <code>expression</code> is an instance of <code>Node</code>,  it is inserted</li>
+<li>else if <code>expression</code> is a Barbiche object <code>boolean: content</code>, if <code>boolean</code> is true and if <code>content</code> is not <code>null</code> or <code>undefined</code>, <code>content.toString()</code> is inserted as HTML</li>
 <li>else, if <code>expression</code> is not <code>null</code> or <code>undefined</code>, <code>expression.toString()</code> is inserted as HTML</li>
 </ul>
 <p>A simple example:</p>
