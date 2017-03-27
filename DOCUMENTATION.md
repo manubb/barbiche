@@ -116,7 +116,7 @@ Barbiche expressions support a subset of JavaScript:
 
 * boolean expressions: `true`, `false`, `||`, `&&`, `==`, `!=`, `<=`,`>=`, `<` ,`>` and `!`
 * null and undefined keywords: `null` and `undefined`
-* identifiers `my_text`, `my_html`
+* identifiers: `my_text`, `my_html`
 * arrays: `[]`, `[text, "string", 1.12]`
 * function calls: `my_function(obj)`, `JSON.stringify(JSON.parse(str))`
 * property accessors: `object.property` and `object[computed property]`
