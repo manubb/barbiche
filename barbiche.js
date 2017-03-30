@@ -3090,6 +3090,7 @@ var BB_IF = 0, BB_ALIAS = 1, BB_TEXT = 2, BB_HTML = 3,
 
 var globalAttr = 'global';
 var elseAttr = 'else';
+var inertAttr = 'inert';
 
 var TEMPLATE = 'TEMPLATE';
 
@@ -3169,6 +3170,7 @@ function Barbiche(opt) {
 	var prefixedGlobalAttr = prefix + globalAttr;
 	var prefixedGlobalAttrSelector = '[' + prefixedGlobalAttr + ']';
 	var prefixedElseAttr = prefix + elseAttr;
+	var prefixedInertAttr = prefix + inertAttr;
 
 	function createTemplate() {
 		return doc.createElement(TEMPLATE);
@@ -3180,7 +3182,9 @@ function Barbiche(opt) {
 
 	var compile_works = {};
 	compile_works[ELEMENT_NODE] = function(node, template) {
-		if (node.hasAttribute(prefixedAttrs[BB_REPEAT]) && node.nodeName != TEMPLATE) {
+		if (node.hasAttribute(prefixedAttrs[BB_REPEAT]) &&
+			(node.nodeName != TEMPLATE || node.hasAttribute(prefixedInertAttr))) {
+
 			if (node.hasAttribute(prefixedAttrs[BB_TEXT]) || node.hasAttribute(prefixedAttrs[BB_HTML]))
 				node.removeAttribute(prefixedAttrs[BB_REPEAT]);
 			else {
@@ -3216,7 +3220,9 @@ function Barbiche(opt) {
 				if (attr in prefixedAttrsObj) setAttr(attr, node.attributes[i].value);
 			}
 		}
-		if (node.nodeName == TEMPLATE && node.hasAttribute(prefixedElseAttr)) attrFound = true;
+		if (node.nodeName == TEMPLATE &&
+			(node.hasAttribute(prefixedElseAttr) || node.hasAttribute(prefixedInertAttr))) attrFound = true;
+
 		if (attrFound) node.setAttribute(prefixedGlobalAttr, JSON.stringify(bbAttrs));
 		if (node.nodeName == TEMPLATE) {
 			compile(node.content, template);
@@ -3349,7 +3355,7 @@ function Barbiche(opt) {
 						node.replaceWith(t.content);
 					})(createTemplate());
 				} else node.remove();
-			} else if (node.nodeName == TEMPLATE) {
+			} else if (node.nodeName == TEMPLATE && !node.hasAttribute(prefixedInertAttr)) {
 				if (bbAttrs.repeat) {
 					if (!nodeContext) {
 						nodeContext = {};
@@ -3412,8 +3418,13 @@ function Barbiche(opt) {
 						}
 					});
 				}
-				while((child = node.querySelector(prefixedGlobalAttrSelector))) {
-					works[ELEMENT_NODE](child, template);
+				if (node.nodeName == TEMPLATE) {
+					node.removeAttribute(prefixedInertAttr);
+					works[DOCUMENT_FRAGMENT_NODE](node.content, template);
+				} else {
+					while((child = node.querySelector(prefixedGlobalAttrSelector))) {
+						works[ELEMENT_NODE](child, template);
+					}
 				}
 			}
 			if (nodeContext) context.pop();
@@ -3435,7 +3446,8 @@ function Barbiche(opt) {
 	function Template(node) {
 		if (node instanceof BBObj) {
 			var name = node.name;
-			if (store[name]) return store[name];
+			if (name != null) name = name.toString();
+			if (name && store[name]) return store[name];
 			else {
 				var t = createTemplate();
 				t.innerHTML = node.value;
