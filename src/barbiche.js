@@ -358,7 +358,8 @@ function Barbiche(opt) {
 	function Template(node) {
 		if (node instanceof BBObj) {
 			var name = node.name;
-			if (store[name]) return store[name];
+			if (name != null) name = name.toString();
+			if (name && store[name]) return store[name];
 			else {
 				var t = createTemplate();
 				t.innerHTML = node.value;
