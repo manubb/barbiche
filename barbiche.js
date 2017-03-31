@@ -3076,7 +3076,7 @@ if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
 
 },{}],2:[function(require,module,exports){
 // Barbiche
-// version: 2.1.1
+// version: 2.2.0
 // author: Manuel Baclet <manuel@eda.sarl>
 // license: MIT
 
@@ -3403,9 +3403,10 @@ function Barbiche(opt) {
 					value = (template.closures[bbAttrs.attr])();
 					if (!Array.isArray(value)) value = [value];
 					value.forEach(function(item) {
-						var value = item.value;
-						var name = item.name && item.name.toString();
-						if (name && value != null) node.setAttribute(name, value);
+						if (item.value != null && item.name != null) {
+							var name = item.name.toString();
+							if (name) node.setAttribute(name, item.value);
+						}
 					});
 				}
 				if (bbAttrs.class) {
