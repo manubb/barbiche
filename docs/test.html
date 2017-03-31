@@ -615,6 +615,35 @@
 				});
 			});
 		});
+		describe('Inert', function() {
+			describe('basic bb-inert usage', function() {
+				it('should preserve the template element', function() {
+					var t = barbiche(barbiche.bbObj('<div id="t1"><template bb-inert><span>{{name}}</span></template></div>'));
+					var clone = t.merge({
+						name: "a"
+					});
+					clone.querySelector('#t1').innerHTML.should.equal('<template><span>a</span></template>');
+				});
+			});
+			describe('bb-inert, class and attribute', function() {
+				it('should preserve the template element with classes and attributes', function() {
+					var t = barbiche(barbiche.bbObj('<div id="t1"><template bb-class="species" bb-attr="name: \'id\'" bb-inert></template></div>'));
+					var clone = t.merge({
+						name: "a",
+						species: "b"
+					});
+					clone.querySelector('#a').classList.contains('b').should.be.true();
+					clone.querySelector('#a').nodeName.should.equal('TEMPLATE');
+				});
+			});
+			describe('bb-inert and loops', function() {
+				it('should preserve the template element while looping', function() {
+					var t = barbiche(barbiche.bbObj('<div id="t1"><template bb-repeat="[1, 2]: \'item\'" bb-inert>{{item}}</template></div>'));
+					var clone = t.merge();
+					clone.querySelector('#t1').innerHTML.should.equal('<template>1</template><template>2</template>');
+				});
+			});
+		});
 		mocha.run();
 	</script>
 </body>

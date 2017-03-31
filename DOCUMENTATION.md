@@ -110,6 +110,8 @@ Barbiche templates are decorated with special attributes which are evaluated in 
 
 and use `{{expression}}` and `{{{expression}}}` for merging text and HTML, respectively.
 
+An additional attribute `bb-inert` can be set on a `<template>` element so that Barbiche will consider it as any other non `<template>` element.
+
 ### Expressions
 
 Barbiche expressions support a subset of JavaScript:
@@ -291,7 +293,7 @@ will produce:
 Other examples can be found [here](https://manubb.github.io/barbiche/demo.html#Imports).
 
 ### Attributes
-A `bb-attr` attribute contains a Barbiche object or an array of Barbiche objects. For each object `value: name`, if `value` is not `undefined` or `null` and if `name.toString()` is not empty, attribute `name.toString()` is set on the current node with value `value`.
+A `bb-attr` attribute contains a Barbiche object or an array of Barbiche objects. For each object `value: name`, if `value` and `name` are not `undefined` or `null` and if `name.toString()` is not empty, attribute `name.toString()` is set on the current node with value `value`.
 
 A simple example:
 ```html
@@ -333,3 +335,26 @@ will produce:
 ```
 
 Other examples can be found [here](https://manubb.github.io/barbiche/demo.html#Classes).
+
+### Inert attribute
+A `bb-inert` attribute can be set on a `<template>` element so that Barbiche will consider the element as any other non `<template>` element.
+
+Note that a `<template>` element can not be decorated with both `bb-inert` and `bb-import` attributes.
+
+A simple example:
+```html
+<template id="inert">
+	<template><p>Not inert template</p></template>
+	<template bb-inert><p>Inert template</p></template>
+</template>
+```
+```js
+barbiche('inert').merge();
+```
+will produce:
+```html
+<p>Not inert template</p>
+<template><p>Inert template</p></template>
+```
+
+Other examples can be found [here](https://manubb.github.io/barbiche/demo.html#Inert).

@@ -73,7 +73,7 @@
 				<b>Template description</b>
 			</a>
 			<div class="content menu">
-				<a class="item" href="#template">&lt;template&gt;</a><a class="item" href="#decorations">Decorations</a><a class="item" href="#expressions">Expressions</a><a class="item" href="#text">Text</a><a class="item" href="#html">HTML</a><a class="item" href="#conditions">Conditions</a><a class="item" href="#aliases">Aliases</a><a class="item" href="#loops">Loops</a><a class="item" href="#imports">Imports</a><a class="item" href="#attributes">Attributes</a><a class="item" href="#classes">Classes</a>
+				<a class="item" href="#template">&lt;template&gt;</a><a class="item" href="#decorations">Decorations</a><a class="item" href="#expressions">Expressions</a><a class="item" href="#text">Text</a><a class="item" href="#html">HTML</a><a class="item" href="#conditions">Conditions</a><a class="item" href="#aliases">Aliases</a><a class="item" href="#loops">Loops</a><a class="item" href="#imports">Imports</a><a class="item" href="#attributes">Attributes</a><a class="item" href="#classes">Classes</a><a class="item" href="#inert-attribute">Inert attribute</a>
 			</div>
 		</div>
 	</div>
@@ -157,6 +157,7 @@ barbiche(bbObj(str));</textarea></div>
 <li><code>bb-class="expression"</code></li>
 </ol>
 <p>and use <code>{{expression}}</code> and <code>{{{expression}}}</code> for merging text and HTML, respectively.</p>
+<p>An additional attribute <code>bb-inert</code> can be set on a <code>&lt;template&gt;</code> element so that Barbiche will consider it as any other non <code>&lt;template&gt;</code> element.</p>
 <h3 id="expressions">Expressions</h3>
 <p>Barbiche expressions support a subset of JavaScript:</p>
 <ul class="ui list">
@@ -279,7 +280,7 @@ Backticks inside a backticked identifier have to be escaped: <code>\`</code>.</p
 &lt;/div&gt;</textarea></div>
 <p>Other examples can be found <a href="https://manubb.github.io/barbiche/demo.html#Imports">here</a>.</p>
 <h3 id="attributes">Attributes</h3>
-<p>A <code>bb-attr</code> attribute contains a Barbiche object or an array of Barbiche objects. For each object <code>value: name</code>, if <code>value</code> is not <code>undefined</code> or <code>null</code> and if <code>name.toString()</code> is not empty, attribute <code>name.toString()</code> is set on the current node with value <code>value</code>.</p>
+<p>A <code>bb-attr</code> attribute contains a Barbiche object or an array of Barbiche objects. For each object <code>value: name</code>, if <code>value</code> and <code>name</code> are not <code>undefined</code> or <code>null</code> and if <code>name.toString()</code> is not empty, attribute <code>name.toString()</code> is set on the current node with value <code>value</code>.</p>
 <p>A simple example:</p>
 <div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="attribute"&gt;
     &lt;div bb-attr="value: 'my-attr'"&gt;&lt;/div&gt;
@@ -305,7 +306,20 @@ Backticks inside a backticked identifier have to be escaped: <code>\`</code>.</p
 });</textarea></div>
 <p>will produce:</p>
 <div class="ui code raised segment hide"><textarea class="html language-html">&lt;div class="item my-class"&gt;&lt;/div&gt;</textarea></div>
-<p>Other examples can be found <a href="https://manubb.github.io/barbiche/demo.html#Classes">here</a>.</p></div>
+<p>Other examples can be found <a href="https://manubb.github.io/barbiche/demo.html#Classes">here</a>.</p>
+<h3 id="inert-attribute">Inert attribute</h3>
+<p>A <code>bb-inert</code> attribute can be set on a <code>&lt;template&gt;</code> element so that Barbiche will consider the element as any other non <code>&lt;template&gt;</code> element.</p>
+<p>Note that a <code>&lt;template&gt;</code> element can not be decorated with both <code>bb-inert</code> and <code>bb-import</code> attributes.</p>
+<p>A simple example:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="inert"&gt;
+    &lt;template&gt;&lt;p&gt;Not inert template&lt;/p&gt;&lt;/template&gt;
+    &lt;template bb-inert&gt;&lt;p&gt;Inert template&lt;/p&gt;&lt;/template&gt;
+&lt;/template&gt;</textarea></div>
+<div class="ui code raised segment hide"><textarea class="js language-js">barbiche('inert').merge();</textarea></div>
+<p>will produce:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;p&gt;Not inert template&lt;/p&gt;
+&lt;template&gt;&lt;p&gt;Inert template&lt;/p&gt;&lt;/template&gt;</textarea></div>
+<p>Other examples can be found <a href="https://manubb.github.io/barbiche/demo.html#Inert">here</a>.</p></div>
 			</div>
 		</div>
 	</div>
