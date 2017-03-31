@@ -88,7 +88,7 @@ Barbiche({
 ```
 
 * `delimiters` is an array containing two distinct one character strings that will be used as delimiters for text and HTML insertion. Note that backslash character (`\`) is used for escaping delimiters and cannot be used as a delimiter. Some examples can be found [here](https://manubb.github.io/barbiche/demo.html#Delimiters).
-* `prefix` is the word used to prefix Barbiche attributes. Internally, Barbiche uses the following attributes: `bb-[if|else|alias|text|html|repeat|import|attr|class|global]`. If you need to use one of these attributes, you can set Barbiche prefix according to your needs.
+* `prefix` is the word used to prefix Barbiche attributes. Internally, Barbiche uses the following attributes: `bb-[if|else|alias|text|html|repeat|import|attr|class|global|inert]`. If you need to use one of these attributes, you can set Barbiche prefix according to your needs.
 * `document` is the HTML document where Barbiche will search for templates.
 * `destructive` is a boolean that allows Barbiche to modify the HTML of the registered templates. (If false, Barbiche will use deep clones of the templates leaving your HTML untouched.)
 

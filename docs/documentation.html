@@ -139,7 +139,7 @@ barbiche(bbObj(str));</textarea></div>
 });</textarea></div>
 <ul class="ui list">
 <li><code>delimiters</code> is an array containing two distinct one character strings that will be used as delimiters for text and HTML insertion. Note that backslash character (<code>\</code>) is used for escaping delimiters and cannot be used as a delimiter. Some examples can be found <a href="https://manubb.github.io/barbiche/demo.html#Delimiters">here</a>.</li>
-<li><code>prefix</code> is the word used to prefix Barbiche attributes. Internally, Barbiche uses the following attributes: <code>bb-[if|else|alias|text|html|repeat|import|attr|class|global]</code>. If you need to use one of these attributes, you can set Barbiche prefix according to your needs.</li>
+<li><code>prefix</code> is the word used to prefix Barbiche attributes. Internally, Barbiche uses the following attributes: <code>bb-[if|else|alias|text|html|repeat|import|attr|class|global|inert]</code>. If you need to use one of these attributes, you can set Barbiche prefix according to your needs.</li>
 <li><code>document</code> is the HTML document where Barbiche will search for templates.</li>
 <li><code>destructive</code> is a boolean that allows Barbiche to modify the HTML of the registered templates. (If false, Barbiche will use deep clones of the templates leaving your HTML untouched.)</li>
 </ul>
