@@ -371,7 +371,7 @@ function Barbiche(opt) {
 		if (node instanceof BBObj) {
 			var name = node.name;
 			if (name != null) name = name.toString();
-			if (name && store[name]) return store[name];
+			if (name && store.hasOwnProperty(name)) return store[name];
 			else {
 				var t = createTemplate();
 				t.innerHTML = node.value;
@@ -379,7 +379,7 @@ function Barbiche(opt) {
 				node = t;
 			}
 		} else if (typeof(node) == 'string') {
-			if (store[node]) return store[node];
+			if (store.hasOwnProperty(node)) return store[node];
 			else node = doc.querySelector('#' + node);
 		}
 		if (!(this instanceof Template)) {
@@ -405,12 +405,11 @@ function Barbiche(opt) {
 	Template.bbObj = function(a, b) {return new BBObj(a, b);};
 
 	Template.clean = function(name) {
-		if (name) delete store[name];
-		else {
+		if (name === undefined) {
 			for (var key in store) {
 				delete store[key];
 			}
-		}
+		} else if (typeof(name) == 'string') delete store[name];
 	};
 
 	/* Public methods */
