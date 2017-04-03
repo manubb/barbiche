@@ -106,7 +106,7 @@ function Barbiche(opt) {
 	var compile_works = {};
 	compile_works[ELEMENT_NODE] = function(node, template) {
 		if (node.hasAttribute(prefixedAttrs[BB_REPEAT]) &&
-			(node.nodeName != TEMPLATE || node.hasAttribute(prefixedInertAttr))) {
+			(node.nodeName !== TEMPLATE || node.hasAttribute(prefixedInertAttr))) {
 
 			if (node.hasAttribute(prefixedAttrs[BB_TEXT]) || node.hasAttribute(prefixedAttrs[BB_HTML]))
 				node.removeAttribute(prefixedAttrs[BB_REPEAT]);
@@ -143,11 +143,11 @@ function Barbiche(opt) {
 				if (attr in prefixedAttrsObj) setAttr(attr, node.attributes[i].value);
 			}
 		}
-		if (node.nodeName == TEMPLATE &&
+		if (node.nodeName === TEMPLATE &&
 			(node.hasAttribute(prefixedElseAttr) || node.hasAttribute(prefixedInertAttr))) attrFound = true;
 
 		if (attrFound) node.setAttribute(prefixedGlobalAttr, JSON.stringify(bbAttrs));
-		if (node.nodeName == TEMPLATE) {
+		if (node.nodeName === TEMPLATE) {
 			compile(node.content, template);
 			if (!attrFound) node.replaceWith(node.content);
 		} else {
@@ -278,7 +278,7 @@ function Barbiche(opt) {
 						node.replaceWith(t.content);
 					})(createTemplate());
 				} else node.remove();
-			} else if (node.nodeName == TEMPLATE && !node.hasAttribute(prefixedInertAttr)) {
+			} else if (node.nodeName === TEMPLATE && !node.hasAttribute(prefixedInertAttr)) {
 				if (bbAttrs.repeat) {
 					if (!nodeContext) {
 						nodeContext = {};
@@ -342,7 +342,7 @@ function Barbiche(opt) {
 						}
 					});
 				}
-				if (node.nodeName == TEMPLATE) {
+				if (node.nodeName === TEMPLATE) {
 					node.removeAttribute(prefixedInertAttr);
 					works[DOCUMENT_FRAGMENT_NODE](node.content, template);
 				} else {
@@ -378,7 +378,7 @@ function Barbiche(opt) {
 				if (name) t.id = name;
 				node = t;
 			}
-		} else if (typeof(node) == 'string') {
+		} else if (typeof(node) === 'string') {
 			if (store.hasOwnProperty(node)) return store[node];
 			else node = doc.querySelector('#' + node);
 		}
@@ -386,7 +386,7 @@ function Barbiche(opt) {
 			return new Template(node);
 		}
 		// <template> polyfill does not like: (node instanceof HTMLTemplateElement)
-		if (node instanceof HTMLElement && node.nodeName == TEMPLATE) {
+		if (node instanceof HTMLElement && node.nodeName === TEMPLATE) {
 			if (node.id) store[node.id] = this;
 			if (destructive) {
 				this.node = node;
@@ -409,7 +409,7 @@ function Barbiche(opt) {
 			for (var key in store) {
 				delete store[key];
 			}
-		} else if (typeof(name) == 'string') delete store[name];
+		} else if (typeof(name) === 'string') delete store[name];
 	};
 
 	/* Public methods */
