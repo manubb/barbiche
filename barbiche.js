@@ -3099,6 +3099,12 @@ var ELEMENT_NODE = Node.ELEMENT_NODE, TEXT_NODE = Node.TEXT_NODE,
 
 var ArrayFrom = Array.prototype.slice;
 
+// <template> polyfill #47b57a only patches document.createElement,
+// not Document.prototype.createElement (unlike version 1.0.0-rc.1)
+function createTemplate() {
+	return document.createElement(TEMPLATE);
+}
+
 /* Shared context */
 
 var context = {
@@ -3172,10 +3178,6 @@ function Barbiche(opt) {
 	var prefixedElseAttr = prefix + elseAttr;
 	var prefixedInertAttr = prefix + inertAttr;
 
-	function createTemplate() {
-		return doc.createElement(TEMPLATE);
-	}
-
 	var store = {};
 
 	/* Compilation helpers */
@@ -3183,7 +3185,7 @@ function Barbiche(opt) {
 	var compile_works = {};
 	compile_works[ELEMENT_NODE] = function(node, template) {
 		if (node.hasAttribute(prefixedAttrs[BB_REPEAT]) &&
-			(node.nodeName != TEMPLATE || node.hasAttribute(prefixedInertAttr))) {
+			(node.nodeName !== TEMPLATE || node.hasAttribute(prefixedInertAttr))) {
 
 			if (node.hasAttribute(prefixedAttrs[BB_TEXT]) || node.hasAttribute(prefixedAttrs[BB_HTML]))
 				node.removeAttribute(prefixedAttrs[BB_REPEAT]);
@@ -3197,7 +3199,7 @@ function Barbiche(opt) {
 						node.removeAttribute(attr);
 					}
 				});
-				node.before(wrapper);
+				node.parentNode.insertBefore(wrapper, node);
 				wrapper.content.appendChild(node);
 				node = wrapper;
 			}
@@ -3220,13 +3222,13 @@ function Barbiche(opt) {
 				if (attr in prefixedAttrsObj) setAttr(attr, node.attributes[i].value);
 			}
 		}
-		if (node.nodeName == TEMPLATE &&
+		if (node.nodeName === TEMPLATE &&
 			(node.hasAttribute(prefixedElseAttr) || node.hasAttribute(prefixedInertAttr))) attrFound = true;
 
 		if (attrFound) node.setAttribute(prefixedGlobalAttr, JSON.stringify(bbAttrs));
-		if (node.nodeName == TEMPLATE) {
+		if (node.nodeName === TEMPLATE) {
 			compile(node.content, template);
-			if (!attrFound) node.replaceWith(node.content);
+			if (!attrFound) node.parentNode.replaceChild(node.content, node);
 		} else {
 			ArrayFrom.call(node.childNodes).forEach(function(child) {
 				compile(child, template);
@@ -3282,24 +3284,24 @@ function Barbiche(opt) {
 		return function(node, template) {
 			while((match = textNodeRegExp.exec(node.nodeValue))) {
 				if (match[3]) {
-					newNode = doc.createTextNode(unescapePlainText(match[3]));
-					node.before(newNode);
+					newNode = node.ownerDocument.createTextNode(unescapePlainText(match[3]));
+					node.parentNode.insertBefore(newNode, node);
 				} else if (match[2]) {
 					newNode = createTemplate();
 					newNode.setAttribute(prefixedAttrs[BB_TEXT], unescapeTextHTML(match[2]));
-					node.before(newNode);
+					node.parentNode.insertBefore(newNode, node);
 					compile(newNode, template);
 				} else if (match[1]) {
 					newNode = createTemplate();
 					newNode.setAttribute(prefixedAttrs[BB_HTML], unescapeTextHTML(match[1]));
-					node.before(newNode);
+					node.parentNode.insertBefore(newNode, node);
 					compile(newNode, template);
 				} else {
 					textNodeRegExp.lastIndex = 0;
 					throw new ParseError(match);
 				}
 			}
-			node.remove();
+			node.parentNode.removeChild(node);
 		};
 	})();
 
@@ -3325,12 +3327,12 @@ function Barbiche(opt) {
 			if (bbAttrs.if) {
 				value = (template.closures[bbAttrs.if])();
 				if (node.nextElementSibling && node.nextElementSibling.hasAttribute(prefixedElseAttr)) {
-					if (value) node.nextElementSibling.remove();
+					if (value) node.parentNode.removeChild(node.nextElementSibling);
 					else {
 						node.nextElementSibling.removeAttribute(prefixedElseAttr);
-						return node.remove();
+						return node.parentNode.removeChild(node);
 					}
-				} else if (!value) return node.remove();
+				} else if (!value) return node.parentNode.removeChild(node);
 			}
 			if (bbAttrs.alias) {
 				value = (template.closures[bbAttrs.alias])();
@@ -3344,36 +3346,36 @@ function Barbiche(opt) {
 			if (bbAttrs.text) {
 				value = (template.closures[bbAttrs.text])();
 				if (value != null) {
-					node.replaceWith(value.toString());
-				} else node.remove();
+					node.parentNode.replaceChild(node.ownerDocument.createTextNode(value), node);
+				} else node.parentNode.removeChild(node);
 			} else if (bbAttrs.html) {
 				value = (template.closures[bbAttrs.html])();
-				if (value instanceof Node) node.replaceWith(value);
+				if (value instanceof Node) node.parentNode.replaceChild(value, node);
 				else if (value != null) {
 					(function(t) {
 						t.innerHTML = value;
-						node.replaceWith(t.content);
+						node.parentNode.replaceChild(t.content, node);
 					})(createTemplate());
-				} else node.remove();
-			} else if (node.nodeName == TEMPLATE && !node.hasAttribute(prefixedInertAttr)) {
+				} else node.parentNode.removeChild(node);
+			} else if (node.nodeName === TEMPLATE && !node.hasAttribute(prefixedInertAttr)) {
 				if (bbAttrs.repeat) {
 					if (!nodeContext) {
 						nodeContext = {};
 						context.push(nodeContext);
 					}
 					value = (template.closures[bbAttrs.repeat])();
-					var order = value._order || 'before';
+					var after = (value._order === 'after');
 					if (!Array.isArray(value)) value = [value];
 
 					var reduceInit = (function(str) {
 						var closure = template.closures[str];
 						if (closure) return function() {
 							var clone = Template(closure())._clone();
-							node[order](works[DOCUMENT_FRAGMENT_NODE](clone.node.content, clone));
+							node.parentNode.insertBefore(works[DOCUMENT_FRAGMENT_NODE](clone.node.content, clone),
+								after ? node.nextSibling : node);
 						}; else return function() {
-							node[order](works[DOCUMENT_FRAGMENT_NODE](
-								node.cloneNode(true).content, template
-							));
+							node.parentNode.insertBefore(works[DOCUMENT_FRAGMENT_NODE](node.cloneNode(true).content,
+								template), after ? node.nextSibling : node);
 						};
 					})(bbAttrs.import);
 
@@ -3393,11 +3395,11 @@ function Barbiche(opt) {
 				} else if (bbAttrs.import) {
 					value = (template.closures[bbAttrs.import])();
 					var clone = Template(value)._clone();
-					node.before(works[DOCUMENT_FRAGMENT_NODE](clone.node.content, clone));
+					node.parentNode.insertBefore(works[DOCUMENT_FRAGMENT_NODE](clone.node.content, clone), node);
 				} else {
-					node.before(works[DOCUMENT_FRAGMENT_NODE](node.content, template));
+					node.parentNode.insertBefore(works[DOCUMENT_FRAGMENT_NODE](node.content, template), node);
 				}
-				node.remove();
+				node.parentNode.removeChild(node);
 			} else {
 				if (bbAttrs.attr) {
 					value = (template.closures[bbAttrs.attr])();
@@ -3419,7 +3421,7 @@ function Barbiche(opt) {
 						}
 					});
 				}
-				if (node.nodeName == TEMPLATE) {
+				if (node.nodeName === TEMPLATE) {
 					node.removeAttribute(prefixedInertAttr);
 					works[DOCUMENT_FRAGMENT_NODE](node.content, template);
 				} else {
@@ -3455,19 +3457,20 @@ function Barbiche(opt) {
 				if (name) t.id = name;
 				node = t;
 			}
-		} else if (typeof(node) == 'string') {
+		} else if (typeof(node) === 'string') {
 			if (store.hasOwnProperty(node)) return store[node];
 			else node = doc.querySelector('#' + node);
 		}
 		if (!(this instanceof Template)) {
 			return new Template(node);
 		}
-		// <template> polyfill does not like: (node instanceof HTMLTemplateElement)
-		if (node instanceof HTMLElement && node.nodeName == TEMPLATE) {
+		// <template> polyfill #47b57a does not support (node instanceof HTMLTemplateElement)
+		// version 1.0.0-rc.1 does mostly
+		if (node instanceof HTMLElement && node.nodeName === TEMPLATE) {
 			if (node.id) store[node.id] = this;
 			if (destructive) {
 				this.node = node;
-				node.remove();
+				if (node.parentNode) node.parentNode.removeChild(node);
 			} else this.node = node.cloneNode(true);
 			this.ready = false;
 		} else {
@@ -3486,7 +3489,7 @@ function Barbiche(opt) {
 			for (var key in store) {
 				delete store[key];
 			}
-		} else if (typeof(name) == 'string') delete store[name];
+		} else if (typeof(name) === 'string') delete store[name];
 	};
 
 	/* Public methods */
