@@ -18,7 +18,7 @@
   "main": "barbiche.js",
   "scripts": {
     "build:doc": "npm run build && cp ./node_modules/mocha/mocha.css ./docs/css && cp ./node_modules/semantic-ui-css/semantic.min.css ./docs/css && cp -r ./node_modules/semantic-ui-css/themes ./docs/css && cp barbiche.min.js ./docs/js/ && ./node_modules/uglify-js/bin/uglifyjs ./node_modules/codemirror/lib/codemirror.js ./node_modules/codemirror/mode/xml/xml.js ./node_modules/codemirror/mode/javascript/javascript.js ./node_modules/codemirror/mode/htmlmixed/htmlmixed.js ./node_modules/js-beautify/js/lib/beautify-html.js -m -c -o ./docs/js/editor.min.js && cp ./node_modules/codemirror/lib/codemirror.css ./docs/css && cp polyfills.min.js ./docs/js && ./node_modules/uglify-js/bin/uglifyjs ./node_modules/mocha/mocha.js ./node_modules/should/should.js -m -c -o ./docs/js/test.min.js && cd scripts && ./makeDocs.js && cd ..",
-    "build:polyfill": "./node_modules/uglify-js/bin/uglifyjs ./node_modules/dom4/build/dom4.max.js ./node_modules/template/template.js -m -c -o polyfills.min.js",
+    "build:polyfill": "./node_modules/uglify-js/bin/uglifyjs ./node_modules/classlist.js/classList.js ./node_modules/template/template.js -m -c -o polyfills.min.js",
     "build:parser": "./node_modules/jison-gho/lib/cli.js --no-default-action ./src/parser.jison",
     "build:js": "./node_modules/browserify/bin/cmd.js ./src/barbiche.js --standalone Barbiche > barbiche.js",
     "build:uglify": "./node_modules/uglify-js/bin/uglifyjs barbiche.js -m -c -o barbiche.min.js",
@@ -26,8 +26,8 @@
   },
   "devDependencies": {
     "browserify": "^14.0.0",
+    "classlist.js": "^1.1.20150312",
     "codemirror": "^5.23.0",
-    "dom4": "^1.8.3",
     "jison-gho": "^0.4.18-172",
     "js-beautify": "^1.6.9",
     "jsdom": "^9.11.0",
