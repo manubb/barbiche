@@ -75,6 +75,13 @@
 			<div class="content menu">
 				<a class="item" href="#template">&lt;template&gt;</a><a class="item" href="#decorations">Decorations</a><a class="item" href="#expressions">Expressions</a><a class="item" href="#text">Text</a><a class="item" href="#html">HTML</a><a class="item" href="#conditions">Conditions</a><a class="item" href="#aliases">Aliases</a><a class="item" href="#loops">Loops</a><a class="item" href="#imports">Imports</a><a class="item" href="#attributes">Attributes</a><a class="item" href="#classes">Classes</a><a class="item" href="#inert-attribute">Inert attribute</a>
 			</div>
+		</div><div class="item">
+			<a class="title" href="#template-polyfill-caveats">
+				<b>Template polyfill caveats</b>
+			</a>
+			<div class="content menu">
+				<a class="item" href="#subdocument-templates">Subdocument templates</a><a class="item" href="#inherent-limitation">Inherent limitation</a>
+			</div>
 		</div>
 	</div>
 					</div>
@@ -86,8 +93,8 @@
 <h3 id="polyfills">Polyfills</h3>
 <p>For decent browser support, using some polyfills is required. Good results can be obtained with:</p>
 <ul class="ui list">
-<li><a href="https://github.com/WebReflection/dom4">DOM4</a> (available as npm package dom4)</li>
-<li><a href="https://github.com/webcomponents/template">template</a> (no npm package, using commit #47b57a is currently recommended)</li>
+<li><a href="https://github.com/webcomponents/template">template</a> (no npm package, using commit #47b57a is recommended if you need IE9 support)</li>
+<li><a href="https://github.com/eligrey/classList.js">classList.js</a> (available as npm package classlist.js, only needed for IE9 support)</li>
 </ul>
 <p>Those polyfills are included in Barbiche package in <code>polyfills.min.js</code>.</p>
 <h4 class="ui horizontal header divider"></h4><h2 id="barbiche-api">Barbiche API</h2>
@@ -319,7 +326,29 @@ Backticks inside a backticked identifier have to be escaped: <code>\`</code>.</p
 <p>will produce:</p>
 <div class="ui code raised segment hide"><textarea class="html language-html">&lt;p&gt;Not inert template&lt;/p&gt;
 &lt;template&gt;&lt;p&gt;Inert template&lt;/p&gt;&lt;/template&gt;</textarea></div>
-<p>Other examples can be found <a href="https://manubb.github.io/barbiche/demo.html#Inert">here</a>.</p></div>
+<p>Other examples can be found <a href="https://manubb.github.io/barbiche/demo.html#Inert">here</a>.</p>
+<h4 class="ui horizontal header divider"></h4><h2 id="template-polyfill-caveats">Template polyfill caveats</h2>
+<h3 id="subdocument-templates">Subdocument templates</h3>
+<p>Templates included in subdocuments (such as HTMLImports) need to be bootstrapped before being usable by calling:</p>
+<div class="ui code raised segment hide"><textarea class="js language-js">if (window.HTMLTemplateElement.bootstrap) window.HTMLTemplateElement.bootstrap(otherDoc);</textarea></div>
+<p>Commit #47b57a of the polyfill only patches <code>document.createElement</code> and <code>&lt;template&gt;</code> can only be properly created from the main document: <code>otherDoc.createElement('TEMPLATE')</code> does not work as expected. This limitation is no longer valid with future version 1.0.0 of the polyfill (that targets mostly IE11, no IE9/10 support).</p>
+<h3 id="inherent-limitation">Inherent limitation</h3>
+<p>In some rare situations, the HTML parser may break the template content. For example:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="table-fragment"&gt;
+    &lt;tr&gt;
+        &lt;td&gt;a&lt;/td&gt;&lt;td&gt;b&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/template&gt;</textarea></div>
+<p>will give you an empty template. A workaround for this is to use a <code>&lt;script&gt;</code> tag:</p>
+<div class="ui code raised segment hide"><textarea class="html language-html">&lt;script id="table-fragment" type="text/barbiche-template"&gt;
+    &lt;tr&gt;
+        &lt;td&gt;a&lt;/td&gt;&lt;td&gt;b&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/script&gt;</textarea></div>
+<p>and then register the template with:</p>
+<div class="ui code raised segment hide"><textarea class="js language-js">var script = document.querySelector('#table-fragment');
+var bbObj = barbiche.bbObj;
+barbiche(bbObj(script.text, script.id));</textarea></div></div>
 			</div>
 		</div>
 	</div>

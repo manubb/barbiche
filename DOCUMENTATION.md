@@ -9,8 +9,8 @@ Barbiche is available as a [npm](https://www.npmjs.com/) package:
 ### Polyfills
 
 For decent browser support, using some polyfills is required. Good results can be obtained with:
-* [DOM4](https://github.com/WebReflection/dom4) (available as npm package dom4)
-* [template](https://github.com/webcomponents/template) (no npm package, using commit #47b57a is currently recommended)
+* [template](https://github.com/webcomponents/template) (no npm package, using commit #47b57a is recommended if you need IE9 support)
+* [classList.js](https://github.com/eligrey/classList.js) (available as npm package classlist.js, only needed for IE9 support)
 
 Those polyfills are included in Barbiche package in `polyfills.min.js`.
 
@@ -358,3 +358,41 @@ will produce:
 ```
 
 Other examples can be found [here](https://manubb.github.io/barbiche/demo.html#Inert).
+
+## Template polyfill caveats
+
+### Subdocument templates
+
+Templates included in subdocuments (such as HTMLImports) need to be bootstrapped before being usable by calling:
+```js
+if (window.HTMLTemplateElement.bootstrap) window.HTMLTemplateElement.bootstrap(otherDoc);
+```
+
+Commit #47b57a of the polyfill only patches `document.createElement` and `<template>` can only be properly created from the main document: `otherDoc.createElement('TEMPLATE')` does not work as expected. This limitation is no longer valid with future version 1.0.0 of the polyfill (that targets mostly IE11, no IE9/10 support).
+
+### Inherent limitation
+
+In some rare situations, the HTML parser may break the template content. For example:
+
+```html
+<template id="table-fragment">
+	<tr>
+		<td>a</td><td>b</td>
+	</tr>
+</template>
+```
+will give you an empty template. A workaround for this is to use a `<script>` tag:
+```html
+<script id="table-fragment" type="text/barbiche-template">
+	<tr>
+		<td>a</td><td>b</td>
+	</tr>
+</script>
+```
+and then register the template with:
+```js
+var script = document.querySelector('#table-fragment');
+var bbObj = barbiche.bbObj;
+barbiche(bbObj(script.text, script.id));
+
+```
