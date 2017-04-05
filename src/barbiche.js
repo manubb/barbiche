@@ -419,9 +419,9 @@ function Barbiche(opt) {
 
 	Template.prototype.merge = function() {
 		var clone = this._clone();
-		var args = new Array(arguments.length);
-		for(var i = 0; i < args.length; ++i) {
-			args[i] = arguments[i];
+		var args = [];
+		for(var i = 0; i < arguments.length; ++i) {
+			if (arguments[i] != null) args.push(arguments[i]);
 		}
 		var savedContext = context.get();
 		context.set(args);
