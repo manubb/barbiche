@@ -300,11 +300,15 @@ function Barbiche(opt) {
 						var closure = template.closures[str];
 						if (closure) return function() {
 							var clone = Template(closure())._clone();
-							node.parentNode.insertBefore(works[DOCUMENT_FRAGMENT_NODE](clone.node.content, clone),
-								after ? node.nextSibling : node);
+							node.parentNode.insertBefore(
+								works[DOCUMENT_FRAGMENT_NODE](clone.node.content, clone),
+								after ? node.nextSibling : node
+							);
 						}; else return function() {
-							node.parentNode.insertBefore(works[DOCUMENT_FRAGMENT_NODE](node.cloneNode(true).content,
-								template), after ? node.nextSibling : node);
+							node.parentNode.insertBefore(
+								works[DOCUMENT_FRAGMENT_NODE](node.cloneNode(true).content, template),
+								after ? node.nextSibling : node
+							);
 						};
 					})(bbAttrs.import);
 
@@ -324,9 +328,15 @@ function Barbiche(opt) {
 				} else if (bbAttrs.import) {
 					value = (template.closures[bbAttrs.import])();
 					var clone = Template(value)._clone();
-					node.parentNode.insertBefore(works[DOCUMENT_FRAGMENT_NODE](clone.node.content, clone), node);
+					node.parentNode.insertBefore(
+						works[DOCUMENT_FRAGMENT_NODE](clone.node.content, clone),
+						node
+					);
 				} else {
-					node.parentNode.insertBefore(works[DOCUMENT_FRAGMENT_NODE](node.content, template), node);
+					node.parentNode.insertBefore(
+						works[DOCUMENT_FRAGMENT_NODE](node.content, template),
+						node
+					);
 				}
 				node.parentNode.removeChild(node);
 			} else {
