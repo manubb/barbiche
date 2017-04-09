@@ -622,7 +622,7 @@
 					var clone = t.merge({
 						name: "a"
 					});
-					clone.querySelector('#t1').innerHTML.should.equal('<template><span>a</span></template>');
+					clone.querySelector('template').innerHTML.should.equal('<span>a</span>');
 				});
 			});
 			describe('bb-inert, class and attribute', function() {
@@ -640,7 +640,11 @@
 				it('should preserve the template element while looping', function() {
 					var t = barbiche(barbiche.bbObj('<div id="t1"><template bb-repeat="[1, 2]: \'item\'" bb-inert>{{item}}</template></div>'));
 					var clone = t.merge();
-					clone.querySelector('#t1').innerHTML.should.equal('<template>1</template><template>2</template>');
+					var templates = Array.prototype.slice.call(clone.querySelector('#t1').childNodes);
+					Should(templates.length).equal(2);
+					templates.forEach(function(item, index) {
+						item.innerHTML.should.equal((index + 1) + '');
+					});
 				});
 			});
 		});

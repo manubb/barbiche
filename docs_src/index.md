@@ -67,9 +67,9 @@ Barbiche requires support of `<template>` element and basic support of `element.
 |----------|------------|---------------------|
 |Chrome    |&ge;26      |**&ge;15** (at least)|
 |Firefox   |&ge;22      |**&ge;20**           |
-|IE/Edge   |&ge;13      |**&ge;9**            |
+|IE/Edge   |No support  |**&ge;9**            |
 |Opera     |&ge;15      |**&ge;11.6**         |
-|Safari    |&ge;9       |**&ge;5.1**          |
+|Safari    |&ge;9       |**&ge;6.2**          |
 
 
 Polyfills, once minified and gzipped, weight an additionnal 3KB.
