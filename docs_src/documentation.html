@@ -18,17 +18,18 @@
 	<link rel="stylesheet" type="text/css" href="css/semantic.min.css">
 	<link rel="stylesheet" type="text/css" href="css/codemirror.css">
 	<link rel="stylesheet" href="css/custom.css">
+	<script type="text/javascript" src="js/semantic.min.js"></script>
 	<script type="text/javascript" src="js/editor.min.js"></script>
 	<link rel="icon" type="image/png" href="favicon.png"/>
 </head>
 <body>
 	<template id="toc-template">
-		<div bb-repeat="h2: 'section'" class="item">
+		<div bb-repeat="h2: 'section'" class="item outer">
 			<a class="title" bb-attr="'#' + section.id: 'href'">
 				<b>{{section.text}}</b>
 			</a>
 			<div bb-if="section.h3.length" class="content menu">
-				<a bb-repeat="section.h3: 'subsection'" class="item" bb-attr=" '#' + subsection.id: 'href'">{{subsection.text}}</a>
+				<a bb-repeat="section.h3: 'subsection'" class="item inner" bb-attr=" '#' + subsection.id: 'href'" bb-class="_section_ == 0 && _subsection_ == 0: 'active'">{{subsection.text}}</a>
 			</div>
 		</div>
 	</template>
@@ -62,7 +63,7 @@
 		<div class="main ui container">
 			<div  class="ui vertical stripe segment">
 				<div id="toc" class="ui dividing right rail">
-					<div>
+					<div class="ui sticky fixed top">
 						<h4 class="ui header">Table of content</h4>
 						<div id="toc-menu" class="ui vertical following fluid text menu"></div>
 					</div>
@@ -82,21 +83,21 @@
 		</div>
 	</div>
 	<script>
-		function scrollTo(target) {
-			document.querySelector(target).scrollIntoView();
-		}
 		document.addEventListener('DOMContentLoaded', function() {
-			document.querySelector('#toc-menu').addEventListener('click', function(e) {
-				e.preventDefault();
-				var target = e.target;
-				while(target !== this && target.nodeName != 'A') {target = target.parentNode;}
-				if (target !== this) {
-					var href = target.getAttribute('href');
-					if (href) {
-						scrollTo(href);
-						window.history && window.history.replaceState(null, href.substring(1), href);
-					}
-				}
+			var activeItem = $('#toc-menu').find('.item.active');
+
+			$('#toc-menu').on('click', 'a', function(event) {
+				var id = $(this).attr('href').replace('#', ''),
+						$element = $('#' + id),
+						position = $element.offset().top - 40;
+				$('html, body')
+					.animate({
+						scrollTop: position
+					}, 250);
+				location.hash = '#' + id;
+				event.stopImmediatePropagation();
+				event.preventDefault();
+				return false;
 			});
 
 			Array.prototype.slice.call(document.querySelectorAll('textarea.language-js')).forEach(function(js) {
@@ -118,6 +119,33 @@
 					indentWithTabs: true,
 					readOnly: true
 				});
+			});
+			$('.sticky').sticky({
+				silent: true,
+				context: $('.main'),
+				offset: 100
+			});
+
+			function next() {
+				activeItem.removeClass('active');
+				activeItem = $('#toc-menu').find('[href="#' + this.id + '"]');
+				activeItem.addClass('active');
+			}
+
+			function previous() {
+				activeItem.removeClass('active');
+				if (activeItem.prev('.item.inner').length > 0) activeItem = activeItem.prev('.item.inner');
+				else if (activeItem.closest('.item.outer').prev().length) {
+					activeItem = activeItem.closest('.item.outer').prev().find('.item.inner:last-child')
+				}
+				activeItem.addClass('active');
+			}
+			$('h3').visibility({
+				observeChanges: false,
+				once: false,
+				offset: 50,
+				onTopPassed: next,
+				onTopPassedReverse: previous
 			});
 		});
 	</script>

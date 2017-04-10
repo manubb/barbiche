@@ -36,8 +36,8 @@ body {
 	padding: 5em 0em;
 }
 
-#toc > div {
-	position: fixed;
+#toc-menu > div:last-child {
+	padding-bottom: 30px;
 }
 
 .masthead h1.ui.header {

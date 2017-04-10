@@ -16,6 +16,7 @@
 	<link rel="stylesheet" type="text/css" href="css/semantic.min.css">
 	<link rel="stylesheet" type="text/css" href="css/codemirror.css">
 	<link rel="stylesheet" href="css/custom.css">
+	<script type="text/javascript" src="js/semantic.min.js"></script>
 	<script type="text/javascript" src="js/editor.min.js"></script>
 	<link rel="icon" type="image/png" href="favicon.png">
 </head>
@@ -51,36 +52,36 @@
 		<div class="main ui container">
 			<div class="ui vertical stripe segment">
 				<div id="toc" class="ui dividing right rail">
-					<div>
+					<div class="ui sticky fixed top">
 						<h4 class="ui header">Table of content</h4>
 						<div id="toc-menu" class="ui vertical following fluid text menu">
-		<div class="item">
+		<div class="item outer">
 			<a class="title" href="#setup">
 				<b>Setup</b>
 			</a>
 			<div class="content menu">
-				<a class="item" href="#installation">Installation</a><a class="item" href="#polyfills">Polyfills</a>
+				<a class="item inner active" href="#installation">Installation</a><a class="item inner" href="#polyfills">Polyfills</a>
 			</div>
-		</div><div class="item">
+		</div><div class="item outer">
 			<a class="title" href="#barbiche-api">
 				<b>Barbiche API</b>
 			</a>
 			<div class="content menu">
-				<a class="item" href="#common-usage">Common usage</a><a class="item" href="#barbiche-objects">Barbiche objects</a><a class="item" href="#settings">Settings</a>
+				<a class="item inner" href="#common-usage">Common usage</a><a class="item inner" href="#barbiche-objects">Barbiche objects</a><a class="item inner" href="#settings">Settings</a>
 			</div>
-		</div><div class="item">
+		</div><div class="item outer">
 			<a class="title" href="#template-description">
 				<b>Template description</b>
 			</a>
 			<div class="content menu">
-				<a class="item" href="#template">&lt;template&gt;</a><a class="item" href="#decorations">Decorations</a><a class="item" href="#expressions">Expressions</a><a class="item" href="#text">Text</a><a class="item" href="#html">HTML</a><a class="item" href="#conditions">Conditions</a><a class="item" href="#aliases">Aliases</a><a class="item" href="#loops">Loops</a><a class="item" href="#imports">Imports</a><a class="item" href="#attributes">Attributes</a><a class="item" href="#classes">Classes</a><a class="item" href="#inert-attribute">Inert attribute</a>
+				<a class="item inner" href="#template">&lt;template&gt;</a><a class="item inner" href="#decorations">Decorations</a><a class="item inner" href="#expressions">Expressions</a><a class="item inner" href="#text">Text</a><a class="item inner" href="#html">HTML</a><a class="item inner" href="#conditions">Conditions</a><a class="item inner" href="#aliases">Aliases</a><a class="item inner" href="#loops">Loops</a><a class="item inner" href="#imports">Imports</a><a class="item inner" href="#attributes">Attributes</a><a class="item inner" href="#classes">Classes</a><a class="item inner" href="#inert-attribute">Inert attribute</a>
 			</div>
-		</div><div class="item">
+		</div><div class="item outer">
 			<a class="title" href="#template-polyfill-caveats">
 				<b>Template polyfill caveats</b>
 			</a>
 			<div class="content menu">
-				<a class="item" href="#subdocument-templates">Subdocument templates</a><a class="item" href="#inherent-limitation">Inherent limitation</a>
+				<a class="item inner" href="#subdocument-templates">Subdocument templates</a><a class="item inner" href="#inherent-limitation">Inherent limitation</a>
 			</div>
 		</div>
 	</div>
@@ -363,21 +364,21 @@ barbiche(bbObj(script.text, script.id));</textarea></div></div>
 		</div>
 	</div>
 	<script>
-		function scrollTo(target) {
-			document.querySelector(target).scrollIntoView();
-		}
 		document.addEventListener('DOMContentLoaded', function() {
-			document.querySelector('#toc-menu').addEventListener('click', function(e) {
-				e.preventDefault();
-				var target = e.target;
-				while(target !== this && target.nodeName != 'A') {target = target.parentNode;}
-				if (target !== this) {
-					var href = target.getAttribute('href');
-					if (href) {
-						scrollTo(href);
-						window.history && window.history.replaceState(null, href.substring(1), href);
-					}
-				}
+			var activeItem = $('#toc-menu').find('.item.active');
+
+			$('#toc-menu').on('click', 'a', function(event) {
+				var id = $(this).attr('href').replace('#', ''),
+						$element = $('#' + id),
+						position = $element.offset().top - 40;
+				$('html, body')
+					.animate({
+						scrollTop: position
+					}, 250);
+				location.hash = '#' + id;
+				event.stopImmediatePropagation();
+				event.preventDefault();
+				return false;
 			});
 
 			Array.prototype.slice.call(document.querySelectorAll('textarea.language-js')).forEach(function(js) {
@@ -399,6 +400,33 @@ barbiche(bbObj(script.text, script.id));</textarea></div></div>
 					indentWithTabs: true,
 					readOnly: true
 				});
+			});
+			$('.sticky').sticky({
+				silent: true,
+				context: $('.main'),
+				offset: 100
+			});
+
+			function next() {
+				activeItem.removeClass('active');
+				activeItem = $('#toc-menu').find('[href="#' + this.id + '"]');
+				activeItem.addClass('active');
+			}
+
+			function previous() {
+				activeItem.removeClass('active');
+				if (activeItem.prev('.item.inner').length > 0) activeItem = activeItem.prev('.item.inner');
+				else if (activeItem.closest('.item.outer').prev().length) {
+					activeItem = activeItem.closest('.item.outer').prev().find('.item.inner:last-child')
+				}
+				activeItem.addClass('active');
+			}
+			$('h3').visibility({
+				observeChanges: false,
+				once: false,
+				offset: 50,
+				onTopPassed: next,
+				onTopPassedReverse: previous
 			});
 		});
 	</script>
