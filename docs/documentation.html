@@ -334,6 +334,7 @@ Backticks inside a backticked identifier have to be escaped: <code>\`</code>.</p
 <div class="ui code raised segment hide"><textarea class="js language-js">if (window.HTMLTemplateElement.bootstrap) window.HTMLTemplateElement.bootstrap(otherDoc);</textarea></div>
 <p>Commit #47b57a of the polyfill only patches <code>document.createElement</code> and <code>&lt;template&gt;</code> can only be properly created from the main document: <code>otherDoc.createElement('TEMPLATE')</code> does not work as expected. This limitation is no longer valid with future version 1.0.0 of the polyfill (that targets mostly IE11, no IE9/10 support).</p>
 <h3 id="inherent-limitation">Inherent limitation</h3>
+<p>Polyfilled templates are not as inert as native templates. For examples, scripts will be executed and images will be loaded.</p>
 <p>In some rare situations, the HTML parser may break the template content. For example:</p>
 <div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="table-fragment"&gt;
     &lt;tr&gt;
@@ -368,13 +369,20 @@ barbiche(bbObj(script.text, script.id));</textarea></div></div>
 			var activeItem = $('#toc-menu').find('.item.active');
 
 			$('#toc-menu').on('click', 'a', function(event) {
-				var id = $(this).attr('href').replace('#', ''),
+				var $this = $(this);
+				var id = $this.attr('href').replace('#', ''),
 						$element = $('#' + id),
 						position = $element.offset().top - 40;
 				$('html, body')
 					.animate({
 						scrollTop: position
-					}, 250);
+					}, 250, function() {
+						if (!$this.hasClass('active')) {
+							activeItem.removeClass('active');
+							activeItem = $this;
+							activeItem.addClass('active');
+						}
+					});
 				location.hash = '#' + id;
 				event.stopImmediatePropagation();
 				event.preventDefault();

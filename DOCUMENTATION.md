@@ -372,6 +372,8 @@ Commit #47b57a of the polyfill only patches `document.createElement` and `<templ
 
 ### Inherent limitation
 
+Polyfilled templates are not as inert as native templates. For examples, scripts will be executed and images will be loaded.
+
 In some rare situations, the HTML parser may break the template content. For example:
 
 ```html

@@ -87,13 +87,20 @@
 			var activeItem = $('#toc-menu').find('.item.active');
 
 			$('#toc-menu').on('click', 'a', function(event) {
-				var id = $(this).attr('href').replace('#', ''),
+				var $this = $(this);
+				var id = $this.attr('href').replace('#', ''),
 						$element = $('#' + id),
 						position = $element.offset().top - 40;
 				$('html, body')
 					.animate({
 						scrollTop: position
-					}, 250);
+					}, 250, function() {
+						if (!$this.hasClass('active')) {
+							activeItem.removeClass('active');
+							activeItem = $this;
+							activeItem.addClass('active');
+						}
+					});
 				location.hash = '#' + id;
 				event.stopImmediatePropagation();
 				event.preventDefault();
