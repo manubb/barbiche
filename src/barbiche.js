@@ -151,11 +151,7 @@ function Barbiche(opt) {
 		if (attrFound) node.setAttribute(prefixedGlobalAttr, JSON.stringify(bbAttrs));
 		if (node.nodeName === TEMPLATE) {
 			compile(node.content, template);
-			// Some browsers such as Safari 6.2 does not support replaceChild(docFrag,...)
-			if (!attrFound) {
-				node.parentNode.insertBefore(node.content, node);
-				node.parentNode.removeChild(node);
-			}
+			if (!attrFound) node.parentNode.replaceChild(node.content, node);
 		} else {
 			ArrayFrom.call(node.childNodes).forEach(function(child) {
 				compile(child, template);
@@ -277,14 +273,12 @@ function Barbiche(opt) {
 					node.parentNode.replaceChild(node.ownerDocument.createTextNode(value), node);
 				} else node.parentNode.removeChild(node);
 			} else if (bbAttrs.html) {
-				// Some browsers such as Safari 6.2 does not support replaceChild(docFrag,...)
 				value = (template.closures[bbAttrs.html])();
-				if (value instanceof Node) node.parentNode.insertBefore(value, node);
+				if (value instanceof Node) node.parentNode.replaceChild(value, node);
 				else if (value != null) {
 					draft.innerHTML = value;
-					node.parentNode.insertBefore(draft.content, node);
-				}
-				node.parentNode.removeChild(node);
+					node.parentNode.replaceChild(draft.content, node);
+				} else node.parentNode.removeChild(node);
 			} else if (node.nodeName === TEMPLATE && !node.hasAttribute(prefixedInertAttr)) {
 				if (bbAttrs.repeat) {
 					if (!nodeContext) {
