@@ -94,7 +94,7 @@
 <h3 id="polyfills">Polyfills</h3>
 <p>For decent browser support, using some polyfills is required. Good results can be obtained with:</p>
 <ul class="ui list">
-<li><a href="https://github.com/webcomponents/template">template</a> (no npm package, using commit #47b57a is recommended if you need IE9 support)</li>
+<li><a href="https://github.com/manubb/template">template</a> (available as npm package template-mb)</li>
 <li><a href="https://github.com/eligrey/classList.js">classList.js</a> (available as npm package classlist.js, only needed for IE9 support)</li>
 </ul>
 <p>Those polyfills are included in Barbiche package in <code>polyfills.min.js</code>.</p>
@@ -332,7 +332,7 @@ Backticks inside a backticked identifier have to be escaped: <code>\`</code>.</p
 <h3 id="subdocument-templates">Subdocument templates</h3>
 <p>Templates included in subdocuments (such as HTMLImports) need to be bootstrapped before being usable by calling:</p>
 <div class="ui code raised segment hide"><textarea class="js language-js">if (window.HTMLTemplateElement.bootstrap) window.HTMLTemplateElement.bootstrap(otherDoc);</textarea></div>
-<p>Commit #47b57a of the polyfill only patches <code>document.createElement</code> and <code>&lt;template&gt;</code> can only be properly created from the main document: <code>otherDoc.createElement('TEMPLATE')</code> does not work as expected. This limitation is no longer valid with future version 1.0.0 of the polyfill (that targets mostly IE11, no IE9/10 support).</p>
+<p>Version 1.x of the polyfill only patches <code>document.createElement</code> and <code>&lt;template&gt;</code> can only be properly created from the main document: <code>otherDoc.createElement('TEMPLATE')</code> does not work as expected. This limitation is no longer valid with future version 2.x of the polyfill (that will not support IE9 and IE10).</p>
 <h3 id="inherent-limitation">Inherent limitation</h3>
 <p>Polyfilled templates are not as inert as native templates. For examples, scripts will be executed and images will be loaded.</p>
 <p>In some rare situations, the HTML parser may break the template content. For example:</p>
