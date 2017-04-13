@@ -3078,7 +3078,7 @@ if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
 
 },{}],2:[function(require,module,exports){
 // Barbiche
-// version: 2.3.2
+// version: 2.3.3
 // author: Manuel Baclet <manuel@eda.sarl>
 // license: MIT
 
@@ -3101,8 +3101,8 @@ var ELEMENT_NODE = Node.ELEMENT_NODE, TEXT_NODE = Node.TEXT_NODE,
 
 var ArrayFrom = Array.prototype.slice;
 
-// <template> polyfill #47b57a only patches document.createElement,
-// not Document.prototype.createElement (unlike version 1.0.0-rc.1)
+// <template> polyfill v1.x only patches document.createElement,
+// not Document.prototype.createElement (unlike future v2.x)
 function createTemplate() {
 	return document.createElement(TEMPLATE);
 }
@@ -3230,11 +3230,7 @@ function Barbiche(opt) {
 		if (attrFound) node.setAttribute(prefixedGlobalAttr, JSON.stringify(bbAttrs));
 		if (node.nodeName === TEMPLATE) {
 			compile(node.content, template);
-			// Some browsers such as Safari 6.2 does not support replaceChild(docFrag,...)
-			if (!attrFound) {
-				node.parentNode.insertBefore(node.content, node);
-				node.parentNode.removeChild(node);
-			}
+			if (!attrFound) node.parentNode.replaceChild(node.content, node);
 		} else {
 			ArrayFrom.call(node.childNodes).forEach(function(child) {
 				compile(child, template);
@@ -3326,6 +3322,7 @@ function Barbiche(opt) {
 	var works = {};
 	works[ELEMENT_NODE] = (function() {
 		var child, bbAttrs, value;
+		var draft = createTemplate();
 		return function(node, template) {
 			var nodeContext;
 			bbAttrs = JSON.parse(node.getAttribute(prefixedGlobalAttr));
@@ -3355,16 +3352,12 @@ function Barbiche(opt) {
 					node.parentNode.replaceChild(node.ownerDocument.createTextNode(value), node);
 				} else node.parentNode.removeChild(node);
 			} else if (bbAttrs.html) {
-				// Some browsers such as Safari 6.2 does not support replaceChild(docFrag,...)
 				value = (template.closures[bbAttrs.html])();
-				if (value instanceof Node) node.parentNode.insertBefore(value, node);
+				if (value instanceof Node) node.parentNode.replaceChild(value, node);
 				else if (value != null) {
-					(function(t) {
-						t.innerHTML = value;
-						node.parentNode.insertBefore(t.content, node);
-					})(createTemplate());
-				}
-				node.parentNode.removeChild(node);
+					draft.innerHTML = value;
+					node.parentNode.replaceChild(draft.content, node);
+				} else node.parentNode.removeChild(node);
 			} else if (node.nodeName === TEMPLATE && !node.hasAttribute(prefixedInertAttr)) {
 				if (bbAttrs.repeat) {
 					if (!nodeContext) {
@@ -3482,8 +3475,8 @@ function Barbiche(opt) {
 		if (!(this instanceof Template)) {
 			return new Template(node);
 		}
-		// <template> polyfill #47b57a does not support (node instanceof HTMLTemplateElement)
-		// version 1.0.0-rc.1 does mostly
+		// <template> polyfill v1.x does not support (node instanceof HTMLTemplateElement)
+		// future version 2.x does mostly
 		if (node instanceof HTMLElement && node.nodeName === TEMPLATE) {
 			if (node.id) store[node.id] = this;
 			if (destructive) {
