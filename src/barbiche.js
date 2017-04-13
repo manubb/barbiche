@@ -22,8 +22,8 @@ var ELEMENT_NODE = Node.ELEMENT_NODE, TEXT_NODE = Node.TEXT_NODE,
 
 var ArrayFrom = Array.prototype.slice;
 
-// <template> polyfill #47b57a only patches document.createElement,
-// not Document.prototype.createElement (unlike version 1.0.0-rc.1)
+// <template> polyfill v1.x only patches document.createElement,
+// not Document.prototype.createElement (unlike future v2.x)
 function createTemplate() {
 	return document.createElement(TEMPLATE);
 }
@@ -402,8 +402,8 @@ function Barbiche(opt) {
 		if (!(this instanceof Template)) {
 			return new Template(node);
 		}
-		// <template> polyfill #47b57a does not support (node instanceof HTMLTemplateElement)
-		// version 1.0.0-rc.1 does mostly
+		// <template> polyfill v1.x does not support (node instanceof HTMLTemplateElement)
+		// future version 2.x does mostly
 		if (node instanceof HTMLElement && node.nodeName === TEMPLATE) {
 			if (node.id) store[node.id] = this;
 			if (destructive) {
