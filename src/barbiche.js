@@ -247,6 +247,7 @@ function Barbiche(opt) {
 	var works = {};
 	works[ELEMENT_NODE] = (function() {
 		var child, bbAttrs, value;
+		var draft = createTemplate();
 		return function(node, template) {
 			var nodeContext;
 			bbAttrs = JSON.parse(node.getAttribute(prefixedGlobalAttr));
@@ -280,10 +281,8 @@ function Barbiche(opt) {
 				value = (template.closures[bbAttrs.html])();
 				if (value instanceof Node) node.parentNode.insertBefore(value, node);
 				else if (value != null) {
-					(function(t) {
-						t.innerHTML = value;
-						node.parentNode.insertBefore(t.content, node);
-					})(createTemplate());
+					draft.innerHTML = value;
+					node.parentNode.insertBefore(draft.content, node);
 				}
 				node.parentNode.removeChild(node);
 			} else if (node.nodeName === TEMPLATE && !node.hasAttribute(prefixedInertAttr)) {
