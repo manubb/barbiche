@@ -1,3 +1,8 @@
+3.0.0
+=====
+
+Drop support of old browsers (Chrome < 26, Firefox < 22, IE < 11, Opera < 15).
+
 2.0.0
 =====
 
