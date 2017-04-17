@@ -9,7 +9,7 @@ Barbiche is available as a [npm](https://www.npmjs.com/) package:
 ### Polyfills
 
 For decent browser support, using some polyfills is required. Good results can be obtained with:
-* [template-mb](https://github.com/manubb/template) (available as npm package template-mb, use version 2.x with Barbiche 3.x and version 1.x with Barbiche 2.x)
+* [template](https://github.com/manubb/template) (available as npm package template-mb, use version 2.x with Barbiche 3.x and version 1.x with Barbiche 2.x)
 * [classList.js](https://github.com/eligrey/classList.js) (available as npm package classlist.js, only needed for IE9 support)
 
 The polyfills are included in Barbiche package in `polyfills.min.js`:
