@@ -1924,8 +1924,7 @@ function push(a, b) {
 
 function getProperty(a, b) {
 	var val = a();
-	if (val == null) return;
-	else {
+	if (val != null) {
 		var ret = val[b()];
 		if (typeof(ret) === 'function') {
 			return ret.bind(val);
@@ -3177,7 +3176,7 @@ if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
 
 },{}],2:[function(require,module,exports){
 // Barbiche
-// version: 2.3.4
+// version: 2.3.5
 // author: Manuel Baclet <manuel@eda.sarl>
 // license: MIT
 
