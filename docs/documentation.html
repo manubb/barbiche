@@ -376,7 +376,7 @@ barbiche(bbObj(script.text, script.id));</textarea></div></div>
 				var $this = $(this);
 				var id = $this.attr('href').replace('#', ''),
 						$element = $('#' + id),
-						position = $element.offset().top - 40;
+						position = $element.offset().top;
 				$('html, body')
 					.animate({
 						scrollTop: position
