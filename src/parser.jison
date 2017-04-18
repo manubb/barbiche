@@ -241,7 +241,7 @@ function getProperty(a, b) {
 	if (val == null) return;
 	else {
 		var ret = val[b()];
-		if (typeof(ret) == 'function') {
+		if (typeof(ret) === 'function') {
 			return ret.bind(val);
 		} else return ret;
 	}
