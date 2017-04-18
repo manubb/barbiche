@@ -1927,14 +1927,17 @@ function getProperty(a, b) {
 	if (val == null) return;
 	else {
 		var ret = val[b()];
-		if (typeof(ret) == 'function') {
+		if (typeof(ret) === 'function') {
 			return ret.bind(val);
 		} else return ret;
 	}
 }
 
 function call(a, b) {
-	return (a()).apply(null, b());
+	var fun = a();
+	if (typeof(fun) === 'function') {
+		return fun.apply(null, b());
+	}
 }
 
 function BBObj(a, b) {
