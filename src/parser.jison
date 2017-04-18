@@ -238,8 +238,7 @@ function push(a, b) {
 
 function getProperty(a, b) {
 	var val = a();
-	if (val == null) return;
-	else {
+	if (val != null) {
 		var ret = val[b()];
 		if (typeof(ret) === 'function') {
 			return ret.bind(val);
