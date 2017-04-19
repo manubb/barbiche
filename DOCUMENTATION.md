@@ -119,7 +119,7 @@ An additional attribute `bb-inert` can be set on a `<template>` element so that 
 
 Barbiche expressions support a subset of JavaScript:
 
-* boolean expressions: `true`, `false`, `||`, `&&`, `==`, `!=`, `<=`,`>=`, `<` ,`>` and `!`
+* boolean expressions: `true`, `false`, `||`, `&&`, `==`, `!=`, `===`, `!==`, `<=`,`>=`, `<` ,`>` and `!`
 * null and undefined keywords: `null` and `undefined`
 * identifiers: `my_text`, `my_html`
 * arrays: `[]`, `[text, "string", 1.12]`
