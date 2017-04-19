@@ -555,6 +555,7 @@ options: {
 symbols_: {
   "!": 10,
   "!=": 19,
+  "!==": 21,
   "$accept": 0,
   "$end": 1,
   "&&": 17,
@@ -567,26 +568,27 @@ symbols_: {
   ".": 13,
   ":": 6,
   "<": 7,
-  "<=": 20,
+  "<=": 22,
   "==": 18,
+  "===": 20,
   ">": 8,
-  ">=": 21,
-  "ArgumentList": 35,
-  "Arguments": 34,
-  "Array": 32,
-  "ArrayItemList": 30,
+  ">=": 23,
+  "ArgumentList": 37,
+  "Arguments": 36,
+  "Array": 34,
+  "ArrayItemList": 32,
   "EOF": 1,
-  "FALSE": 26,
-  "IDENTIFIER": 24,
-  "Main": 29,
-  "NULL": 28,
-  "NUMBER": 22,
-  "Order": 31,
-  "PropertyName": 36,
-  "STRING": 23,
-  "SimpleExpression": 33,
-  "TRUE": 25,
-  "UNDEFINED": 27,
+  "FALSE": 28,
+  "IDENTIFIER": 26,
+  "Main": 31,
+  "NULL": 30,
+  "NUMBER": 24,
+  "Order": 33,
+  "PropertyName": 38,
+  "STRING": 25,
+  "SimpleExpression": 35,
+  "TRUE": 27,
+  "UNDEFINED": 29,
   "[": 4,
   "]": 5,
   "error": 2,
@@ -612,15 +614,17 @@ terminals_: {
   17: "&&",
   18: "==",
   19: "!=",
-  20: "<=",
-  21: ">=",
-  22: "NUMBER",
-  23: "STRING",
-  24: "IDENTIFIER",
-  25: "TRUE",
-  26: "FALSE",
-  27: "UNDEFINED",
-  28: "NULL"
+  20: "===",
+  21: "!==",
+  22: "<=",
+  23: ">=",
+  24: "NUMBER",
+  25: "STRING",
+  26: "IDENTIFIER",
+  27: "TRUE",
+  28: "FALSE",
+  29: "UNDEFINED",
+  30: "NULL"
 },
 TERROR: 2,
 EOF: 1,
@@ -713,21 +717,21 @@ collect_expected_token_set: function parser_collect_expected_token_set(state, do
 },
 productions_: bp({
   pop: u([
-  29,
-  29,
-  30,
-  30,
   31,
   31,
   32,
   32,
+  33,
+  33,
+  34,
+  34,
   s,
-  [33, 23],
-  34,
-  34,
-  35,
-  35,
-  36
+  [35, 25],
+  36,
+  36,
+  37,
+  37,
+  38
 ]),
   rule: u([
   2,
@@ -738,17 +742,17 @@ productions_: bp({
   1,
   2,
   s,
-  [3, 11],
+  [3, 13],
   2,
   3,
   2,
   4,
   c,
-  [19, 3],
+  [21, 3],
   s,
   [1, 6],
   c,
-  [31, 5]
+  [33, 5]
 ])
 }),
 performAction: function parser__PerformAction(yytext, yystate /* action[1] */, yysp, yyvstack) {
@@ -768,14 +772,14 @@ case 2:
 
 case 3:
     /*! Production::    ArrayItemList : SimpleExpression */
-case 34:
+case 36:
     /*! Production::    ArgumentList : SimpleExpression */
     this.$ = singleton.bind(null, yyvstack[yysp]);
     break;
 
 case 4:
     /*! Production::    ArrayItemList : ArrayItemList "," SimpleExpression */
-case 35:
+case 37:
     /*! Production::    ArgumentList : ArgumentList "," SimpleExpression */
     this.$ = push.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
@@ -792,16 +796,16 @@ case 6:
 
 case 7:
     /*! Production::    Array : "[" "]" */
-case 32:
+case 34:
     /*! Production::    Arguments : "(" ")" */
     this.$ = emptyArray;
     break;
 
 case 8:
     /*! Production::    Array : "[" ArrayItemList "]" */
-case 20:
+case 22:
     /*! Production::    SimpleExpression : "(" SimpleExpression ")" */
-case 33:
+case 35:
     /*! Production::    Arguments : "(" ArgumentList ")" */
     this.$ = yyvstack[yysp - 1];
     break;
@@ -832,88 +836,98 @@ case 13:
     break;
 
 case 14:
+    /*! Production::    SimpleExpression : SimpleExpression "===" SimpleExpression */
+    this.$ = STRICT_EQUAL.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
+    break;
+
+case 15:
+    /*! Production::    SimpleExpression : SimpleExpression "!==" SimpleExpression */
+    this.$ = STRICT_NOT_EQ.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
+    break;
+
+case 16:
     /*! Production::    SimpleExpression : SimpleExpression "<=" SimpleExpression */
     this.$ = LEQ.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
-case 15:
+case 17:
     /*! Production::    SimpleExpression : SimpleExpression ">=" SimpleExpression */
     this.$ = GEQ.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
-case 16:
+case 18:
     /*! Production::    SimpleExpression : SimpleExpression "<" SimpleExpression */
     this.$ = LESS.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
-case 17:
+case 19:
     /*! Production::    SimpleExpression : SimpleExpression ">" SimpleExpression */
     this.$ = GREATER.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
-case 18:
+case 20:
     /*! Production::    SimpleExpression : SimpleExpression "+" SimpleExpression */
     this.$ = plus.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
-case 19:
+case 21:
     /*! Production::    SimpleExpression : "!" SimpleExpression */
     this.$ = NOT.bind(null, yyvstack[yysp]);
     break;
 
-case 21:
+case 23:
     /*! Production::    SimpleExpression : SimpleExpression Arguments */
     this.$ = call.bind(null, yyvstack[yysp - 1], yyvstack[yysp]);
     break;
 
-case 22:
+case 24:
     /*! Production::    SimpleExpression : SimpleExpression "[" SimpleExpression "]" */
     this.$ = getProperty.bind(null, yyvstack[yysp - 3], yyvstack[yysp - 1]);
     break;
 
-case 23:
+case 25:
     /*! Production::    SimpleExpression : SimpleExpression "." PropertyName */
     this.$ = getProperty.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
-case 24:
+case 26:
     /*! Production::    SimpleExpression : Array */
     this.$ = yyvstack[yysp];
     break;
 
-case 25:
+case 27:
     /*! Production::    SimpleExpression : NUMBER */
     var number = Number(yytext); this.$ = function() {return number;};
     break;
 
-case 26:
+case 28:
     /*! Production::    SimpleExpression : STRING */
-case 36:
+case 38:
     /*! Production::    PropertyName : IDENTIFIER */
     this.$ = function() {return yytext;};
     break;
 
-case 27:
+case 29:
     /*! Production::    SimpleExpression : IDENTIFIER */
     this.$ = yy.context.resolve.bind(yy.context, yytext);
     break;
 
-case 28:
+case 30:
     /*! Production::    SimpleExpression : TRUE */
     this.$ = TRUE;
     break;
 
-case 29:
+case 31:
     /*! Production::    SimpleExpression : FALSE */
     this.$ = FALSE;
     break;
 
-case 30:
+case 32:
     /*! Production::    SimpleExpression : UNDEFINED */
     this.$ = UNDEFINED;
     break;
 
-case 31:
+case 33:
     /*! Production::    SimpleExpression : NULL */
     this.$ = NULL;
     break;
@@ -924,7 +938,7 @@ table: bt({
   len: u([
   13,
   1,
-  18,
+  20,
   12,
   12,
   s,
@@ -933,40 +947,40 @@ table: bt({
   0,
   1,
   s,
-  [12, 10],
+  [12, 12],
   0,
   12,
   2,
   c,
-  [18, 3],
-  20,
-  15,
+  [20, 3],
+  22,
+  17,
   0,
   2,
-  16,
+  18,
   0,
   s,
-  [20, 10],
-  15,
+  [22, 12],
+  17,
   s,
   [0, 3],
   c,
-  [17, 3],
+  [19, 3],
   0,
   c,
-  [52, 3],
+  [56, 3],
   12,
-  16,
-  16
+  18,
+  18
 ]),
   symbol: u([
   4,
   10,
   11,
   s,
-  [22, 8, 1],
-  32,
-  33,
+  [24, 8, 1],
+  34,
+  35,
   1,
   1,
   4,
@@ -974,68 +988,68 @@ table: bt({
   [6, 4, 1],
   11,
   s,
-  [13, 9, 1],
-  31,
-  34,
-  c,
-  [32, 10],
-  32,
+  [13, 11, 1],
   33,
+  36,
+  c,
+  [34, 10],
+  34,
+  35,
   c,
   [12, 13],
   5,
   c,
   [13, 9],
-  30,
+  32,
   c,
-  [57, 3],
+  [59, 3],
   c,
   [39, 25],
   c,
-  [12, 107],
-  24,
-  36,
+  [12, 131],
+  26,
+  38,
   c,
   [14, 3],
   12,
   c,
   [15, 9],
-  35,
+  37,
   1,
   s,
   [3, 7, 1],
   s,
-  [11, 11, 1],
-  34,
+  [11, 13, 1],
+  36,
   c,
-  [224, 6],
+  [252, 6],
   12,
   13,
   c,
-  [15, 7],
+  [17, 9],
   3,
   5,
   c,
-  [36, 8],
+  [40, 8],
   c,
-  [18, 8],
+  [20, 10],
   c,
-  [53, 20],
+  [59, 22],
   c,
-  [20, 180],
+  [22, 242],
   c,
-  [215, 15],
+  [281, 17],
   3,
   12,
   3,
   c,
-  [251, 15],
+  [321, 17],
   c,
-  [326, 24],
+  [400, 24],
   c,
-  [273, 16],
+  [343, 18],
   c,
-  [56, 16]
+  [60, 18]
 ]),
   type: u([
   s,
@@ -1044,33 +1058,33 @@ table: bt({
   [0, 3],
   1,
   s,
-  [2, 16],
+  [2, 18],
   0,
   0,
   c,
   [12, 34],
   c,
-  [57, 4],
+  [59, 4],
   c,
   [51, 47],
   c,
-  [12, 87],
+  [12, 111],
   c,
-  [149, 26],
+  [173, 26],
   c,
-  [22, 9],
+  [24, 11],
   c,
-  [15, 29],
+  [17, 33],
   c,
-  [18, 21],
+  [20, 23],
   c,
-  [20, 197],
+  [22, 261],
   c,
-  [233, 29],
+  [301, 31],
   c,
-  [473, 25],
+  [571, 25],
   c,
-  [58, 20],
+  [62, 24],
   0
 ]),
   state: u([
@@ -1078,18 +1092,14 @@ table: bt({
   5,
   2,
   15,
-  26,
+  28,
   5,
-  32,
+  34,
   5,
-  33,
   35,
-  5,
-  36,
+  37,
   5,
   38,
-  5,
-  39,
   5,
   40,
   5,
@@ -1108,22 +1118,30 @@ table: bt({
   47,
   5,
   48,
+  5,
   49,
   5,
-  53,
+  50,
+  5,
+  51,
+  5,
   52,
+  53,
+  5,
+  57,
+  56,
   s,
-  [26, 15],
+  [28, 17],
   5,
-  60,
+  64,
   5,
-  61,
-  26,
-  26
+  65,
+  28,
+  28
 ]),
   mode: u([
   s,
-  [1, 180],
+  [1, 202],
   2,
   2,
   c,
@@ -1134,47 +1152,47 @@ table: bt({
   c,
   [8, 7],
   c,
-  [11, 4],
+  [13, 6],
   c,
-  [35, 16],
+  [39, 18],
   c,
-  [28, 3],
+  [32, 3],
   c,
-  [50, 16],
+  [56, 18],
   c,
-  [24, 7],
+  [26, 7],
   c,
-  [25, 7],
+  [27, 9],
   c,
-  [19, 13],
+  [21, 13],
   c,
-  [20, 6],
+  [22, 8],
   c,
-  [19, 14],
+  [21, 14],
   c,
-  [10, 6],
+  [22, 7],
   c,
-  [19, 14],
+  [21, 15],
   c,
-  [12, 4],
+  [25, 6],
   c,
-  [19, 24],
+  [21, 68],
   c,
   [9, 5],
   c,
-  [145, 9],
+  [203, 11],
   c,
-  [19, 64],
+  [21, 70],
   c,
-  [221, 30],
+  [287, 34],
   c,
   [7, 12],
   c,
-  [291, 22],
+  [363, 24],
   c,
-  [256, 15],
+  [324, 17],
   c,
-  [50, 14]
+  [54, 16]
 ]),
   goto: u([
   13,
@@ -1183,203 +1201,229 @@ table: bt({
   s,
   [6, 7, 1],
   14,
-  27,
-  16,
-  23,
-  24,
-  25,
-  31,
-  28,
   29,
+  16,
+  25,
+  26,
+  27,
+  33,
   30,
+  31,
+  32,
   s,
-  [17, 6, 1],
+  [17, 8, 1],
   c,
-  [26, 10],
+  [28, 10],
   c,
   [10, 11],
-  34,
+  36,
   c,
   [11, 9],
-  37,
+  39,
   c,
   [32, 21],
   c,
-  [10, 89],
-  50,
+  [10, 109],
+  54,
   c,
   [11, 3],
-  51,
+  55,
   c,
   [12, 7],
-  19,
-  19,
-  27,
+  21,
+  21,
+  29,
   s,
-  [19, 5],
-  31,
-  19,
-  28,
+  [21, 5],
+  33,
+  21,
+  30,
   s,
+  [21, 10],
+  c,
+  [212, 6],
+  58,
+  30,
+  c,
+  [211, 8],
+  60,
+  59,
+  3,
+  29,
+  3,
+  c,
+  [232, 6],
+  c,
   [19, 8],
-  c,
-  [188, 6],
-  54,
-  28,
-  c,
-  [187, 6],
-  56,
-  55,
-  3,
-  27,
-  3,
-  c,
-  [206, 6],
-  c,
-  [17, 6],
   9,
   9,
-  27,
+  29,
   9,
   9,
   c,
-  [16, 4],
+  [18, 4],
   9,
-  28,
+  30,
   9,
   9,
   c,
-  [19, 6],
+  [21, 8],
   10,
   10,
-  27,
+  29,
   10,
   10,
   c,
-  [19, 4],
+  [21, 4],
   10,
-  28,
+  30,
   s,
   [10, 3],
   c,
-  [19, 5],
+  [21, 7],
   11,
   11,
-  27,
+  29,
   11,
   11,
   c,
-  [19, 4],
+  [21, 4],
   11,
-  28,
+  30,
   s,
   [11, 4],
   c,
-  [19, 4],
+  [21, 6],
   12,
   12,
-  27,
+  29,
   12,
   12,
   c,
-  [19, 4],
+  [21, 4],
   12,
-  28,
+  30,
   s,
-  [12, 6],
+  [12, 8],
   c,
-  [280, 3],
+  [314, 3],
   13,
-  27,
+  29,
   13,
   13,
   c,
-  [19, 4],
+  [21, 4],
   13,
-  28,
+  30,
   s,
-  [13, 6],
-  21,
-  22,
+  [13, 8],
+  23,
+  24,
   14,
   14,
-  27,
-  s,
-  [14, 4],
-  25,
-  31,
+  29,
   14,
-  28,
+  14,
+  c,
+  [21, 4],
+  14,
+  30,
   s,
   [14, 8],
+  23,
+  24,
   15,
   15,
-  27,
-  s,
-  [15, 4],
-  25,
-  31,
+  29,
   15,
-  28,
+  15,
+  c,
+  [21, 4],
+  15,
+  30,
   s,
   [15, 8],
+  23,
+  24,
   16,
   16,
-  27,
+  29,
   s,
   [16, 4],
-  25,
-  31,
-  16,
-  28,
-  s,
-  [16, 8],
-  17,
-  17,
   27,
+  33,
+  16,
+  30,
+  s,
+  [16, 10],
+  17,
+  17,
+  29,
   s,
   [17, 4],
-  25,
-  31,
+  27,
+  33,
   17,
-  28,
+  30,
   s,
-  [17, 8],
+  [17, 10],
   18,
   18,
+  29,
+  s,
+  [18, 4],
   27,
-  s,
-  [18, 5],
-  31,
+  33,
   18,
-  28,
+  30,
   s,
-  [18, 8],
+  [18, 10],
+  19,
+  19,
+  29,
+  s,
+  [19, 4],
   27,
-  57,
+  33,
+  19,
+  30,
+  s,
+  [19, 10],
+  20,
+  20,
+  29,
+  s,
+  [20, 5],
+  33,
+  20,
+  30,
+  s,
+  [20, 10],
+  29,
+  61,
   c,
-  [204, 12],
-  59,
-  58,
-  34,
+  [268, 14],
+  63,
+  62,
+  36,
   c,
-  [238, 6],
-  34,
+  [306, 6],
+  36,
   c,
-  [17, 7],
+  [19, 9],
   c,
-  [303, 20],
+  [375, 20],
   4,
-  27,
+  29,
   4,
   c,
-  [52, 12],
-  35,
+  [56, 14],
+  37,
   c,
-  [50, 6],
-  35,
+  [54, 6],
+  37,
   c,
-  [15, 7]
+  [17, 9]
 ])
 }),
 defaultActions: bda({
@@ -1387,35 +1431,35 @@ defaultActions: bda({
   s,
   [5, 8, 1],
   14,
-  26,
-  29,
-  30,
-  34,
-  37,
-  49,
-  50,
-  51,
+  28,
+  31,
+  32,
+  36,
+  39,
+  53,
   54,
   55,
-  57,
-  58
+  58,
+  59,
+  61,
+  62
 ]),
   goto: u([
   s,
-  [24, 8, 1],
+  [26, 8, 1],
   1,
-  21,
+  23,
   5,
   6,
   7,
   2,
-  23,
-  36,
-  32,
-  20,
-  8,
+  25,
+  38,
+  34,
   22,
-  33
+  8,
+  24,
+  35
 ])
 }),
 parseError: function parseError(str, hash, ExceptionClass) {
@@ -1890,6 +1934,14 @@ function EQUAL(a, b) {
 
 function NOT_EQ(a, b) {
 	return a() != b();
+}
+
+function STRICT_EQUAL(a, b) {
+	return a() === b();
+}
+
+function STRICT_NOT_EQ(a, b) {
+	return a() !== b();
 }
 
 function LEQ(a, b) {
@@ -2975,20 +3027,20 @@ case 0 :
 /*! Rule::       \s+ */ 
  /* skip whitespace */ 
 break;
-case 25 : 
-/*! Conditions:: INITIAL */ 
-/*! Rule::       {StringLiteral} */ 
- yy_.yytext = stringUnescape(yy_.yytext.substr(1, yy_.yyleng - 2)); return 23 
-break;
-case 26 : 
-/*! Conditions:: INITIAL */ 
-/*! Rule::       {BackTickIdentifier} */ 
- yy_.yytext = stringUnescape(yy_.yytext.substr(1, yy_.yyleng - 2)); return 24 
-break;
 case 27 : 
 /*! Conditions:: INITIAL */ 
+/*! Rule::       {StringLiteral} */ 
+ yy_.yytext = stringUnescape(yy_.yytext.substr(1, yy_.yyleng - 2)); return 25 
+break;
+case 28 : 
+/*! Conditions:: INITIAL */ 
+/*! Rule::       {BackTickIdentifier} */ 
+ yy_.yytext = stringUnescape(yy_.yytext.substr(1, yy_.yyleng - 2)); return 26 
+break;
+case 29 : 
+/*! Conditions:: INITIAL */ 
 /*! Rule::       {Identifier} */ 
- yy_.yytext = stringUnescape(yy_.yytext); return 24 
+ yy_.yytext = stringUnescape(yy_.yytext); return 26 
 break;
 default:
   return this.simpleCaseActionClusters[$avoiding_name_collisions];
@@ -2998,7 +3050,7 @@ default:
 
   /*! Conditions:: INITIAL */ 
   /*! Rule::       (-)?[0-9]+(\.[0-9]+)?\b */ 
-   1 : 22,
+   1 : 24,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       \|\| */ 
    2 : 16,
@@ -3006,80 +3058,88 @@ default:
   /*! Rule::       && */ 
    3 : 17,
   /*! Conditions:: INITIAL */ 
+  /*! Rule::       === */ 
+   4 : 20,
+  /*! Conditions:: INITIAL */ 
+  /*! Rule::       !== */ 
+   5 : 21,
+  /*! Conditions:: INITIAL */ 
   /*! Rule::       == */ 
-   4 : 18,
+   6 : 18,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       != */ 
-   5 : 19,
+   7 : 19,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       <= */ 
-   6 : 20,
+   8 : 22,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       >= */ 
-   7 : 21,
+   9 : 23,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       < */ 
-   8 : 7,
+   10 : 7,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       > */ 
-   9 : 8,
+   11 : 8,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       \+\+ */ 
-   10 : 15,
+   12 : 15,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       -- */ 
-   11 : 14,
+   13 : 14,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       \+ */ 
-   12 : 9,
+   14 : 9,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       ! */ 
-   13 : 10,
+   15 : 10,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       \( */ 
-   14 : 11,
+   16 : 11,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       \) */ 
-   15 : 12,
+   17 : 12,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       true */ 
-   16 : 25,
-  /*! Conditions:: INITIAL */ 
-  /*! Rule::       false */ 
-   17 : 26,
-  /*! Conditions:: INITIAL */ 
-  /*! Rule::       undefined */ 
    18 : 27,
   /*! Conditions:: INITIAL */ 
-  /*! Rule::       null */ 
+  /*! Rule::       false */ 
    19 : 28,
   /*! Conditions:: INITIAL */ 
+  /*! Rule::       undefined */ 
+   20 : 29,
+  /*! Conditions:: INITIAL */ 
+  /*! Rule::       null */ 
+   21 : 30,
+  /*! Conditions:: INITIAL */ 
   /*! Rule::       , */ 
-   20 : 3,
+   22 : 3,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       \. */ 
-   21 : 13,
+   23 : 13,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       \[ */ 
-   22 : 4,
+   24 : 4,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       \] */ 
-   23 : 5,
+   25 : 5,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       : */ 
-   24 : 6,
+   26 : 6,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       $ */ 
-   28 : 1,
+   30 : 1,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       . */ 
-   29 : 'INVALID'
+   31 : 'INVALID'
 },
     rules: [
 /^(?:\s+)/,
 /^(?:(-)?\d+(\.\d+)?\b)/,
 /^(?:\|\|)/,
 /^(?:&&)/,
+/^(?:===)/,
+/^(?:!==)/,
 /^(?:==)/,
 /^(?:!=)/,
 /^(?:<=)/,
@@ -3139,7 +3199,9 @@ default:
       26,
       27,
       28,
-      29
+      29,
+      30,
+      31
     ],
     inclusive: true
   }
