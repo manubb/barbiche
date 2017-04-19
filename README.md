@@ -69,13 +69,13 @@ The returned document fragment can then be inserted anywhere you want. It contai
 
 Barbiche requires support of `<template>` element and basic support of `element.classList` API. Here is the support table:
 
-|          |Native      | Polyfilled          |
-|----------|------------|---------------------|
-|Chrome    |&ge;26      |**&ge;15** (at least)|
-|Firefox   |&ge;22      |**&ge;20**           |
-|IE/Edge   |No support  |**&ge;9**            |
-|Opera     |&ge;15      |**&ge;11.6**         |
-|Safari    |&ge;9       |**&ge;6.2**          |
+|          |Native (v2 &amp; v3)|Polyfilled (v2)|Polyfilled (v3)|
+|----------|--------------------|---------------|---------------|
+|Chrome    |&ge;26              |**&ge;15**     |**&ge;26**     |
+|Firefox   |&ge;22              |**&ge;20**     |**&ge;22**     |
+|IE/Edge   |No support          |**&ge;9**      |**&ge;11**     |
+|Opera     |&ge;15              |**&ge;11.6**   |**&ge;15**     |
+|Safari    |&ge;9               |**&ge;6.2**    |**&ge;6.2**    |
 
 
 Polyfills, once minified and gzipped, weight an additionnal 3KB.

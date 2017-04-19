@@ -9,10 +9,13 @@ Barbiche is available as a [npm](https://www.npmjs.com/) package:
 ### Polyfills
 
 For decent browser support, using some polyfills is required. Good results can be obtained with:
-* [template](https://github.com/manubb/template) (available as npm package template-mb)
+* [template](https://github.com/manubb/template) (available as npm package template-mb, use version 2.x with Barbiche 3.x and version 1.x with Barbiche 2.x)
 * [classList.js](https://github.com/eligrey/classList.js) (available as npm package classlist.js, only needed for IE9 support)
 
-Those polyfills are included in Barbiche package in `polyfills.min.js`.
+The polyfills are included in Barbiche package in `polyfills.min.js`:
+
+* version 3.x of Barbiche contains template-mb(2.x)
+* version 2.x of Barbiche contains template-mb(1.x) and classList.js
 
 ## Barbiche API
 ### Common usage
@@ -368,7 +371,7 @@ Templates included in subdocuments (such as HTMLImports) need to be bootstrapped
 if (window.HTMLTemplateElement.bootstrap) window.HTMLTemplateElement.bootstrap(otherDoc);
 ```
 
-Version 1.x of the polyfill only patches `document.createElement` and `<template>` can only be properly created from the main document: `otherDoc.createElement('TEMPLATE')` does not work as expected. This limitation is no longer valid with future version 2.x of the polyfill (that will not support IE9 and IE10).
+Version 1.x of the polyfill only patches `document.createElement` and `<template>` can only be properly created from the main document: `otherDoc.createElement('TEMPLATE')` does not work as expected. This limitation is no longer relevant in version 2.x of the polyfill.
 
 ### Inherent limitation
 
