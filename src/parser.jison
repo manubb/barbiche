@@ -24,6 +24,8 @@ BackTickIdentifier (`{BackTickStringCharacter}*`)
 ("-")?[0-9]+("."[0-9]+)?\b  return 'NUMBER'
 "||"                        return '||'
 "&&"                        return '&&'
+"==="                       return '==='
+"!=="                       return '!=='
 "=="                        return '=='
 "!="                        return '!='
 "<="                        return '<='
@@ -59,7 +61,7 @@ BackTickIdentifier (`{BackTickStringCharacter}*`)
 %left ':'
 %left '||'
 %left '&&'
-%left '==' '!='
+%left '==' '!=' '===' '!=='
 %left '<=' '>=' '<' '>'
 %left '+'
 %right '!'
@@ -110,6 +112,10 @@ SimpleExpression
 		{$$ = EQUAL.bind(null, $1, $3);}
 	| SimpleExpression '!=' SimpleExpression
 		{$$ = NOT_EQ.bind(null, $1, $3);}
+	| SimpleExpression '===' SimpleExpression
+		{$$ = STRICT_EQUAL.bind(null, $1, $3);}
+	| SimpleExpression '!==' SimpleExpression
+		{$$ = STRICT_NOT_EQ.bind(null, $1, $3);}
 	| SimpleExpression '<=' SimpleExpression
 		{$$ = LEQ.bind(null, $1, $3);}
 	| SimpleExpression '>=' SimpleExpression
@@ -204,6 +210,14 @@ function EQUAL(a, b) {
 
 function NOT_EQ(a, b) {
 	return a() != b();
+}
+
+function STRICT_EQUAL(a, b) {
+	return a() === b();
+}
+
+function STRICT_NOT_EQ(a, b) {
+	return a() !== b();
 }
 
 function LEQ(a, b) {
