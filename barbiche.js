@@ -3238,7 +3238,7 @@ if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
 
 },{}],2:[function(require,module,exports){
 // Barbiche
-// version: 3.0.3
+// version: 3.0.4
 // author: Manuel Baclet <manuel@eda.sarl>
 // license: MIT
 
