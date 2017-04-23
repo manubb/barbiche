@@ -29,7 +29,7 @@ barbiche('my-template');
 // or
 barbiche(document.querySelector('#my-template'));
 ```
-If no template is found, an unamed empty `<template>` element is used so that subsequent operations fail silently.
+If no template is found, an unnamed empty `<template>` element is used so that subsequent operations fail silently.
 
 If the template has an id attribute, Barbiche internally stores the template for later reuse:
 ```js
