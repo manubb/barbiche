@@ -80,25 +80,11 @@ Main
 		{return ORDER.bind(null, $1, $2);}
 	;
 
-List
-	: SimpleExpression
-		{$$ = SINGLETON.bind(null, $1);}
-	| List ',' SimpleExpression
-		{$$ = PUSH.bind(null, $1, $3);}
-	;
-
 Order
 	: '--'
 		{$$ = 'after';}
 	| '++'
 		{$$ = 'before';}
-	;
-
-Array
-	: '[' ']'
-		{$$ = EMPTY_ARRAY;}
-	| '[' List ']'
-		{$$ = $2;}
 	;
 
 SimpleExpression
@@ -154,6 +140,11 @@ SimpleExpression
 		{$$ = NULL;}
 	;
 
+PropertyName
+	: IDENTIFIER
+		{$$ = function() {return yytext;};}
+	;
+
 Arguments
 	: "(" ")"
 		{$$ = EMPTY_ARRAY;}
@@ -161,9 +152,18 @@ Arguments
 		{$$ = $2;}
 	;
 
-PropertyName
-	: IDENTIFIER
-		{$$ = function() {return yytext;};}
+Array
+	: '[' ']'
+		{$$ = EMPTY_ARRAY;}
+	| '[' List ']'
+		{$$ = $2;}
+	;
+
+List
+	: SimpleExpression
+		{$$ = SINGLETON.bind(null, $1);}
+	| List ',' SimpleExpression
+		{$$ = PUSH.bind(null, $1, $3);}
 	;
 
 %% /* Helpers */
