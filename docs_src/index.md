@@ -72,4 +72,4 @@ Barbiche requires support of `<template>` element and basic support of `element.
 |Safari    |&ge;9               |**&ge;6.2**    |**&ge;6.2**    |
 
 
-Polyfills, once minified and gzipped, weight an additionnal 3KB.
+Polyfills, once minified and gzipped, weight an additionnal 2KB.
