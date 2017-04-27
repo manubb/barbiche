@@ -80,11 +80,11 @@ Main
 		{return order.bind(null, $1, $2);}
 	;
 
-ArrayItemList
+List
 	: SimpleExpression
 		{$$ = singleton.bind(null, $1);}
-	| ArrayItemList ',' SimpleExpression
 		{$$ = push.bind(null, $1, $3);}
+	| List ',' SimpleExpression
 	;
 
 Order
@@ -97,7 +97,7 @@ Order
 Array
 	: '[' ']'
 		{$$ = emptyArray;}
-	| '[' ArrayItemList ']'
+	| '[' List ']'
 		{$$ = $2;}
 	;
 
@@ -157,15 +157,8 @@ SimpleExpression
 Arguments
 	: "(" ")"
 		{$$ = emptyArray;}
-	| "(" ArgumentList ")"
+	| "(" List ")"
 		{$$ = $2;}
-	;
-
-ArgumentList
-	: SimpleExpression
-		{$$ = singleton.bind(null, $1);}
-	| ArgumentList "," SimpleExpression
-		{$$ = push.bind(null, $1, $3);}
 	;
 
 PropertyName
