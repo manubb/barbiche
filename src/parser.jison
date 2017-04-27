@@ -77,14 +77,14 @@ Main
 	: SimpleExpression EOF
 		{return $1;}
 	| SimpleExpression Order EOF
-		{return order.bind(null, $1, $2);}
+		{return ORDER.bind(null, $1, $2);}
 	;
 
 List
 	: SimpleExpression
-		{$$ = singleton.bind(null, $1);}
-		{$$ = push.bind(null, $1, $3);}
+		{$$ = SINGLETON.bind(null, $1);}
 	| List ',' SimpleExpression
+		{$$ = PUSH.bind(null, $1, $3);}
 	;
 
 Order
@@ -96,14 +96,14 @@ Order
 
 Array
 	: '[' ']'
-		{$$ = emptyArray;}
+		{$$ = EMPTY_ARRAY;}
 	| '[' List ']'
 		{$$ = $2;}
 	;
 
 SimpleExpression
 	: SimpleExpression ':' SimpleExpression
-		{$$ = BBObj.bind(yy, $1, $3);}
+		{$$ = BB_OBJ.bind(yy, $1, $3);}
 	| SimpleExpression '||' SimpleExpression
 		{$$ = OR.bind(null, $1, $3);}
 	| SimpleExpression '&&' SimpleExpression
@@ -125,17 +125,17 @@ SimpleExpression
 	| SimpleExpression '>' SimpleExpression
 		{$$ = GREATER.bind(null, $1, $3);}
 	| SimpleExpression '+' SimpleExpression
-		{$$ = plus.bind(null, $1, $3);}
+		{$$ = PLUS.bind(null, $1, $3);}
 	| '!' SimpleExpression
 		{$$ = NOT.bind(null, $2);}
 	| '(' SimpleExpression ')' %prec GROUP
 		{$$ = $2;}
 	| SimpleExpression Arguments
-		{$$ = call.bind(null, $1, $2);}
+		{$$ = CALL.bind(null, $1, $2);}
 	| SimpleExpression "[" SimpleExpression "]"
-		{$$ = getProperty.bind(null, $1, $3);}
+		{$$ = GET_PROPERTY.bind(null, $1, $3);}
 	| SimpleExpression"." PropertyName
-		{$$ = getProperty.bind(null, $1, $3);}
+		{$$ = GET_PROPERTY.bind(null, $1, $3);}
 	| Array
 		{$$ = $1;}
 	| NUMBER
@@ -156,7 +156,7 @@ SimpleExpression
 
 Arguments
 	: "(" ")"
-		{$$ = emptyArray;}
+		{$$ = EMPTY_ARRAY;}
 	| "(" List ")"
 		{$$ = $2;}
 	;
@@ -233,17 +233,17 @@ function NOT(a) {
 	return !(a());
 }
 
-function emptyArray() {return [];}
+function EMPTY_ARRAY() {return [];}
 
-function singleton(a) {return [a()];}
+function SINGLETON(a) {return [a()];}
 
-function push(a, b) {
+function PUSH(a, b) {
 	var ret = a();
 	ret.push(b());
 	return ret;
 }
 
-function getProperty(a, b) {
+function GET_PROPERTY(a, b) {
 	var val = a();
 	if (val != null) {
 		var ret = val[b()];
@@ -253,22 +253,22 @@ function getProperty(a, b) {
 	}
 }
 
-function call(a, b) {
+function CALL(a, b) {
 	var fun = a();
 	if (typeof(fun) === 'function') {
 		return fun.apply(null, b());
 	}
 }
 
-function BBObj(a, b) {
+function BB_OBJ(a, b) {
 	return new this.BBObj(a(), b());
 }
 
-function plus(a, b) {
+function PLUS(a, b) {
 	return a() + b();
 }
 
-function order(a, b) {
+function ORDER(a, b) {
 	var ret = a();
 	ret._order = b;
 	return ret;
