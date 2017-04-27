@@ -553,61 +553,60 @@ options: {
   errorRecoveryTokenDiscardCount: 3
 },
 symbols_: {
-  "!": 10,
+  "!": 7,
   "!=": 19,
   "!==": 21,
   "$accept": 0,
   "$end": 1,
   "&&": 17,
-  "(": 11,
-  ")": 12,
-  "+": 9,
+  "(": 8,
+  ")": 9,
+  "+": 6,
   "++": 15,
-  ",": 3,
+  ",": 13,
   "--": 14,
-  ".": 13,
-  ":": 6,
-  "<": 7,
+  ".": 12,
+  ":": 3,
+  "<": 4,
   "<=": 22,
   "==": 18,
   "===": 20,
-  ">": 8,
+  ">": 5,
   ">=": 23,
-  "ArgumentList": 37,
-  "Arguments": 36,
-  "Array": 34,
-  "ArrayItemList": 32,
+  "Arguments": 35,
+  "Array": 36,
   "EOF": 1,
   "FALSE": 28,
   "IDENTIFIER": 26,
+  "List": 37,
   "Main": 31,
   "NULL": 30,
   "NUMBER": 24,
-  "Order": 33,
-  "PropertyName": 38,
+  "Order": 32,
+  "PropertyName": 34,
   "STRING": 25,
-  "SimpleExpression": 35,
+  "SimpleExpression": 33,
   "TRUE": 27,
   "UNDEFINED": 29,
-  "[": 4,
-  "]": 5,
+  "[": 10,
+  "]": 11,
   "error": 2,
   "||": 16
 },
 terminals_: {
   1: "EOF",
   2: "error",
-  3: ",",
-  4: "[",
-  5: "]",
-  6: ":",
-  7: "<",
-  8: ">",
-  9: "+",
-  10: "!",
-  11: "(",
-  12: ")",
-  13: ".",
+  3: ":",
+  4: "<",
+  5: ">",
+  6: "+",
+  7: "!",
+  8: "(",
+  9: ")",
+  10: "[",
+  11: "]",
+  12: ".",
+  13: ",",
   14: "--",
   15: "++",
   16: "||",
@@ -721,38 +720,36 @@ productions_: bp({
   31,
   32,
   32,
-  33,
-  33,
-  34,
-  34,
   s,
-  [35, 25],
+  [33, 25],
+  34,
+  35,
+  35,
   36,
   36,
   37,
-  37,
-  38
+  37
 ]),
   rule: u([
   2,
   3,
   1,
-  3,
   1,
-  1,
-  2,
   s,
-  [3, 13],
+  [3, 12],
   2,
   3,
   2,
   4,
   c,
-  [21, 3],
+  [19, 3],
   s,
-  [1, 6],
+  [1, 7],
   c,
-  [33, 5]
+  [14, 3],
+  3,
+  1,
+  3
 ])
 }),
 performAction: function parser__PerformAction(yytext, yystate /* action[1] */, yysp, yyvstack) {
@@ -767,169 +764,165 @@ case 1:
 
 case 2:
     /*! Production::    Main : SimpleExpression Order EOF */
-    return order.bind(null, yyvstack[yysp - 2], yyvstack[yysp - 1]);
+    return ORDER.bind(null, yyvstack[yysp - 2], yyvstack[yysp - 1]);
     break;
 
 case 3:
-    /*! Production::    ArrayItemList : SimpleExpression */
-case 36:
-    /*! Production::    ArgumentList : SimpleExpression */
-    this.$ = singleton.bind(null, yyvstack[yysp]);
-    break;
-
-case 4:
-    /*! Production::    ArrayItemList : ArrayItemList "," SimpleExpression */
-case 37:
-    /*! Production::    ArgumentList : ArgumentList "," SimpleExpression */
-    this.$ = push.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
-    break;
-
-case 5:
     /*! Production::    Order : "--" */
     this.$ = 'after';
     break;
 
-case 6:
+case 4:
     /*! Production::    Order : "++" */
     this.$ = 'before';
     break;
 
-case 7:
-    /*! Production::    Array : "[" "]" */
-case 34:
-    /*! Production::    Arguments : "(" ")" */
-    this.$ = emptyArray;
-    break;
-
-case 8:
-    /*! Production::    Array : "[" ArrayItemList "]" */
-case 22:
-    /*! Production::    SimpleExpression : "(" SimpleExpression ")" */
-case 35:
-    /*! Production::    Arguments : "(" ArgumentList ")" */
-    this.$ = yyvstack[yysp - 1];
-    break;
-
-case 9:
+case 5:
     /*! Production::    SimpleExpression : SimpleExpression ":" SimpleExpression */
-    this.$ = BBObj.bind(yy, yyvstack[yysp - 2], yyvstack[yysp]);
+    this.$ = BB_OBJ.bind(yy, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
-case 10:
+case 6:
     /*! Production::    SimpleExpression : SimpleExpression "||" SimpleExpression */
     this.$ = OR.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
-case 11:
+case 7:
     /*! Production::    SimpleExpression : SimpleExpression "&&" SimpleExpression */
     this.$ = AND.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
-case 12:
+case 8:
     /*! Production::    SimpleExpression : SimpleExpression "==" SimpleExpression */
     this.$ = EQUAL.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
-case 13:
+case 9:
     /*! Production::    SimpleExpression : SimpleExpression "!=" SimpleExpression */
     this.$ = NOT_EQ.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
-case 14:
+case 10:
     /*! Production::    SimpleExpression : SimpleExpression "===" SimpleExpression */
     this.$ = STRICT_EQUAL.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
-case 15:
+case 11:
     /*! Production::    SimpleExpression : SimpleExpression "!==" SimpleExpression */
     this.$ = STRICT_NOT_EQ.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
-case 16:
+case 12:
     /*! Production::    SimpleExpression : SimpleExpression "<=" SimpleExpression */
     this.$ = LEQ.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
-case 17:
+case 13:
     /*! Production::    SimpleExpression : SimpleExpression ">=" SimpleExpression */
     this.$ = GEQ.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
-case 18:
+case 14:
     /*! Production::    SimpleExpression : SimpleExpression "<" SimpleExpression */
     this.$ = LESS.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
-case 19:
+case 15:
     /*! Production::    SimpleExpression : SimpleExpression ">" SimpleExpression */
     this.$ = GREATER.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
-case 20:
+case 16:
     /*! Production::    SimpleExpression : SimpleExpression "+" SimpleExpression */
-    this.$ = plus.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
+    this.$ = PLUS.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
-case 21:
+case 17:
     /*! Production::    SimpleExpression : "!" SimpleExpression */
     this.$ = NOT.bind(null, yyvstack[yysp]);
     break;
 
-case 23:
+case 18:
+    /*! Production::    SimpleExpression : "(" SimpleExpression ")" */
+case 32:
+    /*! Production::    Arguments : "(" List ")" */
+case 34:
+    /*! Production::    Array : "[" List "]" */
+    this.$ = yyvstack[yysp - 1];
+    break;
+
+case 19:
     /*! Production::    SimpleExpression : SimpleExpression Arguments */
-    this.$ = call.bind(null, yyvstack[yysp - 1], yyvstack[yysp]);
+    this.$ = CALL.bind(null, yyvstack[yysp - 1], yyvstack[yysp]);
     break;
 
-case 24:
+case 20:
     /*! Production::    SimpleExpression : SimpleExpression "[" SimpleExpression "]" */
-    this.$ = getProperty.bind(null, yyvstack[yysp - 3], yyvstack[yysp - 1]);
+    this.$ = GET_PROPERTY.bind(null, yyvstack[yysp - 3], yyvstack[yysp - 1]);
     break;
 
-case 25:
+case 21:
     /*! Production::    SimpleExpression : SimpleExpression "." PropertyName */
-    this.$ = getProperty.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
+    this.$ = GET_PROPERTY.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
-case 26:
+case 22:
     /*! Production::    SimpleExpression : Array */
     this.$ = yyvstack[yysp];
     break;
 
-case 27:
+case 23:
     /*! Production::    SimpleExpression : NUMBER */
     var number = Number(yytext); this.$ = function() {return number;};
     break;
 
-case 28:
+case 24:
     /*! Production::    SimpleExpression : STRING */
-case 38:
+case 30:
     /*! Production::    PropertyName : IDENTIFIER */
     this.$ = function() {return yytext;};
     break;
 
-case 29:
+case 25:
     /*! Production::    SimpleExpression : IDENTIFIER */
     this.$ = yy.context.resolve.bind(yy.context, yytext);
     break;
 
-case 30:
+case 26:
     /*! Production::    SimpleExpression : TRUE */
     this.$ = TRUE;
     break;
 
-case 31:
+case 27:
     /*! Production::    SimpleExpression : FALSE */
     this.$ = FALSE;
     break;
 
-case 32:
+case 28:
     /*! Production::    SimpleExpression : UNDEFINED */
     this.$ = UNDEFINED;
     break;
 
-case 33:
+case 29:
     /*! Production::    SimpleExpression : NULL */
     this.$ = NULL;
+    break;
+
+case 31:
+    /*! Production::    Arguments : "(" ")" */
+case 33:
+    /*! Production::    Array : "[" "]" */
+    this.$ = EMPTY_ARRAY;
+    break;
+
+case 35:
+    /*! Production::    List : SimpleExpression */
+    this.$ = SINGLETON.bind(null, yyvstack[yysp]);
+    break;
+
+case 36:
+    /*! Production::    List : List "," SimpleExpression */
+    this.$ = PUSH.bind(null, yyvstack[yysp - 2], yyvstack[yysp]);
     break;
 
 }
@@ -957,7 +950,7 @@ table: bt({
   17,
   0,
   2,
-  18,
+  19,
   0,
   s,
   [22, 12],
@@ -965,91 +958,81 @@ table: bt({
   s,
   [0, 3],
   c,
-  [19, 3],
-  0,
+  [26, 3],
   c,
-  [56, 3],
-  12,
-  18,
-  18
+  [55, 3],
+  19
 ]),
   symbol: u([
-  4,
+  7,
+  8,
   10,
-  11,
   s,
   [24, 8, 1],
-  34,
+  33,
+  36,
+  1,
+  1,
+  s,
+  [3, 4, 1],
+  s,
+  [8, 4, 2],
+  s,
+  [15, 9, 1],
+  32,
   35,
-  1,
-  1,
-  4,
-  s,
-  [6, 4, 1],
-  11,
-  s,
-  [13, 11, 1],
+  c,
+  [34, 10],
   33,
   36,
   c,
-  [34, 10],
-  34,
-  35,
-  c,
-  [12, 13],
-  5,
+  [12, 15],
+  11,
   c,
   [13, 9],
-  32,
-  c,
-  [59, 3],
-  c,
-  [39, 25],
-  c,
-  [12, 131],
-  26,
-  38,
-  c,
-  [14, 3],
-  12,
-  c,
-  [15, 9],
   37,
   1,
-  s,
-  [3, 7, 1],
-  s,
-  [11, 13, 1],
-  36,
   c,
-  [252, 6],
+  [39, 27],
+  c,
+  [12, 129],
+  26,
+  34,
+  s,
+  [7, 4, 1],
+  c,
+  [173, 11],
+  c,
+  [231, 5],
+  s,
+  [9, 15, 1],
+  35,
+  c,
+  [21, 7],
   12,
-  13,
   c,
   [17, 9],
-  3,
-  5,
+  11,
+  13,
   c,
-  [40, 8],
+  [40, 10],
   c,
-  [20, 10],
+  [21, 9],
   c,
-  [59, 22],
+  [60, 22],
   c,
   [22, 242],
   c,
-  [281, 17],
-  3,
-  12,
-  3,
+  [554, 6],
+  11,
   c,
-  [321, 17],
+  [302, 10],
+  9,
+  13,
   c,
-  [400, 24],
+  [371, 12],
   c,
-  [343, 18],
-  c,
-  [60, 18]
+  [314, 19]
 ]),
   type: u([
   s,
@@ -1076,31 +1059,28 @@ table: bt({
   c,
   [17, 33],
   c,
-  [20, 23],
+  [21, 25],
   c,
-  [22, 261],
+  [22, 260],
   c,
-  [301, 31],
+  [17, 13],
   c,
-  [571, 25],
-  c,
-  [62, 24],
+  [355, 20],
   0
 ]),
   state: u([
   1,
-  5,
   2,
+  5,
   15,
   28,
-  5,
   34,
   5,
   35,
-  37,
   5,
   38,
   5,
+  37,
   40,
   5,
   41,
@@ -1126,43 +1106,39 @@ table: bt({
   51,
   5,
   52,
-  53,
   5,
-  57,
+  53,
+  38,
+  5,
   56,
   s,
-  [28, 17],
+  [28, 16],
+  62,
   5,
-  64,
-  5,
-  65,
-  28,
   28
 ]),
   mode: u([
   s,
   [1, 202],
-  2,
-  2,
-  c,
-  [3, 3],
   s,
-  [2, 3],
+  [2, 5],
+  1,
+  2,
   1,
   c,
-  [8, 7],
+  [4, 3],
+  s,
+  [2, 10],
   c,
-  [13, 6],
+  [44, 24],
   c,
-  [39, 18],
+  [40, 5],
   c,
-  [32, 3],
+  [57, 9],
   c,
-  [56, 18],
+  [19, 9],
   c,
-  [26, 7],
-  c,
-  [27, 9],
+  [49, 10],
   c,
   [21, 13],
   c,
@@ -1176,254 +1152,230 @@ table: bt({
   c,
   [25, 6],
   c,
-  [21, 68],
+  [21, 65],
   c,
-  [9, 5],
+  [6, 5],
   c,
-  [203, 11],
+  [204, 14],
   c,
-  [21, 70],
+  [21, 67],
   c,
-  [287, 34],
+  [288, 40],
   c,
-  [7, 12],
-  c,
-  [363, 24],
-  c,
-  [324, 17],
-  c,
-  [54, 16]
+  [298, 23]
 ]),
   goto: u([
-  13,
   3,
   4,
+  13,
   s,
   [6, 7, 1],
   14,
-  29,
   16,
   25,
   26,
   27,
   33,
-  30,
-  31,
-  32,
+  s,
+  [29, 4, 1],
   s,
   [17, 8, 1],
   c,
   [28, 10],
   c,
-  [10, 11],
+  [10, 13],
   36,
   c,
-  [11, 9],
+  [11, 7],
   39,
   c,
-  [32, 21],
+  [32, 23],
   c,
-  [10, 109],
+  [10, 107],
   54,
-  c,
-  [11, 3],
+  3,
+  4,
   55,
   c,
-  [12, 7],
-  21,
-  21,
-  29,
+  [12, 8],
   s,
-  [21, 5],
+  [17, 5],
   33,
-  21,
+  17,
+  29,
+  17,
   30,
   s,
-  [21, 10],
+  [17, 11],
   c,
-  [212, 6],
-  58,
+  [212, 5],
+  57,
+  29,
   30,
   c,
   [211, 8],
-  60,
+  58,
   59,
-  3,
+  c,
+  [18, 5],
+  35,
   29,
-  3,
-  c,
-  [232, 6],
-  c,
-  [19, 8],
-  9,
-  9,
-  29,
-  9,
-  9,
-  c,
-  [18, 4],
-  9,
+  35,
   30,
-  9,
-  9,
+  35,
+  c,
+  [20, 8],
+  5,
+  5,
+  c,
+  [19, 4],
+  5,
+  29,
+  5,
+  30,
+  s,
+  [5, 3],
   c,
   [21, 8],
-  10,
-  10,
-  29,
-  10,
-  10,
+  6,
+  6,
   c,
   [21, 4],
-  10,
+  6,
+  29,
+  6,
   30,
   s,
-  [10, 3],
+  [6, 4],
   c,
   [21, 7],
-  11,
-  11,
-  29,
-  11,
-  11,
+  7,
+  7,
   c,
   [21, 4],
-  11,
+  7,
+  29,
+  7,
   30,
   s,
-  [11, 4],
+  [7, 5],
   c,
   [21, 6],
-  12,
-  12,
-  29,
-  12,
-  12,
+  8,
+  8,
   c,
   [21, 4],
-  12,
-  30,
-  s,
-  [12, 8],
-  c,
-  [314, 3],
-  13,
+  8,
   29,
-  13,
-  13,
-  c,
-  [21, 4],
-  13,
+  8,
   30,
   s,
-  [13, 8],
+  [8, 9],
   23,
   24,
-  14,
-  14,
-  29,
-  14,
-  14,
+  9,
+  9,
   c,
   [21, 4],
+  9,
+  29,
+  9,
+  30,
+  s,
+  [9, 9],
+  23,
+  24,
+  10,
+  10,
+  c,
+  [21, 4],
+  10,
+  29,
+  10,
+  30,
+  s,
+  [10, 9],
+  23,
+  24,
+  11,
+  11,
+  c,
+  [21, 4],
+  11,
+  29,
+  11,
+  30,
+  s,
+  [11, 9],
+  23,
+  24,
+  s,
+  [12, 4],
+  27,
+  33,
+  12,
+  29,
+  12,
+  30,
+  s,
+  [12, 11],
+  s,
+  [13, 4],
+  27,
+  33,
+  13,
+  29,
+  13,
+  30,
+  s,
+  [13, 11],
+  s,
+  [14, 4],
+  27,
+  33,
+  14,
+  29,
   14,
   30,
   s,
-  [14, 8],
-  23,
-  24,
-  15,
+  [14, 11],
+  s,
+  [15, 4],
+  27,
+  33,
   15,
   29,
   15,
-  15,
+  30,
+  s,
+  [15, 11],
+  s,
+  [16, 5],
+  33,
+  16,
+  29,
+  16,
+  30,
+  s,
+  [16, 12],
   c,
-  [21, 4],
-  15,
-  30,
-  s,
-  [15, 8],
-  23,
-  24,
-  16,
-  16,
-  29,
-  s,
-  [16, 4],
-  27,
-  33,
-  16,
-  30,
-  s,
-  [16, 10],
-  17,
-  17,
-  29,
-  s,
-  [17, 4],
-  27,
-  33,
-  17,
-  30,
-  s,
-  [17, 10],
-  18,
-  18,
-  29,
-  s,
-  [18, 4],
-  27,
-  33,
-  18,
-  30,
-  s,
-  [18, 10],
-  19,
-  19,
-  29,
-  s,
-  [19, 4],
-  27,
-  33,
-  19,
-  30,
-  s,
-  [19, 10],
-  20,
-  20,
-  29,
-  s,
-  [20, 5],
-  33,
-  20,
-  30,
-  s,
-  [20, 10],
-  29,
+  [500, 5],
+  60,
+  c,
+  [288, 9],
   61,
+  59,
   c,
-  [268, 14],
-  63,
-  62,
+  [349, 10],
+  c,
+  [28, 5],
   36,
-  c,
-  [306, 6],
-  36,
-  c,
-  [19, 9],
-  c,
-  [375, 20],
-  4,
   29,
-  4,
+  36,
+  30,
+  36,
   c,
-  [56, 14],
-  37,
-  c,
-  [54, 6],
-  37,
-  c,
-  [17, 9]
+  [30, 8]
 ])
 }),
 defaultActions: bda({
@@ -1439,27 +1391,27 @@ defaultActions: bda({
   53,
   54,
   55,
+  57,
   58,
-  59,
-  61,
-  62
+  60,
+  61
 ]),
   goto: u([
   s,
-  [26, 8, 1],
+  [22, 8, 1],
   1,
-  23,
-  5,
-  6,
-  7,
+  19,
+  3,
+  4,
+  33,
   2,
-  25,
-  38,
+  21,
+  30,
+  31,
+  18,
   34,
-  22,
-  8,
-  24,
-  35
+  20,
+  32
 ])
 }),
 parseError: function parseError(str, hash, ExceptionClass) {
@@ -1964,17 +1916,17 @@ function NOT(a) {
 	return !(a());
 }
 
-function emptyArray() {return [];}
+function EMPTY_ARRAY() {return [];}
 
-function singleton(a) {return [a()];}
+function SINGLETON(a) {return [a()];}
 
-function push(a, b) {
+function PUSH(a, b) {
 	var ret = a();
 	ret.push(b());
 	return ret;
 }
 
-function getProperty(a, b) {
+function GET_PROPERTY(a, b) {
 	var val = a();
 	if (val != null) {
 		var ret = val[b()];
@@ -1984,22 +1936,22 @@ function getProperty(a, b) {
 	}
 }
 
-function call(a, b) {
+function CALL(a, b) {
 	var fun = a();
 	if (typeof(fun) === 'function') {
 		return fun.apply(null, b());
 	}
 }
 
-function BBObj(a, b) {
+function BB_OBJ(a, b) {
 	return new this.BBObj(a(), b());
 }
 
-function plus(a, b) {
+function PLUS(a, b) {
 	return a() + b();
 }
 
-function order(a, b) {
+function ORDER(a, b) {
 	var ret = a();
 	ret._order = b;
 	return ret;
@@ -3077,10 +3029,10 @@ default:
    9 : 23,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       < */ 
-   10 : 7,
+   10 : 4,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       > */ 
-   11 : 8,
+   11 : 5,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       \+\+ */ 
    12 : 15,
@@ -3089,16 +3041,16 @@ default:
    13 : 14,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       \+ */ 
-   14 : 9,
+   14 : 6,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       ! */ 
-   15 : 10,
+   15 : 7,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       \( */ 
-   16 : 11,
+   16 : 8,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       \) */ 
-   17 : 12,
+   17 : 9,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       true */ 
    18 : 27,
@@ -3113,19 +3065,19 @@ default:
    21 : 30,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       , */ 
-   22 : 3,
+   22 : 13,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       \. */ 
-   23 : 13,
+   23 : 12,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       \[ */ 
-   24 : 4,
+   24 : 10,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       \] */ 
-   25 : 5,
+   25 : 11,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       : */ 
-   26 : 6,
+   26 : 3,
   /*! Conditions:: INITIAL */ 
   /*! Rule::       $ */ 
    30 : 1,
@@ -3238,7 +3190,7 @@ if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
 
 },{}],2:[function(require,module,exports){
 // Barbiche
-// version: 3.0.4
+// version: 3.0.5
 // author: Manuel Baclet <manuel@eda.sarl>
 // license: MIT
 
