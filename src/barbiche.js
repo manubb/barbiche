@@ -124,14 +124,12 @@ function Barbiche(opt) {
 				node = wrapper;
 			}
 		}
-		var bbAttrs = {};
+		var bbAttrs;
 		function setAttr(name, value) {
-			attrFound = true;
-			var parsed = Parser.parse(value);
-			bbAttrs[prefixedAttrsObj[attr]] = template._addClosure(parsed);
+			if (!bbAttrs) bbAttrs = Object.create(null);
+			bbAttrs[prefixedAttrsObj[attr]] = template._addClosure(Parser.parse(value));
 			node.removeAttribute(attr);
 		}
-		var attrFound = false;
 		if (node.attributes.length > attrs.length) {
 			prefixedAttrs.forEach(function(attr) {
 				if (node.hasAttribute(attr)) setAttr(attr, node.getAttribute(attr));
@@ -142,13 +140,13 @@ function Barbiche(opt) {
 				if (attr in prefixedAttrsObj) setAttr(attr, node.attributes[i].value);
 			}
 		}
-		if (node.nodeName === TEMPLATE &&
-			(node.hasAttribute(prefixedElseAttr) || node.hasAttribute(prefixedInertAttr))) attrFound = true;
+		if (!bbAttrs && node.nodeName === TEMPLATE &&
+			(node.hasAttribute(prefixedElseAttr) || node.hasAttribute(prefixedInertAttr))) bbAttrs = Object.create(null);
 
-		if (attrFound) node.setAttribute(prefixedGlobalAttr, JSON.stringify(bbAttrs));
+		if (bbAttrs) node.setAttribute(prefixedGlobalAttr, JSON.stringify(bbAttrs));
 		if (node.nodeName === TEMPLATE) {
 			compile(node.content, template);
-			if (!attrFound) node.parentNode.replaceChild(node.content, node);
+			if (!bbAttrs) node.parentNode.replaceChild(node.content, node);
 		} else {
 			ArrayFrom.call(node.childNodes).forEach(function(child) {
 				compile(child, template);
