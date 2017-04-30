@@ -33,12 +33,9 @@ function createTemplate() {
 var context = {
 	stack: null,
 	resolve: function(identifier) {
-		var m = this.stack.length;
-		var value;
-		while (value === undefined && --m >= 0) {
-			value = this.stack[m][identifier];
+		for (var index = this.stack.length - 1; index >= 0; index--) {
+			if (identifier in this.stack[index]) return this.stack[index][identifier];
 		}
-		return value;
 	},
 	get: function() {
 		return this.stack;
