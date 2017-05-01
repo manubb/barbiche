@@ -127,8 +127,8 @@ function Barbiche(opt) {
 		var bbAttrs;
 		function setAttr(name, value) {
 			if (!bbAttrs) bbAttrs = Object.create(null);
-			bbAttrs[prefixedAttrsObj[attr]] = template._addClosure(Parser.parse(value));
-			node.removeAttribute(attr);
+			bbAttrs[prefixedAttrsObj[name]] = template._addClosure(Parser.parse(value));
+			node.removeAttribute(name);
 		}
 		if (node.attributes.length > attrs.length) {
 			prefixedAttrs.forEach(function(attr) {
