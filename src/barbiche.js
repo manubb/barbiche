@@ -139,7 +139,9 @@ function Barbiche(opt) {
 			}
 		}
 		if (!bbAttrs && node.nodeName === TEMPLATE &&
-			(node.hasAttribute(prefixedElseAttr) || node.hasAttribute(prefixedInertAttr))) bbAttrs = Object.create(null);
+			(node.hasAttribute(prefixedElseAttr) || node.hasAttribute(prefixedInertAttr))) {
+			bbAttrs = Object.create(null);
+		}
 
 		if (bbAttrs) node.setAttribute(prefixedGlobalAttr, JSON.stringify(bbAttrs));
 		if (node.nodeName === TEMPLATE) {
@@ -292,7 +294,10 @@ function Barbiche(opt) {
 							);
 						}; else return function() {
 							node.parentNode.insertBefore(
-								works[DOCUMENT_FRAGMENT_NODE](node.cloneNode(true).content, template),
+								works[DOCUMENT_FRAGMENT_NODE](
+									node.cloneNode(true).content,
+									template
+								),
 								after ? node.nextSibling : node
 							);
 						};
