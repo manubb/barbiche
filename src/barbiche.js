@@ -31,8 +31,8 @@ function createTemplate(ownerDoc) {
 var context = {
 	stack: null,
 	resolve: function(identifier) {
-		for (var index = this.stack.length - 1; index >= 0; index--) {
-			if (identifier in this.stack[index]) return this.stack[index][identifier];
+		for (var i = this.stack.length - 1; i >= 0; --i) {
+			if (identifier in this.stack[i]) return this.stack[i][identifier];
 		}
 	},
 	get: function() {
@@ -133,7 +133,7 @@ function Barbiche(opt) {
 				if (node.hasAttribute(attr)) setAttr(attr, node.getAttribute(attr));
 			});
 		} else {
-			for (var i = node.attributes.length - 1; i >= 0; i--) {
+			for (var i = node.attributes.length - 1; i >= 0; --i) {
 				var attr = node.attributes[i].name;
 				if (attr in prefixedAttrsObj) setAttr(attr, node.attributes[i].value);
 			}
@@ -420,7 +420,7 @@ function Barbiche(opt) {
 	Template.prototype.merge = function() {
 		var clone = this._clone();
 		var args = [];
-		for(var i = 0; i < arguments.length; ++i) {
+		for (var i = 0; i < arguments.length; ++i) {
 			if (arguments[i] != null) args.push(arguments[i]);
 		}
 		var savedContext = context.get();
