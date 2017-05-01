@@ -61,7 +61,7 @@ BBObj.prototype.toString = function() {
 	else return '';
 };
 
-/* Shared Parser*/
+/* Shared Parser */
 
 var Parser = require('../parser.js');
 Parser.parser.yy.context = context;
