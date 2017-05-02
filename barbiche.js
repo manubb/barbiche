@@ -3190,7 +3190,7 @@ if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
 
 },{}],2:[function(require,module,exports){
 // Barbiche
-// version: 3.0.7
+// version: 3.0.8
 // author: Manuel Baclet <manuel@eda.sarl>
 // license: MIT
 
@@ -3252,7 +3252,7 @@ BBObj.prototype.toString = function() {
 	else return '';
 };
 
-/* Shared Parser*/
+/* Shared Parser */
 
 var Parser = require('../parser.js');
 Parser.parser.yy.context = context;

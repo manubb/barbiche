@@ -1,6 +1,6 @@
 {
   "name": "barbiche",
-  "version": "3.0.7",
+  "version": "3.0.8",
   "description": "Logic-full template engine for DOM & JavaScript",
   "author": "Manuel Baclet <manuel@eda.sarl>",
   "homepage": "https://manubb.github.io/barbiche",
@@ -35,7 +35,7 @@
     "semantic-ui-css": "^2.2.9",
     "should": "^11.2.0",
     "showdown": "^1.6.4",
-    "template-mb": "^2.0.0",
+    "template-mb": "^2.0.1",
     "uglify-js": "^2.7.5"
   },
   "bugs": {
