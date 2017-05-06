@@ -35,7 +35,7 @@
     "semantic-ui-css": "^2.2.9",
     "should": "^11.2.0",
     "showdown": "^1.6.4",
-    "template-mb": "^2.0.1",
+    "template-mb": "^2.0.3",
     "uglify-js": "^2.7.5"
   },
   "bugs": {
