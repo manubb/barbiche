@@ -394,8 +394,8 @@ function Barbiche(opt) {
 		if (!(this instanceof Template)) {
 			return new Template(node);
 		}
-		// <template> polyfill v1.x does not support (node instanceof HTMLTemplateElement)
-		// future version 2.x does mostly
+		// <template> polyfill does not support (node instanceof HTMLTemplateElement)
+		// in old browsers
 		if (node instanceof HTMLElement && node.nodeName === TEMPLATE) {
 			if (node.id) store[node.id] = this;
 			if (destructive) {
