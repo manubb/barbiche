@@ -3190,7 +3190,7 @@ if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
 
 },{}],2:[function(require,module,exports){
 // Barbiche
-// version: 2.3.10
+// version: 2.4.0
 // author: Manuel Baclet <manuel@eda.sarl>
 // license: MIT
 
@@ -3213,10 +3213,8 @@ var ELEMENT_NODE = Node.ELEMENT_NODE, TEXT_NODE = Node.TEXT_NODE,
 
 var ArrayFrom = Array.prototype.slice;
 
-// <template> polyfill v1.x only patches document.createElement,
-// not Document.prototype.createElement (unlike future v2.x)
-function createTemplate() {
-	return document.createElement(TEMPLATE);
+function createTemplate(ownerDoc) {
+	return ownerDoc.createElement(TEMPLATE);
 }
 
 /* Shared context */
@@ -3301,7 +3299,7 @@ function Barbiche(opt) {
 			if (node.hasAttribute(prefixedAttrs[BB_TEXT]) || node.hasAttribute(prefixedAttrs[BB_HTML]))
 				node.removeAttribute(prefixedAttrs[BB_REPEAT]);
 			else {
-				var wrapper = createTemplate();
+				var wrapper = createTemplate(node.ownerDocument);
 				wrapper.setAttribute(prefixedAttrs[BB_REPEAT], node.getAttribute(prefixedAttrs[BB_REPEAT]));
 				node.removeAttribute(prefixedAttrs[BB_REPEAT]);
 				[prefixedAttrs[BB_IF], prefixedAttrs[BB_ALIAS], prefixedElseAttr].forEach(function(attr) {
@@ -3398,12 +3396,12 @@ function Barbiche(opt) {
 					newNode = node.ownerDocument.createTextNode(unescapePlainText(match[3]));
 					node.parentNode.insertBefore(newNode, node);
 				} else if (match[2]) {
-					newNode = createTemplate();
+					newNode = createTemplate(node.ownerDocument);
 					newNode.setAttribute(prefixedAttrs[BB_TEXT], unescapeTextHTML(match[2]));
 					node.parentNode.insertBefore(newNode, node);
 					compile(newNode, template);
 				} else if (match[1]) {
-					newNode = createTemplate();
+					newNode = createTemplate(node.ownerDocument);
 					newNode.setAttribute(prefixedAttrs[BB_HTML], unescapeTextHTML(match[1]));
 					node.parentNode.insertBefore(newNode, node);
 					compile(newNode, template);
@@ -3431,7 +3429,7 @@ function Barbiche(opt) {
 	var works = Object.create(null);
 	works[ELEMENT_NODE] = (function() {
 		var child, bbAttrs, value;
-		var draft = createTemplate();
+		var draft = createTemplate(doc);
 		return function(node, template) {
 			var nodeContext;
 			bbAttrs = JSON.parse(node.getAttribute(prefixedGlobalAttr));
@@ -3575,7 +3573,7 @@ function Barbiche(opt) {
 			if (name != null) name = name.toString();
 			if (name && name in store) return store[name];
 			else {
-				var t = createTemplate();
+				var t = createTemplate(doc);
 				t.innerHTML = node.value;
 				if (name) t.id = name;
 				node = t;
@@ -3597,7 +3595,7 @@ function Barbiche(opt) {
 			} else this.node = node.cloneNode(true);
 			this.ready = false;
 		} else {
-			this.node = createTemplate();
+			this.node = createTemplate(doc);
 			this.ready = true;
 		}
 		this.closures = Object.create(null);
