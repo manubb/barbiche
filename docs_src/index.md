@@ -66,7 +66,7 @@ Barbiche requires support of `<template>` element and basic support of `element.
 |          |Native (v2 &amp; v3)|Polyfilled (v2)|Polyfilled (v3)|
 |----------|--------------------|---------------|---------------|
 |Chrome    |&ge;26              |**&ge;15**     |**&ge;26**     |
-|Firefox   |&ge;22              |**&ge;20**     |**&ge;22**     |
+|Firefox   |&ge;22              |**&ge;22**     |**&ge;22**     |
 |IE/Edge   |No support          |**&ge;9**      |**&ge;11**     |
 |Opera     |&ge;15              |**&ge;11.6**   |**&ge;15**     |
 |Safari    |&ge;9               |**&ge;6.2**    |**&ge;6.2**    |
