@@ -81,7 +81,7 @@
 				<b>Template polyfill caveats</b>
 			</a>
 			<div class="content menu">
-				<a class="item inner" href="#subdocument-templates">Subdocument templates</a><a class="item inner" href="#inherent-limitation">Inherent limitation</a>
+				<a class="item inner" href="#subdocument-templates">Subdocument templates</a><a class="item inner" href="#inherent-limitations">Inherent limitations</a>
 			</div>
 		</div>
 	</div>
@@ -336,7 +336,7 @@ Backticks inside a backticked identifier have to be escaped: <code>\`</code>.</p
 <h3 id="subdocument-templates">Subdocument templates</h3>
 <p>Templates included in subdocuments (such as HTMLImports) need to be bootstrapped before being usable by calling:</p>
 <div class="ui code raised segment hide"><textarea class="js language-js">if (window.HTMLTemplateElement.bootstrap) window.HTMLTemplateElement.bootstrap(otherDoc);</textarea></div>
-<h3 id="inherent-limitation">Inherent limitation</h3>
+<h3 id="inherent-limitations">Inherent limitations</h3>
 <p>Polyfilled templates are not as inert as native templates. For examples, scripts will be executed and images will be loaded.</p>
 <p>In some rare situations, the HTML parser may break the template content. For example:</p>
 <div class="ui code raised segment hide"><textarea class="html language-html">&lt;template id="table-fragment"&gt;
