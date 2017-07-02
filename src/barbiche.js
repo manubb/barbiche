@@ -1,5 +1,5 @@
 // Barbiche
-// version: 3.0.10
+// version: 3.0.11
 // author: Manuel Baclet <mbaclet@gmail.com>
 // license: MIT
 
