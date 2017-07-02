@@ -1,6 +1,6 @@
 // Barbiche
 // version: 2.4.1
-// author: Manuel Baclet <manuel@eda.sarl>
+// author: Manuel Baclet <mbaclet@gmail.com>
 // license: MIT
 
 'use strict';
